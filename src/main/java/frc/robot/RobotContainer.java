@@ -41,6 +41,10 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
+    public final TalonFX intakeMotor = new TalonFX(Constants.FuelConstants.IntakeMotor);
+  public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
+
+  private final FuelSubsystem m_fuelSubsystem = new FuelSubsystem(intakeMotor, feederMotor);
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
