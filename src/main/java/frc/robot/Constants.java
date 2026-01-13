@@ -28,6 +28,7 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
   public static class FuelConstants {
     // this is the motor id
     public static final int IntakeMotor = 1;

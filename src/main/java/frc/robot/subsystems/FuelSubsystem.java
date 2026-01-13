@@ -4,16 +4,16 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import frc.robot.Constants;
-import frc.robot.Constants.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.*;
 
 public class FuelSubsystem extends SubsystemBase {
   /** Creates a new FuelSubsystem. */
   private final TalonFX intakeMotor;
+
   private final TalonFX feederMotor;
+
   public FuelSubsystem(TalonFX intakeMotor, TalonFX feederMotor) {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
