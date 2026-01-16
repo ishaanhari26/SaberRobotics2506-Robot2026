@@ -19,6 +19,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.*;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Eject;
+import frc.robot.commands.Intake;
+import frc.robot.commands.Launch;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.drive.Drive;
@@ -167,6 +170,11 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
+
+    // fuelSubsystem buttons Intake, Launch, Eject
+    controller.leftBumper().onTrue(new Intake(m_fuelSubsystem));
+    controller.rightBumper().onTrue(new Launch(m_fuelSubsystem));
+    controller.y().onTrue(new Eject(m_fuelSubsystem));
   }
 
   /**
