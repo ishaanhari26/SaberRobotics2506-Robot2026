@@ -4,24 +4,20 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
-
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.Constants.*;
-import frc.robot.subsystems.FuelSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class Launch extends Command {
+public class ExampleCommand extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
-  private final FuelSubsystem m_subsystem;
+  private final ExampleSubsystem m_subsystem;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public Launch(FuelSubsystem subsystem) {
+  public ExampleCommand(ExampleSubsystem subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -29,23 +25,15 @@ public class Launch extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_subsystem.runIntake(Constants.FuelConstants.IntakeLaunchSpeed);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    if(m_subsystem.getAtSetpoint()){
-      m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
-    }
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_subsystem.stopMotors();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

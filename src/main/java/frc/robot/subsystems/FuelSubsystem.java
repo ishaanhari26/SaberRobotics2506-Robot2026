@@ -5,23 +5,40 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 
 public class FuelSubsystem extends SubsystemBase {
   /** Creates a new FuelSubsystem. */
   private final TalonFX intakeMotor;
-
   private final TalonFX feederMotor;
+  private final PIDController ShooterPid = new PIDController(FuelConstants.LaunchkP,FuelConstants.LaunchkI,FuelConstants.LaunchkD);
+  // Creates a PIDController with gains kP, kI, and kD
+
 
   public FuelSubsystem(TalonFX intakeMotor, TalonFX feederMotor) {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
+    // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
+    ShooterPid.setTolerance(1,5);
   }
 
   public void runIntake(double speed) {
     intakeMotor.set(speed);
   }
+
+  public void runIntakePID(double speed) {
+    // Calculates the output of the PID algorithm based on the sensor reading
+    // and sends it to a motor
+    intakeMotor.set(ShooterPid.calculate(intakeMotor.get(), speed));
+  }
+
+  public boolean getAtSetpoint(){
+   return ShooterPid.atSetpoint();
+  }
+
 
   public void runFeeder(double speed) {
     feederMotor.set(speed);
