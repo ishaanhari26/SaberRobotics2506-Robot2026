@@ -31,11 +31,12 @@ public final class Constants {
 
   public static class FuelConstants {
     // this is the motor id
-    public static final int IntakeMotor = 1;
-    public static final int FeederMotor = 2;
+    public static final int IntakeMotor = 52;
+    public static final int FeederMotor = 54;
 
     // speeds for intake and feeder motors when intaking
     public static final double IntakeIntakeSpeed = -0.84;
+    // public static final double IntakeIntakeSpeed = -0.6;
     public static final double FeederIntakeSpeed = 1;
 
     // speeds for intake and feeder motors when ejecting
@@ -43,7 +44,9 @@ public final class Constants {
     public static final double FeederEjectSpeed = -1;
 
     // speeds for intake and feeder motors when launching
-    public static final double IntakeLaunchSpeed = 0.88;
-    public static final double FeederLaunchSpeed = 0.75;
+    public static final double IntakeLaunchSpeed = -0.88;
+    // public static final double IntakeLaunchSpeed = -0.6;
+    public static final double FeederLaunchSpeed = -0.75;
+    // public static final double FeederLaunchSpeed = -0.5;
   }
 }

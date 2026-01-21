@@ -172,9 +172,9 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // fuelSubsystem buttons Intake, Launch, Eject
-    controller.leftBumper().onTrue(new Intake(m_fuelSubsystem));
-    controller.rightBumper().onTrue(new Launch(m_fuelSubsystem));
-    controller.y().onTrue(new Eject(m_fuelSubsystem));
+    controller.leftBumper().whileTrue(new Intake(m_fuelSubsystem));
+    controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
+    controller.y().whileTrue(new Eject(m_fuelSubsystem));
   }
 
   /**
