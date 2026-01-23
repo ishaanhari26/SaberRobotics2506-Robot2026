@@ -23,7 +23,7 @@ public class FuelSubsystem extends SubsystemBase {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
-    ShooterPid.setTolerance(0.1, 5);
+    ShooterPid.setTolerance(0.01, 5);
   }
 
   public void runIntake(double speed) {
