@@ -49,6 +49,7 @@ public class Leds extends SubsystemBase {
   // Estop - if robot estopped flash special color sequence
   @Override
   public void periodic() {
+    set(255, 0, 0);
     m_led.setData(m_buffer);
   }
 }
