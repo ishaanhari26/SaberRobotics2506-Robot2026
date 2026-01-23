@@ -8,15 +8,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Leds extends SubsystemBase {
   /** Called once at the beginning of the robot program. */
   private final AddressableLED m_led = new AddressableLED(0);
-  //Rename file!
-  
+  // Rename file!
+
   // Create the buffer
   AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(13);
+
   public Leds() {
     m_led.setLength(m_buffer.getLength());
-    m_led.setData(m_buffer); //sets the led output dat
-    m_led.start(); //start leds
-    set(0, 0, 0); //starts LEDS as off
+    m_led.setData(m_buffer); // sets the led output dat
+    m_led.start(); // start leds
+    set(0, 0, 0); // starts LEDS as off
   }
   // Create the view for the section of the strip on the left side of the robot.
   // This section spans LEDs from index 0 through index 59, inclusive.
@@ -28,11 +29,11 @@ public class Leds extends SubsystemBase {
   // physical LED strip on the robot.
   AddressableLEDBufferView m_right = m_buffer.createView(6, 12).reversed();
 
-  public void set(int red, int green, int blue){
-    for (int i=0; i < m_buffer.getLength(); i++) {
-        m_buffer.setRGB(i, red, green, blue); //Sets each individual LED to the desired Color
+  public void set(int red, int green, int blue) {
+    for (int i = 0; i < m_buffer.getLength(); i++) {
+      m_buffer.setRGB(i, red, green, blue); // Sets each individual LED to the desired Color
     }
-}
+  }
   // On power up - Alliance check, show Automode selection somehow, flashing left or right for climb
   // selection
 
@@ -47,7 +48,7 @@ public class Leds extends SubsystemBase {
 
   // Estop - if robot estopped flash special color sequence
   @Override
-    public void periodic() {
-      m_led.setData(m_buffer);
-    }
+  public void periodic() {
+    m_led.setData(m_buffer);
+  }
 }

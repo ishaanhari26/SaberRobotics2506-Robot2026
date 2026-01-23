@@ -153,9 +153,13 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    controller.leftBumper().onTrue(new InstantCommand(()->{
-        led.set(255,0,0);
-    }));
+    controller
+        .leftBumper()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  led.set(255, 0, 0);
+                }));
     // Reset gyro to 0° when B button is pressed
     controller
         .b()
