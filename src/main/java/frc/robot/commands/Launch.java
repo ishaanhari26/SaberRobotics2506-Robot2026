@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
@@ -36,9 +34,9 @@ public class Launch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_subsystem.getAtSetpoint()){
-      m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
-    }
+    // if (m_subsystem.getAtSetpoint()) {
+    m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
+    // }
   }
 
   // Called once the command ends or is interrupted.
