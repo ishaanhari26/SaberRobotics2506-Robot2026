@@ -11,7 +11,7 @@ public class Leds extends SubsystemBase {
   // Rename file!
 
   // Create the buffer
-  AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(13);
+  private final AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(13);
 
   public Leds() {
     m_led.setLength(m_buffer.getLength());
