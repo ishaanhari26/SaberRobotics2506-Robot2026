@@ -48,5 +48,10 @@ public final class Constants {
     // public static final double IntakeLaunchSpeed = -0.6;
     public static final double FeederLaunchSpeed = -0.75;
     // public static final double FeederLaunchSpeed = -0.5;
+
+    public static final int LaunchkP = 0;
+    public static final int LaunchkI = 0;
+    public static final int LaunchkD = 0;
+
   }
 }
