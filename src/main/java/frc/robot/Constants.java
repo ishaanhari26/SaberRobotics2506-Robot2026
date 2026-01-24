@@ -28,4 +28,22 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  // climb constants
+  public static class ClimbConstants {
+    // component ids
+    public static final int climbMotorID = 55; //it's actually 31
+    public static final int climbEncoderID = 32; // right for now
+    public static final int climbLimitSwitchID = 0; //temp value
+
+    public static final int climbExtendSpeed = 1; //temp value
+    public static final int climbRetractSpeed = -1;//temp value
+
+    public static final int encoderClicksToTop = 20; //temp value
+
+    //Wanted this to know how many rotations are needed if we get it from the motor
+    //e.g. if we need 20 clicks when ratio is 36:1, we need 720 clicks if the ratio is 1:1
+    public static final int gearRatio = 36; //real
+  }
+
 }
