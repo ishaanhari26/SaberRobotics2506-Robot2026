@@ -22,6 +22,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Eject;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
+import frc.robot.commands.LaunchPID;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.drive.Drive;
@@ -175,6 +176,7 @@ public class RobotContainer {
     controller.leftBumper().whileTrue(new Intake(m_fuelSubsystem));
     controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
+    controller.rightTrigger().whileTrue(new LaunchPID(m_fuelSubsystem));
   }
 
   /**
