@@ -1,41 +1,54 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.*;
+import frc.robot.Constants.ClimbConstants.ClimbState;
 
 public class ClimbSubsystem extends SubsystemBase {
 
-    private TalonFX climbMotor;
-    private DigitalInput limitSwitch;
+  public static ClimbState currentState;
 
-    public ClimbSubsystem(TalonFX climbMotor, DigitalInput limitSwitch) {
-        this.climbMotor = climbMotor;
-        this.limitSwitch = limitSwitch;
-    }
+  private TalonFX climbMotor;
+  private DigitalInput limitSwitch;
 
-    public void runClimb(double speed){
-        climbMotor.set(speed);
-    }
+  public ClimbSubsystem(TalonFX climbMotor, DigitalInput limitSwitch) {
+    this.climbMotor = climbMotor;
+    this.limitSwitch = limitSwitch;
+  }
 
-    public void stopMotor(){
-        climbMotor.set(0);
-    }
+  public void runClimb(double speed) {
+    climbMotor.set(speed);
+  }
 
-    public boolean retracted(){
-        //check limit switch
-        return limitSwitch.get();
-    }
+  public void stopMotor() {
+    climbMotor.set(0);
+  }
 
-    @Override
-    public void periodic() {
-        // This method will be called once per scheduler run
+  public ClimbState getClimbState() {
+    if (limitSwitch.get()) {
+      currentState = ClimbState.RETRACTED;
+    } else if (false /* use encoder */) {
+      currentState = ClimbState.EXTENDED;
+    } else if (climbMotor.get() == Constants.ClimbConstants.climbRetractSpeed) {
+      currentState = ClimbState.RETRACTING;
+    } else if (climbMotor.get() == Constants.ClimbConstants.climbExtendSpeed) {
+      currentState = ClimbState.EXTENDING;
+    } else {
+      currentState = ClimbState.BROKEN;
     }
+    return currentState;
+  }
 
-    @Override
-    public void simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
-    }
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // This method will be called once per scheduler run during simulation
+  }
 }

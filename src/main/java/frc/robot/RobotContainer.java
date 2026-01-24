@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Extend;
+import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.drive.Drive;
@@ -42,11 +44,12 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-    // climb
-    public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
-    public final DigitalInput limitSwitch = new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
+  // climb
+  public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
+  public final DigitalInput limitSwitch =
+      new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
 
-    private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem(climbMotor, limitSwitch);
+  private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem(climbMotor, limitSwitch);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -169,6 +172,9 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
+
+    controller.rightTrigger().whileTrue(new Extend(m_climbSubsystem));
+    controller.leftTrigger().whileTrue(new Retract(m_climbSubsystem));
   }
 
   /**
