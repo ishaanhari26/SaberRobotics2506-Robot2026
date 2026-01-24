@@ -50,11 +50,13 @@ public class RobotContainer {
   public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
 
   private final FuelSubsystem m_fuelSubsystem = new FuelSubsystem(intakeMotor, feederMotor);
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations

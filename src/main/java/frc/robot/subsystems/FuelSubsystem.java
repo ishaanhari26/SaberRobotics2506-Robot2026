@@ -14,6 +14,7 @@ public class FuelSubsystem extends SubsystemBase {
   /** Creates a new FuelSubsystem. */
   private final TalonFX intakeMotor;
 
+  private double errorPlusMotor;
   private double calShooter;
   private final TalonFX feederMotor;
   private final PIDController ShooterPid =
@@ -34,8 +35,10 @@ public class FuelSubsystem extends SubsystemBase {
   public void runIntakePID(double speed) {
     // Calculates the output of the PID algorithm based on the sensor reading
     // and sends it to a motor
-    calShooter = ShooterPid.calculate(intakeMotor.get(), speed);
-    intakeMotor.set(calShooter);
+    calShooter =
+        ShooterPid.calculate(intakeMotor.getVelocity().getValueAsDouble() * 60, speed * 6000);
+    errorPlusMotor = calShooter / 6000;
+    intakeMotor.set(errorPlusMotor);
   }
 
   public boolean getAtSetpoint() {
@@ -61,6 +64,7 @@ public class FuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
     SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
     SmartDashboard.putNumber("Calc shooter", calShooter);
+    SmartDashboard.putNumber("error + motor", errorPlusMotor);
   }
 
   @Override
