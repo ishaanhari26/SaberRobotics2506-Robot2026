@@ -36,10 +36,13 @@ public final class Constants {
     public static final int climbEncoderID = 32; // right for now
     public static final int climbLimitSwitchID = 0; // temp value
 
+    // motor speeds
     public static final double climbExtendSpeed = 0.1; // temp value
-    public static final double climbRetractSpeed = -0.1; // temp value
+    public static double climbRetractSpeed = -0.1; // temp value
 
+    // encoder
     public static final int encoderClicksToTop = 20; // temp value
+
 
     // Wanted this to know how many rotations are needed if we get it from the motor
     // e.g. if we need 20 clicks when ratio is 36:1, we need 720 clicks if the ratio is 1:1
@@ -48,14 +51,10 @@ public final class Constants {
     public static enum ClimbState {
       // probably what we start at
       RETRACTED,
-
       EXTENDED,
-
       RETRACTING,
-
       EXTENDING,
-
-      BROKEN
+      BROKEN // in case something's wrong, probably removed for actual
     }
   }
 }

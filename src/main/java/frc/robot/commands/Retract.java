@@ -4,9 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
+import frc.robot.Constants.ClimbConstants.ClimbState;
 import frc.robot.subsystems.ClimbSubsystem;
 
 /** An example command that uses an example subsystem. */
@@ -35,6 +37,9 @@ public class Retract extends Command {
   @Override
   public void execute() {
     // TODO: check if reach bottom
+
+    SmartDashboard.putBoolean("Retracting", (m_subsystem.getClimbState() == ClimbState.RETRACTING));
+    SmartDashboard.putNumber("Motor Speed", m_subsystem.getMotorSpeed());
   }
 
   // Called once the command ends or is interrupted.

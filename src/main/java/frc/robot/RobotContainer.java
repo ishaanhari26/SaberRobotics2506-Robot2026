@@ -44,12 +44,12 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-  // climb
-  public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
-  public final DigitalInput limitSwitch =
+    // climb
+    public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
+    public final DigitalInput limitSwitch =
       new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
 
-  private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem(climbMotor, limitSwitch);
+    private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem(climbMotor, limitSwitch);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
