@@ -7,8 +7,10 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,10 +29,6 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.*;
-
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -47,8 +45,8 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(3); 
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(3); 
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -56,7 +54,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
-    default:
+      default:
       case REAL:
         // Real robot, instantiate hardware IO implementations
         // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
@@ -68,11 +66,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-                
-        aprilTagEstimator = 
+
+        aprilTagEstimator =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOLimelight(camera0Name, drive::getRotation), 
+                new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
 
         // The ModuleIOTalonFXS implementation provides an example implementation for
@@ -103,12 +101,9 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        
-        aprilTagEstimator = 
-            new Vision(
-                drive::addVisionMeasurement,
-                new VisionIO() {},
-                new VisionIO() {});
+
+        aprilTagEstimator =
+            new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         break;
 
@@ -122,11 +117,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
 
-        aprilTagEstimator = 
-            new Vision(
-                drive::addVisionMeasurement,
-                new VisionIO() {},
-                new VisionIO() {});
+        aprilTagEstimator =
+            new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         break;
     }
@@ -165,9 +157,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> xLimiter.calculate(-controller.getLeftY()),
+            () -> yLimiter.calculate(-controller.getLeftX()),
+            () -> controller.getRightX()));
 
     // Lock to 0° when A button is held
     controller
@@ -180,7 +172,7 @@ public class RobotContainer {
                 () -> Rotation2d.kZero));
 
     // Switch to X pattern when X button is pressed
-    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when B button is pressed
     controller

@@ -15,8 +15,21 @@ public class Gains {
   public final double kMMEV;
   public final double kMMEA;
 
-  private Gains(double kP, double kI, double kD, double kS, double kG, double kV, double kA,double kMMV, double kMMA, double kMMJ, double kMMEV, double kMMEA) {
-    if (kP < 0 || kI < 0 || kD < 0 || kS < 0 || kV < 0 || kA < 0 || kG < 0 || kMMV < 0 || kMMA < 0 || kMMJ < 0 || kMMEV < 0 || kMMEA < 0) {
+  private Gains(
+      double kP,
+      double kI,
+      double kD,
+      double kS,
+      double kG,
+      double kV,
+      double kA,
+      double kMMV,
+      double kMMA,
+      double kMMJ,
+      double kMMEV,
+      double kMMEA) {
+    if (kP < 0 || kI < 0 || kD < 0 || kS < 0 || kV < 0 || kA < 0 || kG < 0 || kMMV < 0 || kMMA < 0
+        || kMMJ < 0 || kMMEV < 0 || kMMEA < 0) {
       throw new IllegalArgumentException("Gains must be non-negative");
     }
     this.kP = kP;
@@ -116,7 +129,6 @@ public class Gains {
       this.kMMEA = kMMEA;
       return this;
     }
-
 
     public Gains build() {
       return new Gains(kP, kI, kD, kS, kG, kV, kA, kMMV, kMMA, kMMJ, kMMEV, kMMEA);
