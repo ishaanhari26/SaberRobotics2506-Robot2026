@@ -14,6 +14,7 @@ public class FuelSubsystem extends SubsystemBase {
   /** Creates a new FuelSubsystem. */
   private final TalonFX intakeMotor;
 
+  private double calShooter;
   private final TalonFX feederMotor;
   private final PIDController ShooterPid =
       new PIDController(FuelConstants.LaunchkP, FuelConstants.LaunchkI, FuelConstants.LaunchkD);
@@ -23,7 +24,7 @@ public class FuelSubsystem extends SubsystemBase {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
-    ShooterPid.setTolerance(0.01, 5);
+    // ShooterPid.setTolerance(0.01, 5);
   }
 
   public void runIntake(double speed) {
@@ -33,7 +34,8 @@ public class FuelSubsystem extends SubsystemBase {
   public void runIntakePID(double speed) {
     // Calculates the output of the PID algorithm based on the sensor reading
     // and sends it to a motor
-    intakeMotor.set(ShooterPid.calculate(intakeMotor.get(), speed));
+    calShooter = ShooterPid.calculate(intakeMotor.get(), speed);
+    intakeMotor.set(calShooter);
   }
 
   public boolean getAtSetpoint() {
@@ -47,6 +49,7 @@ public class FuelSubsystem extends SubsystemBase {
   public void stopMotors() {
     intakeMotor.set(0);
     feederMotor.set(0);
+    ShooterPid.setSetpoint(0);
   }
 
   @Override
@@ -56,7 +59,8 @@ public class FuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("intake motor speed", intakeMotor.get());
     SmartDashboard.putNumber("feeder motor speed", feederMotor.get());
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
-    SmartDashboard.putBoolean("feeder motor speed", ShooterPid.atSetpoint());
+    SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
+    SmartDashboard.putNumber("Calc shooter", calShooter);
   }
 
   @Override
