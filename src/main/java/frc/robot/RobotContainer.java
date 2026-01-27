@@ -9,8 +9,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.Blue;
+import frc.robot.commands.FasterFlashingGreen;
+import frc.robot.commands.FlashingGreen;
 import frc.robot.commands.Rainbow;
 import frc.robot.commands.Red;
 import frc.robot.subsystems.Leds;
@@ -43,6 +45,9 @@ public class RobotContainer {
   private void configureButtonBindings() {
     controller.leftBumper().whileTrue(new Red(m_led));
     controller.rightBumper().whileTrue(new Rainbow(m_led));
+    controller.y().whileTrue(new Blue(m_led));
+    controller.b().whileTrue(new FlashingGreen(m_led));
+    controller.a().whileTrue(new FasterFlashingGreen(m_led));
   }
 
   /**
