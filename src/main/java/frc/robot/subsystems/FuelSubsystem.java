@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
@@ -18,9 +19,10 @@ public class FuelSubsystem extends SubsystemBase {
   private double errorPlusMotor;
   private double calShooter;
   private final TalonFX feederMotor;
-  private final PIDController ShooterPid =
-      new PIDController(FuelConstants.LaunchkP, FuelConstants.LaunchkI, FuelConstants.LaunchkD);
+  private final PIDController ShooterPid = new PIDController(FuelConstants.LaunchkP, FuelConstants.LaunchkI, FuelConstants.LaunchkD);
   // Creates a PIDController with gains kP, kI, and kD
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(FuelConstants.LaunchkS, FuelConstants.LaunchkV, FuelConstants.LaunchkA);
+   // Create a new SimpleMotorFeedforward with gains kS, kV, and kA
 
   public FuelSubsystem(TalonFX intakeMotor, TalonFX feederMotor) {
     this.intakeMotor = intakeMotor;
@@ -39,6 +41,7 @@ public class FuelSubsystem extends SubsystemBase {
     calShooter = ShooterPid.calculate(intakeMotor.getVelocity().getValueAsDouble() * 60, speed);
     currentSpeed = intakeMotor.getVelocity().getValueAsDouble() * 60;
     errorPlusMotor = (calShooter + currentSpeed) / 6380;
+    feedforward.calculate(speed); // still edit this!!! NOT DONE!!!
     intakeMotor.set(errorPlusMotor);
   }
 
