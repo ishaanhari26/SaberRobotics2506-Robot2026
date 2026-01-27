@@ -40,15 +40,15 @@ public class Leds extends SubsystemBase {
     setPattern(LEDPattern.solid(Color.kRed));
   }
 
-  public void blue(){
+  public void blue() {
     setPattern(LEDPattern.solid(Color.kBlue));
   }
 
-  public void flashingGreen(){
+  public void flashingGreen() {
     setPattern(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1)));
   }
 
-  public void fasterFlashingGreen(){
+  public void fasterFlashingGreen() {
     setPattern(LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.25)));
   }
 
