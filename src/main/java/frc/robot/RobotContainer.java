@@ -24,7 +24,7 @@ public class RobotContainer {
   //   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-    private final Leds m_led = new Leds();
+  private final Leds m_led = new Leds();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -39,9 +39,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-        controller
-            .leftBumper()
-            .onTrue(new Red(m_led));
+    controller.leftBumper().onTrue(new Red(m_led));
   }
 
   /**

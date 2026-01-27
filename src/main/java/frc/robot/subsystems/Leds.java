@@ -27,12 +27,12 @@ public class Leds extends SubsystemBase {
     }
   }
 
-  public void red(){
+  public void red() {
     LEDPattern red = LEDPattern.solid(Color.kRed);
     red.applyTo(m_buffer);
   }
 
-  public void off(){
+  public void off() {
     set(0, 0, 0);
   }
 
