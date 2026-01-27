@@ -42,7 +42,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     controller.leftBumper().whileTrue(new Red(m_led));
-    controller.rightBumper().onTrue(new Rainbow(m_led)).onFalse(new InstantCommand(()->m_led.off()));
+    controller
+        .rightBumper()
+        .onTrue(new Rainbow(m_led))
+        .onFalse(new InstantCommand(() -> m_led.off()));
   }
 
   /**
