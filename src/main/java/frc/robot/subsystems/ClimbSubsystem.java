@@ -37,8 +37,8 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void getCancoder(){
-    //TODO: MAKE THE RANDOM THING A DOUBLE
-    // SmartDashboard.putNumber("Cancoder", cancoder.getPosition());
+    //MAKE THE RANDOM THING A DOUBLE
+    SmartDashboard.putNumber("Cancoder", cancoder.getPosition().getValueAsDouble());
   }
 
   public void runClimb(double speed) {
