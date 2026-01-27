@@ -53,7 +53,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 // import frc.robot.Constants.Direction;
 import frc.robot.Constants.Mode;
-// import frc.robot.commands.CommandFactory;
+import frc.robot.commands.CommandFactory;
 import frc.robot.generated.TunerConstants;
 // import frc.robot.subsystems.Climb;
 // import frc.robot.subsystems.Extake;
@@ -245,8 +245,7 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("Average Module Speed", getAverageVelocity());
     SmartDashboard.putNumber("Match Time", Timer.getMatchTime());
 
-    // SmartDashboard.putNumber("Closest Tag",
-    // CommandFactory.findClosestTagAfterRefresh(getPose()));
+    SmartDashboard.putNumber("Closest Tag", CommandFactory.findClosestTagAfterRefresh(getPose()));
 
     SmartDashboard.putNumber("PoseX", getPose().getX());
     SmartDashboard.putNumber("PoseY", getPose().getY());
@@ -255,18 +254,6 @@ public class Drive extends SubsystemBase {
     // SmartDashboard.putNumber("Pigeon Pitch", getPitch());
     // SmartDashboard.putNumber("Pigeon Roll", getRoll());
     // SmartDashboard.putNumber("Pigeon Yaw", getYaw());
-
-    // if (Elevator.cachedState == Constants.ElevatorConstants.ElevatorStates.SHOOT) {
-    //   Constants.currentState = Constants.RobotState.BARGE;
-    // } else if (Climb.state == Constants.ClimbStates.EXTENDED) {
-    //   Constants.currentState = Constants.RobotState.CLIMB;
-    // } else {
-    //   Constants.currentState = Constants.RobotState.DRIVE;
-    // }
-
-    // driveState();
-
-    // SmartDashboard.putString("Drive State", Constants.currentState.toString());
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);

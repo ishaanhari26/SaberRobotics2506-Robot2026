@@ -1,9 +1,6 @@
 package frc.robot.commands;
+
 import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
-
-import java.util.function.Function;
-
-import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -11,121 +8,137 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.util.LoggedTunableNumber;
+import java.util.function.Function;
+import org.littletonrobotics.junction.Logger;
 
 public class CommandFactory {
 
-    private static CommandFactory instance;
+  private static CommandFactory instance;
 
-    public enum DriveDirection {
-        FORWARD,
-        REVERSE
+  public enum DriveDirection {
+    FORWARD,
+    REVERSE
+  }
+
+  private static Alliance alliance;
+  private static final int[] targetIdsRed = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+
+  private static final int[] targetIdsBlue = {
+    18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
+  };
+
+  private static int[] targetIds;
+
+  // public static int closestTag = 0;
+
+  /**
+   * Finds the closest april tag to a position.
+   *
+   * @param pos The Pose2d to find the closest relative tag.
+   * @param targets The list of AprilTag IDs to check for.
+   * @return The pose of the closest april tag in "targets" to "pos"
+   */
+  public static Pose2d findClosestPose(Pose2d pos) {
+    refreshAlliance();
+    int[] targets = targetIds;
+    double minDistance = Double.MAX_VALUE;
+    Pose2d target = Pose2d.kZero;
+
+    for (int i = 0; i < targets.length; i++) {
+      double distance =
+          pos.getTranslation()
+              .getDistance(
+                  aprilTagLayout
+                      .getTagPose(targets[i])
+                      .orElse(Pose3d.kZero)
+                      .getTranslation()
+                      .toTranslation2d());
+      if (distance < minDistance) {
+        target = aprilTagLayout.getTagPose(targets[i]).orElse(Pose3d.kZero).toPose2d();
+        minDistance = distance;
+        // closestTag = targets[i];
+      }
     }
 
-    private static Alliance alliance;
-    private final static int[] targetIdsRed = {
-        6,7,8,9,10,11
+    return target;
+  }
+
+  /**
+   * Finds the closest april tag to a position.
+   *
+   * @param pos The Pose2d to find the closest relative tag.
+   * @param targets The list of AprilTag IDs to check for.
+   * @return The pose of the closest april tag in "targets" to "pos"
+   */
+  public static int findClosestTagAfterRefresh(Pose2d pos) {
+    refreshAlliance();
+    int[] targets = targetIds;
+    double minDistance = Double.MAX_VALUE;
+    int tagId = 0;
+    for (int i = 0; i < targets.length; i++) {
+      double distance =
+          pos.getTranslation()
+              .getDistance(
+                  aprilTagLayout
+                      .getTagPose(targets[i])
+                      .orElse(Pose3d.kZero)
+                      .getTranslation()
+                      .toTranslation2d());
+      if (distance < minDistance) {
+        minDistance = distance;
+        tagId = targets[i];
+      }
+    }
+
+    return tagId;
+  }
+
+  // public static int getClosestTag() {
+  //     return closestTag;
+  // }
+
+  /**
+   * Returns A function which takes the current position on the robot and returns where we want to
+   * score.
+   *
+   * @param pos
+   * @param isBackingUp
+   * @return
+   */
+  public static Function<Pose2d, Pose2d> getTargetPositionFunction(double backOffset) {
+    refreshAlliance();
+    return (Pose2d pose) -> {
+      double appliedOffset = 0;
+
+      Transform2d offset = new Transform2d(backOffset, appliedOffset, new Rotation2d(Math.PI));
+      Pose2d closestTarget = findClosestPose(pose);
+
+      Pose2d target = closestTarget.transformBy(offset);
+      Logger.recordOutput("TargetPose", target);
+      return target;
     };
+  }
 
-    private final static int[] targetIdsBlue = {
-        17,18,19,20,21,22
-    };
+  // public static Function<Pose2d, Pose2d> getBargeScorePoseFunction() {
+  //     if (Drive.onRed()) {
+  //         return (Pose2d pose) -> {
+  //             return new Pose2d(9.8, 1.9, new Rotation2d());
+  //         };
+  //     } else {
+  //         return (Pose2d pose) -> {
+  //             return new Pose2d(7.7, 5.9, new Rotation2d(Math.PI));
+  //         };
+  //     }
+  // }
 
-    private static int[] targetIds;
+  public static void initialize() {
+    refreshAlliance();
+  }
 
-    // public static int closestTag = 0;
-
-    /**
-     * Finds the closest april tag to a position.
-     * 
-     * @param pos The Pose2d to find the closest relative tag.
-     * @param targets The list of AprilTag IDs to check for.
-     * @return The pose of the closest april tag in "targets" to "pos"
-     */
-    public static Pose2d findClosestPose(Pose2d pos) {
-        refreshAlliance();
-        int[] targets = targetIds;
-        double minDistance = Double.MAX_VALUE;
-        Pose2d target = Pose2d.kZero;
-        
-        for (int i = 0; i < targets.length; i++) {
-            double distance = pos.getTranslation().getDistance(aprilTagLayout.getTagPose(targets[i]).orElse(Pose3d.kZero).getTranslation().toTranslation2d());
-            if (distance < minDistance) {
-                target = aprilTagLayout.getTagPose(targets[i]).orElse(Pose3d.kZero).toPose2d();
-                minDistance = distance;
-                // closestTag = targets[i];
-            }
-        }
-        
-        return target;
-    }
-
-    /**
-     * Finds the closest april tag to a position.
-     * 
-     * @param pos The Pose2d to find the closest relative tag.
-     * @param targets The list of AprilTag IDs to check for.
-     * @return The pose of the closest april tag in "targets" to "pos"
-     */
-    public static int findClosestTagAfterRefresh(Pose2d pos) {
-        refreshAlliance();
-        int[] targets = targetIds;
-        double minDistance = Double.MAX_VALUE;
-        int tagId = 0;
-        for (int i = 0; i < targets.length; i++) {
-            double distance = pos.getTranslation().getDistance(aprilTagLayout.getTagPose(targets[i]).orElse(Pose3d.kZero).getTranslation().toTranslation2d());
-            if (distance < minDistance) {
-                minDistance = distance;
-                tagId = targets[i];
-            }
-        }
-        
-        return tagId;
-    }
-
-    // public static int getClosestTag() {
-    //     return closestTag;
-    // }
-
-    /**
-     * Returns A function which takes the current position on the robot and returns where we want to score.
-     * @param pos
-     * @param isBackingUp
-     * @return
-     */
-    public static Function<Pose2d, Pose2d> getTargetPositionFunction(double backOffset) {
-        refreshAlliance();
-        return (Pose2d pose) -> {
-            double appliedOffset = 0;
-            
-            Transform2d offset = new Transform2d(backOffset, appliedOffset, new Rotation2d(Math.PI));
-            Pose2d closestTarget = findClosestPose(pose);
-
-            Pose2d target = closestTarget.transformBy(offset);
-            Logger.recordOutput("TargetPose", target);
-            return target;
-        };
-    }
-
-    // public static Function<Pose2d, Pose2d> getBargeScorePoseFunction() {
-    //     if (Drive.onRed()) {
-    //         return (Pose2d pose) -> {
-    //             return new Pose2d(9.8, 1.9, new Rotation2d());
-    //         };
-    //     } else {
-    //         return (Pose2d pose) -> {
-    //             return new Pose2d(7.7, 5.9, new Rotation2d(Math.PI));
-    //         };
-    //     }
-    // }
-
-    public static void initialize() {
-        refreshAlliance();
-    }
-
-    public static void refreshAlliance() {
-        targetIds = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue ? targetIdsBlue : targetIdsRed;
-    }
-
+  public static void refreshAlliance() {
+    targetIds =
+        DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue
+            ? targetIdsBlue
+            : targetIdsRed;
+  }
 }
