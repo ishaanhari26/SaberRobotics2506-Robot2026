@@ -39,7 +39,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    controller.leftBumper().onTrue(new Red(m_led));
+    controller.leftBumper().whileTrue(new Red(m_led));
   }
 
   /**
