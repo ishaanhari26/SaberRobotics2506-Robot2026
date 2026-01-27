@@ -14,6 +14,7 @@ public class FuelSubsystem extends SubsystemBase {
   /** Creates a new FuelSubsystem. */
   private final TalonFX intakeMotor;
 
+  private double currentSpeed;
   private double errorPlusMotor;
   private double calShooter;
   private final TalonFX feederMotor;
@@ -25,7 +26,7 @@ public class FuelSubsystem extends SubsystemBase {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
-    // ShooterPid.setTolerance(0.01, 5);
+    // ShooterPid.setTolerance(100, 5);
   }
 
   public void runIntake(double speed) {
@@ -35,9 +36,9 @@ public class FuelSubsystem extends SubsystemBase {
   public void runIntakePID(double speed) {
     // Calculates the output of the PID algorithm based on the sensor reading
     // and sends it to a motor
-    calShooter =
-        ShooterPid.calculate(intakeMotor.getVelocity().getValueAsDouble() * 60, speed * 6000);
-    errorPlusMotor = calShooter / 6000;
+    calShooter = ShooterPid.calculate(intakeMotor.getVelocity().getValueAsDouble() * 60, speed);
+    currentSpeed = intakeMotor.getVelocity().getValueAsDouble() * 60;
+    errorPlusMotor = (calShooter + currentSpeed) / 6380;
     intakeMotor.set(errorPlusMotor);
   }
 
@@ -59,12 +60,14 @@ public class FuelSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     intakeMotor.get();
-    SmartDashboard.putNumber("intake motor speed", intakeMotor.get());
+    SmartDashboard.putNumber(
+        "intake motor speed", intakeMotor.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber("feeder motor speed", feederMotor.get());
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
     SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
     SmartDashboard.putNumber("Calc shooter", calShooter);
     SmartDashboard.putNumber("error + motor", errorPlusMotor);
+    // SmartDashboard.putNumber("initial speed", initialSpeed);
   }
 
   @Override

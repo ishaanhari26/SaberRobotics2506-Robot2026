@@ -45,11 +45,12 @@ public final class Constants {
 
     // speeds for intake and feeder motors when launching
     public static final double IntakeLaunchSpeed = -0.88;
+    public static final double IntakeLaunchSpeedRPM = -4000;
     // public static final double IntakeLaunchSpeed = -0.6;
     public static final double FeederLaunchSpeed = -1;
     // public static final double FeederLaunchSpeed = -0.75;
 
-    public static final double LaunchkP = 1.4; // .1, .6, 1.0, 1.4,5 , 4, 3,2
+    public static final double LaunchkP = 2; // .1, .6, 1.0, 1.4,5 , 4, 3,2
     public static final double LaunchkI = 0;
     public static final double LaunchkD = 0;
   }

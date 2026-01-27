@@ -32,7 +32,7 @@ public class LaunchPID extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.runIntakePID(Constants.FuelConstants.IntakeLaunchSpeed);
+    m_subsystem.runIntakePID(Constants.FuelConstants.IntakeLaunchSpeedRPM);
     if (m_subsystem.getAtSetpoint()) {
       m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
     }
