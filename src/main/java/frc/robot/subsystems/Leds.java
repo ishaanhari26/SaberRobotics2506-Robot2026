@@ -1,52 +1,44 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Leds extends SubsystemBase {
   /** Called once at the beginning of the robot program. */
-  // private final AddressableLED m_led = new AddressableLED(0);
-  // Rename file!
+  private final AddressableLED m_led = new AddressableLED(0);
 
   // Create the buffer
-  // private final AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(13);
+  private final AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(13);
 
   public Leds() {
-    // m_led.setLength(m_buffer.getLength());
-    // m_led.setData(m_buffer); // sets the led output dat
-    // m_led.start(); // start leds
-    // set(0, 0, 0); // starts LEDS as off
+    m_led.setLength(m_buffer.getLength());
+    m_led.setData(m_buffer); // sets the led output dat
+    m_led.start(); // start leds
+    set(0, 0, 0); // starts LEDS as off
   }
-  // Create the view for the section of the strip on the left side of the robot.
-  // This section spans LEDs from index 0 through index 59, inclusive.
-  // AddressableLEDBufferView m_left = m_buffer.createView(0, 5);
 
-  // The section of the strip on the right side of the robot.
-  // This section spans LEDs from index 60 through index 119, inclusive.
-  // This view is reversed to cancel out the serpentine arrangement of the
-  // physical LED strip on the robot.
-  // AddressableLEDBufferView m_right = m_buffer.createView(6, 12).reversed();
+  public void set(int red, int green, int blue) {
+    for (int i = 0; i < m_buffer.getLength(); i++) {
+      m_buffer.setRGB(i, red, green, blue); // Sets each individual LED to the desired Color
+    }
+  }
 
-  // public void set(int red, int green, int blue) {
-  //   for (int i = 0; i < m_buffer.getLength(); i++) {
-  //     m_buffer.setRGB(i, red, green, blue); // Sets each individual LED to the desired Color
-  //   }
-  // }
-  // On power up - Alliance check, show Automode selection somehow, flashing left or right for climb
-  // selection
+  public void red(){
+    LEDPattern red = LEDPattern.solid(Color.kRed);
+    red.applyTo(m_buffer);
+  }
 
-  // Auto - show Automode selection somehow
+  public void off(){
+    set(0, 0, 0);
+  }
 
-  // Transition and Attack - green flashing (able to shoot), faster green flashing (active
-  // shooting), yellow flashing (close to end of period)
-
-  // Defense - red solid (unable to shoot), yellow flashing (close to end of period)
-
-  // End Game - same as attack, different color for climb while flashing climb side
-
-  // Estop - if robot estopped flash special color sequence
   @Override
   public void periodic() {
-    // set(255, 0, 0);
-    // m_led.setData(m_buffer);
+    m_led.setData(m_buffer);
+    SmartDashboard.putString("Led Color", m_buffer.getLED(0).toString());
   }
 }

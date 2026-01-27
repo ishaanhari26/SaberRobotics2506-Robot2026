@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.Red;
+import frc.robot.subsystems.Leds;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,7 +24,7 @@ public class RobotContainer {
   //   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-  //   private final Leds led = new Leds();
+    private final Leds m_led = new Leds();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -37,13 +39,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    //     controller
-    //         .leftBumper()
-    //         .onTrue(
-    //             new InstantCommand(
-    //                 () -> {
-    //                   led.set(255, 0, 0);
-    //                 }));
+        controller
+            .leftBumper()
+            .onTrue(new Red(m_led));
   }
 
   /**

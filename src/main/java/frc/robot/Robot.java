@@ -31,47 +31,7 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
-  private AddressableLED m_led;
-  private AddressableLEDBuffer m_ledBuffer;
-
   public Robot() {
-    // Making the LEDs
-    // Test board used PWM is port 0
-    m_led = new AddressableLED(0);
-
-    // // Default to a length of 60, start empty output
-    // // Length is expensive to set, so only set it once, then just update data
-    // // LEDBuffer is the number of LEDs in a pattern or running the same color
-    m_ledBuffer = new AddressableLEDBuffer(13);
-    m_led.setLength(m_ledBuffer.getLength());
-
-    // // Set the data
-    m_led.setData(m_ledBuffer);
-    m_led.start();
-
-    // // Create the buffer
-    // AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(120);
-
-    // // Create the view for the section of the strip on the left side of the robot.
-    // // This section spans LEDs from index 0 through index 59, inclusive.
-    // AddressableLEDBufferView m_left = m_buffer.createView(0, 59);
-
-    // // The section of the strip on the right side of the robot.
-    // // This section spans LEDs from index 60 through index 119, inclusive.
-    // // This view is reversed to cancel out the serpentine arrangement of the
-    // // physical LED strip on the robot.
-    // AddressableLEDBufferView m_right = m_buffer.createView(60, 119).reversed();
-
-    // // Create an LED pattern that sets the entire strip to solid red
-    LEDPattern red = LEDPattern.solid(Color.kYellow);
-
-    // // Apply the LED pattern to the data buffer
-    red.applyTo(m_ledBuffer);
-
-    // // Write the data to the LED strip
-    m_led.setData(m_ledBuffer);
-    SmartDashboard.putString("led", m_ledBuffer.getLED(0).toString());
-
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
