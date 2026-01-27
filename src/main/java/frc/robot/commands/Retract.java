@@ -4,11 +4,9 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.*;
-import frc.robot.Constants.ClimbConstants.ClimbState;
+// import frc.robot.Constants.*;
 import frc.robot.subsystems.ClimbSubsystem;
 
 /** An example command that uses an example subsystem. */
@@ -36,10 +34,10 @@ public class Retract extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // TODO: check if reach bottom
-
-    SmartDashboard.putBoolean("Retracting", (m_subsystem.getClimbState() == ClimbState.RETRACTING));
-    SmartDashboard.putNumber("Motor Speed", m_subsystem.getMotorSpeed());
+    if (m_subsystem.getClimbState().name() == "RETRACTED") {
+      m_subsystem.stopMotor();
+      m_subsystem.resetEncoder();
+    }
   }
 
   // Called once the command ends or is interrupted.

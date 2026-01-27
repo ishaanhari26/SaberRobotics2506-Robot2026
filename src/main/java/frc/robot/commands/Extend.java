@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.*;
+// import frc.robot.Constants.*;
 import frc.robot.subsystems.ClimbSubsystem;
 
 /** An example command that uses an example subsystem. */
@@ -34,8 +34,9 @@ public class Extend extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // TODO: check if reach top
-
+    if (m_subsystem.getClimbState().name() == "EXTENDED") {
+      m_subsystem.stopMotor();
+    }
   }
 
   // Called once the command ends or is interrupted.

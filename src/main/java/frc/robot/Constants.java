@@ -41,7 +41,7 @@ public final class Constants {
     public static double climbRetractSpeed = -0.1; // temp value
 
     // encoder
-    public static final int encoderClicksToTop = 20; // temp value
+    public static final int encoderClicksToTop = 1; // temp value
 
     // Wanted this to know how many rotations are needed if we get it from the motor
     // e.g. if we need 20 clicks when ratio is 36:1, we need 720 clicks if the ratio is 1:1
@@ -53,7 +53,16 @@ public final class Constants {
       EXTENDED,
       RETRACTING,
       EXTENDING,
-      BROKEN // in case something's wrong, probably removed for actual
+      STATIONARY,
+      WhatHaveYouDone // in case something's wrong, probably removed for actual
+    }
+
+    // function because I need it
+    public static boolean equals(double one, double two, double tol) {
+      if (one - tol < two && one + tol > two) {
+        return true;
+      }
+      return false;
     }
   }
 }

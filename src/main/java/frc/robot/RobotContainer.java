@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -46,10 +47,12 @@ public class RobotContainer {
 
   // climb
   public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
-  public final DigitalInput limitSwitch =
+  public final DigitalInput climbLimitSwitch =
       new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
+  public final CANcoder climbEncoder = new CANcoder(Constants.ClimbConstants.climbEncoderID);
 
-  private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem(climbMotor, limitSwitch);
+  private final ClimbSubsystem m_climbSubsystem =
+      new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
