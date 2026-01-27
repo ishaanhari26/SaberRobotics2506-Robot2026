@@ -43,7 +43,6 @@ public final class Constants {
     // encoder
     public static final int encoderClicksToTop = 20; // temp value
 
-
     // Wanted this to know how many rotations are needed if we get it from the motor
     // e.g. if we need 20 clicks when ratio is 36:1, we need 720 clicks if the ratio is 1:1
     public static final int gearRatio = 36; // real

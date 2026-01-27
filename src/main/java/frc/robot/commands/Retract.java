@@ -40,7 +40,6 @@ public class Retract extends Command {
 
     SmartDashboard.putBoolean("Retracting", (m_subsystem.getClimbState() == ClimbState.RETRACTING));
     SmartDashboard.putNumber("Motor Speed", m_subsystem.getMotorSpeed());
-    SmartDashboard.putNumber("Encoder", m_subsystem.getCancoder(););
   }
 
   // Called once the command ends or is interrupted.

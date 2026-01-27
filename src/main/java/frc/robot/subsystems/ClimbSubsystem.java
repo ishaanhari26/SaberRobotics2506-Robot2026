@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
+// import com.ctre.phoenix.ParamEnum;
+// import com.ctre.phoenix.sensors.CANCoderConfigUtil;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -8,23 +12,16 @@ import frc.robot.Constants;
 import frc.robot.Constants.*;
 import frc.robot.Constants.ClimbConstants.ClimbState;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.CustomParamsConfigs;
-import com.ctre.phoenix6.hardware.CANcoder;
-// import com.ctre.phoenix.ParamEnum;
-// import com.ctre.phoenix.sensors.CANCoderConfigUtil;
-
 public class ClimbSubsystem extends SubsystemBase {
 
   CANcoder cancoder = new CANcoder(0); // creates a new CANCoder with ID 0
 
-  CANcoderConfiguration config = new CANcoderConfiguration();//.withCustomParams(null);
+  CANcoderConfiguration config = new CANcoderConfiguration(); // .withCustomParams(null);
 
   // config.sensorCoefficient = 2 * Math.PI / 4096.0;
   // config.unitString = "rad";
   // config.sensorTimeBase = SensorTimeBase.PerSecond;
   // cancoder.configAllSettings(config);
-
 
   public static ClimbState currentState;
 
@@ -36,9 +33,9 @@ public class ClimbSubsystem extends SubsystemBase {
     this.limitSwitch = limitSwitch;
   }
 
-  public void getCancoder(){
-    //MAKE THE RANDOM THING A DOUBLE
-    SmartDashboard.putNumber("Cancoder", cancoder.getPosition().getValueAsDouble());
+  public double getCancoder() {
+    // MAKE THE RANDOM THING A DOUBLE
+    return cancoder.getPosition().getValueAsDouble();
   }
 
   public void runClimb(double speed) {
@@ -56,7 +53,7 @@ public class ClimbSubsystem extends SubsystemBase {
   public ClimbState getClimbState() {
     if (limitSwitch.get()) {
       currentState = ClimbState.RETRACTED;
-    } else if (false /* use encoder */) {
+    } else if (getCancoder() == Constants.ClimbConstants.encoderClicksToTop) {
       currentState = ClimbState.EXTENDED;
     } else if (climbMotor.get() == Constants.ClimbConstants.climbRetractSpeed) {
       currentState = ClimbState.RETRACTING;
@@ -71,6 +68,8 @@ public class ClimbSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Cancoder", getCancoder());
+    SmartDashboard.putString("State", getClimbState().name());
   }
 
   @Override

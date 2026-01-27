@@ -14,7 +14,6 @@ public class Extend extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
   private final ClimbSubsystem m_subsystem;
 
-  
   /**
    * Creates a new ExampleCommand.
    *
