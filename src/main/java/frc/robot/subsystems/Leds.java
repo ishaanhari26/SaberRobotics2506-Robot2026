@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -34,13 +35,28 @@ public class Leds extends SubsystemBase {
     pattern.applyTo(m_buffer);
   }
 
+  // patterns
   public void red() {
     setPattern(LEDPattern.solid(Color.kRed));
   }
 
-  public void rainbow() {
-    setPattern(LEDPattern.rainbow(255, 255).scrollAtRelativeSpeed(Percent.per(Second).of(1000)));
+  public void blue(){
+    setPattern(LEDPattern.solid(Color.kBlue));
   }
+
+  public void flashingGreen(){
+    setPattern(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1)));
+  }
+
+  public void fasterFlashingGreen(){
+    setPattern(LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.25)));
+  }
+
+  public void rainbow() {
+    setPattern(LEDPattern.rainbow(255, 255).scrollAtRelativeSpeed(Percent.per(Second).of(100)));
+  }
+
+  // TODO: Climb is Solid Snake from MGS4's color palette
 
   public void off() {
     set(0, 0, 0);
