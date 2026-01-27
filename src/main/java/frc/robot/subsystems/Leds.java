@@ -27,9 +27,16 @@ public class Leds extends SubsystemBase {
     }
   }
 
+  public void setPattern(LEDPattern pattern){
+    pattern.applyTo(m_buffer);
+  }
+
   public void red() {
-    LEDPattern red = LEDPattern.solid(Color.kRed);
-    red.applyTo(m_buffer);
+    setPattern(LEDPattern.solid(Color.kRed));
+  }
+
+  public void rainbow() {
+    setPattern(LEDPattern.rainbow(100, 100));
   }
 
   public void off() {
