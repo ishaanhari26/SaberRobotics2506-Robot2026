@@ -88,6 +88,10 @@ public class Module {
     io.setTurnPosition(Rotation2d.kZero);
   }
 
+  public void alignModules() {
+    io.setTurnPosition(new Rotation2d());
+  }
+
   /** Disables all outputs to motors. */
   public void stop() {
     io.setDriveOpenLoop(0.0);

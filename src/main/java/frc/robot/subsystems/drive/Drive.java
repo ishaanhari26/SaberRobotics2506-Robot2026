@@ -1,4 +1,4 @@
-// Copyright 2021-2025 FRC 6328
+// Copyright 2021-2026 FRC 6328
 // http://github.com/Mechanical-Advantage
 //
 // This program is free software; you can redistribute it and/or
@@ -51,13 +51,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
-// import frc.robot.Constants.Direction;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.CommandFactory;
 import frc.robot.generated.TunerConstants;
-// import frc.robot.subsystems.Climb;
-// import frc.robot.subsystems.Extake;
-// import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -251,9 +247,9 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("PoseY", getPose().getY());
     SmartDashboard.putNumber("Rotation", getRotation().getDegrees());
 
-    // SmartDashboard.putNumber("Pigeon Pitch", getPitch());
-    // SmartDashboard.putNumber("Pigeon Roll", getRoll());
-    // SmartDashboard.putNumber("Pigeon Yaw", getYaw());
+    SmartDashboard.putNumber("Pigeon Pitch", getPitch());
+    SmartDashboard.putNumber("Pigeon Roll", getRoll());
+    SmartDashboard.putNumber("Pigeon Yaw", getYaw());
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
@@ -308,11 +304,11 @@ public class Drive extends SubsystemBase {
     stop();
   }
 
-  // public void alignModules() {
-  //   for (int i = 0; i < 4; i++) {
-  //     modules[i].alignModules();
-  //   }
-  // }
+  public void alignModules() {
+    for (int i = 0; i < 4; i++) {
+      modules[i].alignModules();
+    }
+  }
 
   public static boolean onRed() {
     var alliance = DriverStation.getAlliance();
@@ -411,17 +407,17 @@ public class Drive extends SubsystemBase {
     return getPose().getRotation();
   }
 
-  // public double getPitch() {
-  //   return gyroIO.getPitch();
-  // }
+  public double getPitch() {
+    return gyroIO.getPitch();
+  }
 
-  // public double getRoll() {
-  //   return gyroIO.getRoll();
-  // }
+  public double getRoll() {
+    return gyroIO.getRoll();
+  }
 
-  // public double getYaw() {
-  //   return gyroIO.getYaw();
-  // }
+  public double getYaw() {
+    return gyroIO.getYaw();
+  }
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
@@ -450,21 +446,6 @@ public class Drive extends SubsystemBase {
   public double getMaxAngularSpeedRadPerSec() {
     return getMaxLinearSpeedMetersPerSec() / DRIVE_BASE_RADIUS;
   }
-
-  // public void driveState() {
-  //   switch (Constants.currentState) {
-  //     default:
-  //     case DRIVE:
-  //       TunerConstants.kSpeedAt12Volts = MetersPerSecond.of(5.0);
-  //       break;
-  //     case BARGE:
-  //       TunerConstants.kSpeedAt12Volts = MetersPerSecond.of(1.0);
-  //       break;
-  //     case CLIMB:
-  //       TunerConstants.kSpeedAt12Volts = MetersPerSecond.of(3.0);
-  //       break;
-  //   }
-  // }
 
   /** Returns an array of module translations. */
   public static Translation2d[] getModuleTranslations() {
