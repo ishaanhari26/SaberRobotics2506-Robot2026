@@ -57,6 +57,8 @@ public class Angle extends Command {
             omegaValue = -turnAnglePID.calculate(rotation);
 
             drive.runVelocity(new ChassisSpeeds(0, 0, omegaValue));
+        } else {
+            drive.runVelocity(new ChassisSpeeds());
         }
     }
 
