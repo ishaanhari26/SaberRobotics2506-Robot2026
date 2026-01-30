@@ -49,7 +49,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public boolean getLimitSwitch() {
-    return limitSwitch.get();
+    return !limitSwitch.get(); // TODO:
   }
 
   public void resetEncoder() {
@@ -62,6 +62,9 @@ public class ClimbSubsystem extends SubsystemBase {
       currentState = ClimbState.EXTENDED;
     } else if (limitSwitch.get()) {
       currentState = ClimbState.RETRACTED;
+    } else if (Constants.ClimbConstants.equals(
+        Constants.climbTarget, getEncoder(), Constants.ClimbConstants.holdTolerance)) {
+      currentState = ClimbState.ATSETPOINT;
     } else if (Constants.ClimbConstants.equals(
         climbMotor.get(), Constants.ClimbConstants.climbRetractSpeed, 0.05)) {
       currentState = ClimbState.RETRACTING;

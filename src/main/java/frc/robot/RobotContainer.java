@@ -185,6 +185,9 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   Constants.climbTarget += Constants.ClimbConstants.targetChangeSpeed;
+                  if (Constants.climbTarget > Constants.ClimbConstants.encoderClicksToTop) {
+                    Constants.climbTarget = Constants.ClimbConstants.encoderClicksToTop;
+                  }
                 }));
     controller
         .leftTrigger()
@@ -192,6 +195,9 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   Constants.climbTarget -= Constants.ClimbConstants.targetChangeSpeed;
+                  if (Constants.climbTarget < 0) {
+                    Constants.climbTarget = 0;
+                  }
                 }));
   }
 
