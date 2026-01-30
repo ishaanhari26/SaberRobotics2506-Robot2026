@@ -48,6 +48,10 @@ public class RobotContainer {
     controller.y().whileTrue(new Blue(m_led));
     controller.b().whileTrue(new FlashingGreen(m_led));
     controller.a().whileTrue(new FasterFlashingGreen(m_led));
+    controller.x().whileTrue(new FasterFlashingGreen(m_led));
+    controller.leftStick().whileTrue(new FasterFlashingGreen(m_led));
+    controller.rightStick().whileTrue(new FasterFlashingGreen(m_led));
+    controller.leftTrigger().whileTrue(new FasterFlashingGreen(m_led));
   }
 
   /**
