@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 // import frc.robot.Constants.*;
 import frc.robot.Constants.ClimbConstants.ClimbState;
+import frc.robot.commands.HoldPosition;
 
 public class ClimbSubsystem extends SubsystemBase {
 
@@ -22,10 +23,13 @@ public class ClimbSubsystem extends SubsystemBase {
     this.climbMotor = climbMotor;
     this.limitSwitch = limitSwitch;
     this.encoder = encoder;
-    if(!getLimitSwitch()){
-      //TODO: SAFELY and I mean SAFELY call the retract command (ask how to do this) 
-    }
+    if (!getLimitSwitch()) {}
     resetEncoder();
+  }
+
+  public void initDefaultCommand() {
+    // Set the default command for a subsystem here.
+    setDefaultCommand(new HoldPosition(this));
   }
 
   public double getEncoder() {
@@ -77,6 +81,8 @@ public class ClimbSubsystem extends SubsystemBase {
     SmartDashboard.putString("State", getClimbState().name());
     SmartDashboard.putNumber("Motor Speed", getMotorSpeed());
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
+    SmartDashboard.putBoolean("Target Matches Encoder", Constants.climbTarget == getEncoder());
+    SmartDashboard.putNumber("Target", Constants.climbTarget);
   }
 
   @Override

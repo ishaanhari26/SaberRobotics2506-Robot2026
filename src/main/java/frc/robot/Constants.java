@@ -29,6 +29,9 @@ public final class Constants {
     REPLAY
   }
 
+  // climb not constant
+  public static double climbTarget = 0.0;
+
   // climb constants
   public static class ClimbConstants {
     // component ids
@@ -38,7 +41,10 @@ public final class Constants {
 
     // motor speeds
     public static final double climbExtendSpeed = 0.1; // temp value
-    public static double climbRetractSpeed = -0.1; // temp value
+    public static final double climbRetractSpeed = -0.1; // temp value
+
+    // AAAAAAAAAAAAAAAAAAa
+    public static final double targetChangeSpeed = 0.1;
 
     // encoder
     public static final int encoderClicksToTop = 1; // temp value

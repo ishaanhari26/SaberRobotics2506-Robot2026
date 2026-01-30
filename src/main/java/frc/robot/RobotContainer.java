@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.Extend;
-import frc.robot.commands.Retract;
+import frc.robot.commands.HoldPosition;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.drive.Drive;
@@ -176,8 +176,23 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightTrigger().whileTrue(new Extend(m_climbSubsystem));
-    controller.leftTrigger().whileTrue(new Retract(m_climbSubsystem));
+    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem));
+    // controller.rightTrigger().whileTrue(new Extend(m_climbSubsystem));
+    controller.leftTrigger().whileTrue(new HoldPosition(m_climbSubsystem));
+    controller
+        .rightTrigger()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.climbTarget += Constants.ClimbConstants.targetChangeSpeed;
+                }));
+    controller
+        .leftTrigger()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.climbTarget -= Constants.ClimbConstants.targetChangeSpeed;
+                }));
   }
 
   /**
