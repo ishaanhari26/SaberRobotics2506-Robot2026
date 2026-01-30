@@ -6,8 +6,10 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +20,9 @@ public class Leds extends SubsystemBase {
 
   // Create the buffer
   private final AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(13);
+
+  // Timer
+  private double matchTime;
 
   public Leds() {
     m_led.setLength(m_buffer.getLength());
@@ -72,16 +77,44 @@ public class Leds extends SubsystemBase {
   public void evil() {
     setPattern(
         LEDPattern.gradient(GradientType.kContinuous, Color.kDarkViolet, Color.kGold)
-            .breathe(Seconds.of(0.5))
-            .scrollAtRelativeSpeed(Percent.per(Second).of(100)));
+            .breathe(Seconds.of(1))
+            .scrollAtRelativeSpeed(Percent.per(Second).of(300)));
   }
 
   public void off() {
     set(0, 0, 0);
   }
 
+  // public void idles() {
+  //     var alliance = DriverStation.getAlliance();
+  //     if(!alliance.isPresent()){
+  //         return;
+  //     }
+
+  //     if (alliance.get()== DriverStation.Alliance.Blue) {
+  //         blue();
+  //     }
+  //     else if(alliance.get() == DriverStation.Alliance.Red) {
+  //         red();
+  //     }
+
+  // }
+
   @Override
   public void periodic() {
+    matchTime = Timer.getMatchTime();
+    if (DriverStation.isEStopped()) {
+      rainbow();
+    } else if (!DriverStation.isEnabled()) {
+      evil();
+      // idles();
+    }
+
+    // matchTime = Timer.getMatchTime();
+    // if (DriverStation.isTeleop() && ((matchTime<31&&matchTime>28)||(matchTime<16&&matchTime>14)))
+    // {
+
+    // }
     m_led.setData(m_buffer);
     SmartDashboard.putString("Led Color", m_buffer.getLED(0).toString());
   }
