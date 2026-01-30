@@ -81,7 +81,10 @@ public class ClimbSubsystem extends SubsystemBase {
     SmartDashboard.putString("State", getClimbState().name());
     SmartDashboard.putNumber("Motor Speed", getMotorSpeed());
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
-    SmartDashboard.putBoolean("Target Matches Encoder", Constants.climbTarget == getEncoder());
+    SmartDashboard.putBoolean(
+        "Target Matches Encoder",
+        Constants.ClimbConstants.equals(
+            Constants.climbTarget, getEncoder(), Constants.ClimbConstants.holdTolerance));
     SmartDashboard.putNumber("Target", Constants.climbTarget);
   }
 

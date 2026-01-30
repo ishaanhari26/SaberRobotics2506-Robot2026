@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 // import frc.robot.Constants.*;
@@ -33,8 +32,17 @@ public class HoldPosition extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Constants.climbTarget == m_subsystem.getEncoder()) {
-      
+    if (!Constants.ClimbConstants.equals(
+        Constants.climbTarget, m_subsystem.getEncoder(), Constants.ClimbConstants.holdTolerance)) {
+      if (Constants.climbTarget > m_subsystem.getEncoder()) {
+        // extend
+        m_subsystem.runClimb(Constants.ClimbConstants.climbExtendSpeed);
+      } else if (Constants.climbTarget < m_subsystem.getEncoder()) {
+        // retract
+        m_subsystem.runClimb(Constants.ClimbConstants.climbRetractSpeed);
+      }
+    } else {
+      m_subsystem.stopMotor();
     }
   }
 

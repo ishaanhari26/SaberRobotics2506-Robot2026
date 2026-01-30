@@ -44,7 +44,8 @@ public final class Constants {
     public static final double climbRetractSpeed = -0.1; // temp value
 
     // AAAAAAAAAAAAAAAAAAa
-    public static final double targetChangeSpeed = 0.1;
+    public static final double targetChangeSpeed = 0.2;
+    public static final double holdTolerance = 0.1;
 
     // encoder
     public static final int encoderClicksToTop = 1; // temp value
