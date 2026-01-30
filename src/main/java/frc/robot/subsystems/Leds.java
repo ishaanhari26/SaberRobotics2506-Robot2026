@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Leds extends SubsystemBase {
@@ -25,7 +24,6 @@ public class Leds extends SubsystemBase {
     m_led.setData(m_buffer); // sets the led output dat
     m_led.start(); // start leds
     set(0, 0, 0); // starts LEDS as off
-    setDefaultCommand(new InstantCommand(()->{setPattern(LEDPattern.kOff);}));
   }
 
   public void set(int red, int green, int blue) {
@@ -72,12 +70,14 @@ public class Leds extends SubsystemBase {
   }
 
   public void evil() {
-    setPattern(LEDPattern.gradient(GradientType.kContinuous, Color.kWhite, Color.kBlack).breathe(Seconds.of(0.5)).scrollAtRelativeSpeed(Percent.per(Second).of(100)));
+    setPattern(
+        LEDPattern.gradient(GradientType.kContinuous, Color.kDarkViolet, Color.kGold)
+            .breathe(Seconds.of(0.5))
+            .scrollAtRelativeSpeed(Percent.per(Second).of(100)));
   }
 
-
   public void off() {
-    setPattern(LEDPattern.kOff);
+    set(0, 0, 0);
   }
 
   @Override

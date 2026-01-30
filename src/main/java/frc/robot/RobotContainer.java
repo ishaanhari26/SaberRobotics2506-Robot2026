@@ -11,8 +11,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Blue;
+import frc.robot.commands.Evil;
 import frc.robot.commands.FasterFlashingGreen;
+import frc.robot.commands.FasterFlashingHotPink;
 import frc.robot.commands.FlashingGreen;
+import frc.robot.commands.FlashingHotPink;
+import frc.robot.commands.FlashingYellow;
 import frc.robot.commands.Rainbow;
 import frc.robot.commands.Red;
 import frc.robot.subsystems.Leds;
@@ -48,10 +52,10 @@ public class RobotContainer {
     controller.y().whileTrue(new Blue(m_led));
     controller.b().whileTrue(new FlashingGreen(m_led));
     controller.a().whileTrue(new FasterFlashingGreen(m_led));
-    controller.x().whileTrue(new FasterFlashingGreen(m_led));
-    controller.leftStick().whileTrue(new FasterFlashingGreen(m_led));
-    controller.rightStick().whileTrue(new FasterFlashingGreen(m_led));
-    controller.leftTrigger().whileTrue(new FasterFlashingGreen(m_led));
+    controller.x().whileTrue(new FlashingHotPink(m_led));
+    controller.leftStick().whileTrue(new FasterFlashingHotPink(m_led));
+    controller.rightStick().whileTrue(new FlashingYellow(m_led));
+    controller.leftTrigger().whileTrue(new Evil(m_led));
   }
 
   /**
