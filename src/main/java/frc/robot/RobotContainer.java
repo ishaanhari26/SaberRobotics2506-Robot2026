@@ -11,15 +11,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Blue;
-import frc.robot.commands.Evil;
-import frc.robot.commands.FasterFlashingGreen;
-import frc.robot.commands.FasterFlashingHotPink;
+import frc.robot.commands.Breathing;
 import frc.robot.commands.FlashingGreen;
 import frc.robot.commands.FlashingHotPink;
-import frc.robot.commands.FlashingYellow;
 import frc.robot.commands.Rainbow;
 import frc.robot.commands.Red;
-import frc.robot.subsystems.Leds;
+import frc.robot.subsystems.LED;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -32,7 +29,7 @@ public class RobotContainer {
   //   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-  private final Leds m_led = new Leds();
+  private final LED m_led = new LED();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -51,11 +48,8 @@ public class RobotContainer {
     controller.rightBumper().whileTrue(new Rainbow(m_led));
     controller.y().whileTrue(new Blue(m_led));
     controller.b().whileTrue(new FlashingGreen(m_led));
-    controller.a().whileTrue(new FasterFlashingGreen(m_led));
     controller.x().whileTrue(new FlashingHotPink(m_led));
-    controller.leftStick().whileTrue(new FasterFlashingHotPink(m_led));
-    controller.rightStick().whileTrue(new FlashingYellow(m_led));
-    controller.leftTrigger().whileTrue(new Evil(m_led));
+    controller.leftTrigger().whileTrue(new Breathing(m_led));
   }
 
   /**

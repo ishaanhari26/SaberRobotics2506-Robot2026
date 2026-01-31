@@ -1,12 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Leds;
+import frc.robot.subsystems.LED;
 
-public class Evil extends Command {
-  Leds m_led;
+public class Breathing extends Command {
+  LED m_led;
 
-  public Evil(Leds m_led) {
+  public Breathing(LED m_led) {
     this.m_led = m_led;
     addRequirements(m_led);
   }
@@ -17,7 +17,7 @@ public class Evil extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_led.evil();
+    m_led.breathing();
   }
 
   // Called once the command ends or is interrupted.

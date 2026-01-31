@@ -1,12 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Leds;
+import frc.robot.subsystems.LED;
 
 public class Blue extends Command {
-  Leds m_led;
+  LED m_led;
 
-  public Blue(Leds m_led) {
+  public Blue(LED m_led) {
     this.m_led = m_led;
     addRequirements(m_led);
   }

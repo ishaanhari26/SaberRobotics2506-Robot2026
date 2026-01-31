@@ -1,12 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Leds;
+import frc.robot.subsystems.LED;
 
 public class FlashingGreen extends Command {
-  Leds m_led;
+  LED m_led;
 
-  public FlashingGreen(Leds m_led) {
+  public FlashingGreen(LED m_led) {
     this.m_led = m_led;
     addRequirements(m_led);
   }
@@ -17,7 +17,7 @@ public class FlashingGreen extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_led.flashingGreen();
+    m_led.blinkingGreen();
   }
 
   // Called once the command ends or is interrupted.

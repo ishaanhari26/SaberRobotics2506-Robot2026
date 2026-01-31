@@ -28,4 +28,27 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static final class LEDConstants {
+    public static final int port = 0;
+    public static final int length = 13;
+
+    public static final double blinkSpeed = 0.25;
+    public static final int percentFrequency = 100;
+
+    public static final int autoPeriodEnd = 30;
+    public static final int firstShiftEnd = 55;
+    public static final int secondShiftEnd = 80;
+    public static final int thirdShiftEnd = 105;
+    public static final int fourthShiftEnd = 130;
+    public static final int endPeriodEnd = 160;
+    public static final int warningTime = 5;
+
+    public static enum Mode {
+      SHOOT,
+      INTAKE,
+      CLIMB,
+      NONE
+    }
+  }
 }
