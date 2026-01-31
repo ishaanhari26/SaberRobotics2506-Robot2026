@@ -149,17 +149,45 @@ public class LED extends SubsystemBase {
 
   }
   /** <h2>LED Colors Meaning</h2>
-  * <h3>Active Shift:</h3>
-  * <ul>
-  * <li>Solid green when able to shoot</li>
-  * <li>blinking green in last five seconds of period</li>
-  * </ul>
-  * <h3>Inactive Shift:</h3>
-  * <ul>
-  * <li>Solid red</li>
-  * <li>blinking red in last five seconds of period</li>
-  * </ul>
-  * <h3>
+   * <h3>Autonomous:</h3>
+   * <ul>
+   * <li>distinct pattern for each auto (currently a single LED lit up at a corresponding index on the LED strip, red or blue according to alliance)</li>
+   * </ul>
+   * <h3>Active Shift:</h3>
+   * <ul>
+   * <li>Solid green when able to shoot</li>
+   * <li>blinking green in last five seconds of period</li>
+   * </ul>
+   * <h3>Inactive Shift:</h3>
+   * <ul>
+   * <li>Solid red</li>
+   * <li>blinking red in last five seconds of period</li>
+   * </ul>
+   * <h3>Endgame Period:</h3>
+   * <ul>
+   * <li>Solid Purple</li>
+   * <li>blinking purple in last five seconds of period</li>
+   * </ul>
+   * <h3>Shooting:</h3>
+   * <ul>
+   * <li>scrolling white LED</li>
+   * </ul>
+   * <h3>Intaking:</h3>
+   * <ul>
+   * <li>scrolling aquamarine LED</li>
+   * </ul>
+   * <h3>Climbing:</h3>
+   * <ul>
+   * <li>solid gold</li>
+   * </ul>
+   * <h3>E Stop:</h3>
+   * <ul>
+   * <li>rainbow</li>
+   * </ul>
+   * <h3>A Stop:</h3>
+   * <ul>
+   * <li>auto pattern but blinking</li>
+   * </ul>
   */
   @Override
   public void periodic() {
@@ -326,7 +354,7 @@ public class LED extends SubsystemBase {
         scrollAquamarine();
         break;
       case CLIMB :
-        blink();
+        gold();
         break;
       default:
         break;
