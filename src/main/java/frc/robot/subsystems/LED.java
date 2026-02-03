@@ -246,6 +246,7 @@ public class LED extends SubsystemBase {
      */
     matchTime = Timer.getMatchTime();
     state = getPeriod(matchTime, gameData, alliance);
+    SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:
         //Autonomous code
@@ -266,8 +267,10 @@ public class LED extends SubsystemBase {
 
     if(warn(matchTime)) {
       blink();
+      SmartDashboard.putBoolean("WarnTime:", true);
     }
 
+    SmartDashboard.putString("LEDMode:", LEDMode.name());
     switch (LEDMode) {
       case SHOOT:
         scrollWhite();
