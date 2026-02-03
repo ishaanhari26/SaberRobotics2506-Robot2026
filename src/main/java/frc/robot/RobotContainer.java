@@ -10,12 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.Blue;
-import frc.robot.commands.Breathing;
-import frc.robot.commands.FlashingGreen;
-import frc.robot.commands.FlashingHotPink;
-import frc.robot.commands.Rainbow;
-import frc.robot.commands.Red;
 import frc.robot.subsystems.LED;
 
 /**
@@ -44,12 +38,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    controller.leftBumper().whileTrue(new Red(m_led));
-    controller.rightBumper().whileTrue(new Rainbow(m_led));
-    controller.y().whileTrue(new Blue(m_led));
-    controller.b().whileTrue(new FlashingGreen(m_led));
-    controller.x().whileTrue(new FlashingHotPink(m_led));
-    controller.leftTrigger().whileTrue(new Breathing(m_led));
   }
 
   /**

@@ -36,19 +36,30 @@ public final class Constants {
     public static final double blinkSpeed = 0.25;
     public static final int percentFrequency = 100;
 
-    public static final int autoPeriodEnd = 30;
-    public static final int firstShiftEnd = 55;
-    public static final int secondShiftEnd = 80;
-    public static final int thirdShiftEnd = 105;
-    public static final int fourthShiftEnd = 130;
-    public static final int endPeriodEnd = 160;
+    public static final int transitionPeriodStart = 140;
+    public static final int firstShiftStart = 130;
+    public static final int secondShiftStart = 105;
+    public static final int thirdShiftStart = 80;
+    public static final int fourthShiftStart = 55;
+    public static final int endPeriodStart = 30;
     public static final int warningTime = 5;
 
     public static enum Mode {
       SHOOT,
       INTAKE,
       CLIMB,
+      ESTOP,
+      ASTOP,
       NONE
+    }
+
+    public static enum Period {
+      PREMATCH,
+      AUTO,
+      TRANSITION,
+      ACTIVE,
+      INACTIVE,
+      ENDGAME
     }
   }
 }

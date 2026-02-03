@@ -5,10 +5,11 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 
 import java.util.Map;
+import java.util.Set;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.AddressableLEDBufferView;
+// import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.LEDPattern;
@@ -26,14 +27,14 @@ public class LED extends SubsystemBase {
 
   // Create the buffer
   private final AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(LEDConstants.length);
-  private final AddressableLEDBufferView m_bufferP1 =
-      new AddressableLEDBufferView(m_buffer, 0, (int) (Math.floor(m_buffer.getLength() / 2) - 1));
-  private final AddressableLEDBufferView m_bufferP2 =
-      new AddressableLEDBufferView(
-          m_buffer, (int) (Math.floor(m_buffer.getLength() / 2)), m_buffer.getLength() - 1);
+  // private final AddressableLEDBufferView m_bufferP1 =
+  //     new AddressableLEDBufferView(m_buffer, 0, (int) (Math.floor(m_buffer.getLength() / 2) - 1));
+  // private final AddressableLEDBufferView m_bufferP2 =
+  //     new AddressableLEDBufferView(m_buffer, (int) (Math.floor(m_buffer.getLength() / 2)), m_buffer.getLength() - 1);
 
   private LEDPattern currentPattern;
   private Mode LEDMode;
+  private LEDConstants.Period state;
   private String gameData;
   private Alliance alliance;
   // Timer
@@ -148,6 +149,38 @@ public class LED extends SubsystemBase {
       }
 
   }
+
+  public LEDConstants.Period getPeriod(double matchTime, String gameData, Alliance alliance) {
+    boolean inactiveFirst = (gameData.charAt(0)==Alliance.Blue.name().charAt(0));
+    if(DriverStation.isAutonomous()){
+      return LEDConstants.Period.AUTO;
+    }
+    if(DriverStation.isTeleop()&&gameData.length()>0){
+      if(matchTime<=LEDConstants.transitionPeriodStart&&matchTime>LEDConstants.firstShiftStart)
+      {
+        return LEDConstants.Period.TRANSITION;
+      }
+      if((matchTime<=LEDConstants.firstShiftStart&&matchTime>LEDConstants.secondShiftStart)||(matchTime<=LEDConstants.thirdShiftStart&&matchTime>LEDConstants.firstShiftStart))
+      {
+        return (inactiveFirst)?LEDConstants.Period.INACTIVE:LEDConstants.Period.ACTIVE;
+      }
+      if((matchTime<=LEDConstants.secondShiftStart&&matchTime>LEDConstants.thirdShiftStart)||(matchTime<=LEDConstants.fourthShiftStart&&matchTime>LEDConstants.endPeriodStart))
+      {
+        return (inactiveFirst)?LEDConstants.Period.ACTIVE:LEDConstants.Period.INACTIVE;
+      }
+      if(matchTime<=LEDConstants.endPeriodStart&&matchTime>0)
+      {
+        return (inactiveFirst)?LEDConstants.Period.ACTIVE:LEDConstants.Period.ENDGAME;
+      }
+    }
+    return LEDConstants.Period.PREMATCH;
+  }
+
+  public boolean warn(double matchTime) {
+    Set<Integer> times = Set.of(LEDConstants.firstShiftStart, LEDConstants.secondShiftStart, LEDConstants.thirdShiftStart, LEDConstants.fourthShiftStart, LEDConstants.endPeriodStart, 0);
+    return (times.stream().anyMatch(num -> ((matchTime-num)<=LEDConstants.warningTime&&(matchTime-num)>0)));
+  }
+
   /** <h2>LED Colors Meaning</h2>
    * <h3>Autonomous:</h3>
    * <ul>
@@ -199,162 +232,57 @@ public class LED extends SubsystemBase {
     } else if (!DriverStation.isEnabled()) {
       idles();
     }
-
+    /**
+     * Match Times In Seconds:
+     * Auto: 20 - 00
+     * 
+     * Teleop: 
+     * - Transition Shift: 140 - 130
+     * - Shift 1: 130 - 105
+     * - Shift 2: 105 - 80
+     * - Shift 3: 80 - 55
+     * - Shift 4: 55 - 30
+     * - End Game: 30 - 00
+     */
     matchTime = Timer.getMatchTime();
-    if (DriverStation.isTeleop() && gameData.length()>0 && matchTime>LEDConstants.autoPeriodEnd)
-    {
-      if(matchTime<=LEDConstants.fourthShiftEnd)
-      {
-        switch (gameData.charAt(0))
-        {
-          case 'B' :
-            if((matchTime>LEDConstants.firstShiftEnd&&matchTime<=LEDConstants.secondShiftEnd)||(matchTime>LEDConstants.thirdShiftEnd&&matchTime<=LEDConstants.fourthShiftEnd))
-            {
-              //Shifts 2 and 4
-              if(alliance==DriverStation.Alliance.Blue)
-              {
-                //Active
-                if((LEDConstants.secondShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.secondShiftEnd-matchTime>=0)||(LEDConstants.fourthShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.fourthShiftEnd-matchTime>=0))
-                {
-                  blinkingGreen();
-                } else
-                {
-                  green();
-                }
-              } else 
-              {
-                //Inactive
-                if((LEDConstants.secondShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.secondShiftEnd-matchTime>=0)||(LEDConstants.fourthShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.fourthShiftEnd-matchTime>=0))
-                {
-                  blinkingRed();
-                } else
-                {
-                  red();
-                }
-              }
-            } else 
-            {
-              //Shifts 1 and 3
-              if(alliance==DriverStation.Alliance.Blue)
-              {
-                //Inactive
-                if((LEDConstants.firstShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.firstShiftEnd-matchTime>=0)||(LEDConstants.thirdShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.thirdShiftEnd-matchTime>=0))
-                {
-                  blinkingRed();
-                } else
-                {
-                  red();
-                }
-              } else 
-              {
-                //Active
-                if((LEDConstants.firstShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.firstShiftEnd-matchTime>=0)||(LEDConstants.thirdShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.thirdShiftEnd-matchTime>=0))
-                {
-                  blinkingGreen();
-                } else
-                {
-                  green();
-                }
-              }
-            }
-            break;
-          case 'R' :
-            if((matchTime>LEDConstants.firstShiftEnd&&matchTime<=LEDConstants.secondShiftEnd)||(matchTime>LEDConstants.thirdShiftEnd&&matchTime<=LEDConstants.fourthShiftEnd))
-            {
-              //Shifts 2 and 4
-              if(alliance==DriverStation.Alliance.Blue)
-              {
-                //Inactive
-                if((LEDConstants.secondShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.secondShiftEnd-matchTime>=0)||(LEDConstants.fourthShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.fourthShiftEnd-matchTime>=0))
-                {
-                  blinkingRed();
-                } else
-                {
-                  red();
-                }
-              } else 
-              {
-                //Active
-                if((LEDConstants.secondShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.secondShiftEnd-matchTime>=0)||(LEDConstants.fourthShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.fourthShiftEnd-matchTime>=0))
-                {
-                  blinkingGreen();
-                } else
-                {
-                  green();
-                }
-              }
-            } else 
-            {
-              //Shifts 1 and 3
-              if(alliance==DriverStation.Alliance.Blue)
-              {
-                //Active
-                if((LEDConstants.firstShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.firstShiftEnd-matchTime>=0)||(LEDConstants.thirdShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.thirdShiftEnd-matchTime>=0))
-                {
-                  blinkingGreen();
-                } else
-                {
-                  green();
-                }
-              } else 
-              {
-                //Inactive
-                if((LEDConstants.firstShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.firstShiftEnd-matchTime>=0)||(LEDConstants.thirdShiftEnd-matchTime<LEDConstants.warningTime&&LEDConstants.thirdShiftEnd-matchTime>=0))
-                {
-                  blinkingRed();
-                } else
-                {
-                  red();
-                }
-              }
-            }
-            break;
-          default :
-            //This is corrupt data
-            SmartDashboard.putString("DriverStation Game Data", "Error, DriverStation data is not giving a proper value.");
-            break;
-        }
-      } else
-      {
-        if(matchTime<=LEDConstants.endPeriodEnd)
-        {
-          //End Game code
-          if(LEDConstants.endPeriodEnd-matchTime<LEDConstants.warningTime&&LEDConstants.endPeriodEnd-matchTime>=0)
-          {
-            blinkingPurple();
-          } else
-          {
-            purple();
-          }
-        } else
-        {
-          //Post Match code
-        }
-      }
-    } else if(DriverStation.isAutonomous())
-    {
-      //Autonomous code
-    } else
-    {
-      //Transition code
-      if(LEDConstants.autoPeriodEnd-matchTime<LEDConstants.warningTime&&LEDConstants.autoPeriodEnd-matchTime>=0)
-      {
-        blinkingGreen();
-      } else
-      {
+    state = getPeriod(matchTime, gameData, alliance);
+    switch (state) {
+      case AUTO:
+        //Autonomous code
+        break;
+      case TRANSITION:
+      case ACTIVE:
         green();
-      }
+        break;
+      case INACTIVE:
+        red();
+        break;
+      case ENDGAME:
+        purple();
+        break;
+      default:
+        break;
+    }
+
+    if(warn(matchTime)) {
+      blink();
     }
 
     switch (LEDMode) {
-      case SHOOT :
+      case SHOOT:
         scrollWhite();
         break;
-      case INTAKE :
+      case INTAKE:
         scrollAquamarine();
         break;
-      case CLIMB :
+      case CLIMB:
         gold();
+        break;
+      case ESTOP:
+        rainbow();
+        break;
+      case ASTOP:
+        blink();
         break;
       default:
         break;
