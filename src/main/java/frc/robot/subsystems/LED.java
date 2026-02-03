@@ -88,26 +88,6 @@ public class LED extends SubsystemBase {
     setPattern(LEDPattern.solid(Color.kGold));
   }
 
-  public void blinkingRed() {
-    setPattern(LEDPattern.solid(Color.kRed).blink(Seconds.of(LEDConstants.blinkSpeed)));
-  }
-
-  public void blinkingBlue() {
-    setPattern(LEDPattern.solid(Color.kBlue).blink(Seconds.of(LEDConstants.blinkSpeed)));
-  }
-
-  public void blinkingGreen() {
-    setPattern(LEDPattern.solid(Color.kGreen).blink(Seconds.of(LEDConstants.blinkSpeed)));
-  }
-
-  public void blinkingHotPink() {
-    setPattern(LEDPattern.solid(Color.kHotPink).blink(Seconds.of(LEDConstants.blinkSpeed)));
-  }
-
-  public void blinkingPurple() {
-    setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(LEDConstants.blinkSpeed)));
-  }
-
   public void rainbow() {
     setPattern(LEDPattern.rainbow(255, 255).scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency)));
   }
