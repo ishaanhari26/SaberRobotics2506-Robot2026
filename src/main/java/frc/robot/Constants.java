@@ -49,7 +49,7 @@ public final class Constants {
 
     // encoder
     public static final double encoderClicksToTop = 2.4; // temp value
-    public static final double initialRetractValue = 3.0;
+    public static final double initialRetractValue = -10.0;
 
     // Wanted this to know how many rotations are needed if we get it from the motor
     // e.g. if we need 20 clicks when ratio is 36:1, we need 720 clicks if the ratio is 1:1

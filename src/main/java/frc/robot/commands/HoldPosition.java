@@ -49,6 +49,9 @@ public class HoldPosition extends Command {
     }
     if (m_subsystem.getClimbState().name() == "RETRACTED") {
       m_subsystem.resetEncoder();
+      if(Constants.climbTarget==Constants.ClimbConstants.initialRetractValue){
+        Constants.climbTarget = 0; 
+      }
     }
     // TODO: make sure this works
     // if (Constants.ClimbConstants.equals(
