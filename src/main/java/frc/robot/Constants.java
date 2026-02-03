@@ -40,15 +40,16 @@ public final class Constants {
     public static final int climbLimitSwitchID = 0; // temp value
 
     // motor speeds
-    public static final double climbExtendSpeed = 0.1; // temp value
-    public static final double climbRetractSpeed = -0.1; // temp value
+    public static final double climbExtendSpeed = 0.2; // temp value
+    public static final double climbRetractSpeed = -0.2; // temp value
 
     // AAAAAAAAAAAAAAAAAAa
     public static final double targetChangeSpeed = 0.2;
-    public static final double holdTolerance = 0.1;
+    public static final double holdTolerance = 0.05;
 
     // encoder
-    public static final int encoderClicksToTop = 1; // temp value
+    public static final double encoderClicksToTop = 2.4; // temp value
+    public static final double initialRetractValue = 3.0;
 
     // Wanted this to know how many rotations are needed if we get it from the motor
     // e.g. if we need 20 clicks when ratio is 36:1, we need 720 clicks if the ratio is 1:1

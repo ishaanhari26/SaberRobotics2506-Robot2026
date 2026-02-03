@@ -33,7 +33,11 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public double getEncoder() {
-    return encoder.getPosition().getValueAsDouble();
+    return -encoder.getPosition().getValueAsDouble();
+  }
+
+  public void setEncoder(double pos) {
+    encoder.setPosition(pos);
   }
 
   public void runClimb(double speed) {
@@ -58,6 +62,12 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public ClimbState getClimbState() {
     if (Constants.ClimbConstants.equals(
+        climbMotor.get(), Constants.ClimbConstants.climbRetractSpeed, 0.05)) {
+      currentState = ClimbState.RETRACTING;
+    } else if (Constants.ClimbConstants.equals(
+        climbMotor.get(), Constants.ClimbConstants.climbExtendSpeed, 0.05)) {
+      currentState = ClimbState.EXTENDING;
+    } else if (Constants.ClimbConstants.equals(
         getEncoder(), Constants.ClimbConstants.encoderClicksToTop, 0.1)) {
       currentState = ClimbState.EXTENDED;
     } else if (getLimitSwitch()) {
@@ -65,12 +75,6 @@ public class ClimbSubsystem extends SubsystemBase {
     } else if (Constants.ClimbConstants.equals(
         Constants.climbTarget, getEncoder(), Constants.ClimbConstants.holdTolerance)) {
       currentState = ClimbState.ATSETPOINT;
-    } else if (Constants.ClimbConstants.equals(
-        climbMotor.get(), Constants.ClimbConstants.climbRetractSpeed, 0.05)) {
-      currentState = ClimbState.RETRACTING;
-    } else if (Constants.ClimbConstants.equals(
-        climbMotor.get(), Constants.ClimbConstants.climbExtendSpeed, 0.05)) {
-      currentState = ClimbState.EXTENDING;
     } else {
       currentState = ClimbState.WhatHaveYouDone;
     }

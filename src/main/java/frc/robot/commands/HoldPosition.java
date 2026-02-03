@@ -28,7 +28,9 @@ public class HoldPosition extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_subsystem.setEncoder(Constants.ClimbConstants.initialRetractValue);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -49,12 +51,17 @@ public class HoldPosition extends Command {
       m_subsystem.resetEncoder();
     }
     // TODO: make sure this works
-    if (Constants.ClimbConstants.equals(
-            m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance)
-        && !m_subsystem.getLimitSwitch()) {
-      m_subsystem.runClimb(Constants.ClimbConstants.climbRetractSpeed);
-    }
-    SmartDashboard.putNumber("This", m_subsystem.getEncoder());
+    // if (Constants.ClimbConstants.equals(
+    //         m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance)
+    //     && !m_subsystem.getLimitSwitch()
+    //     && m_subsystem.getClimbState() != ClimbState.EXTENDING) {
+    //   m_subsystem.runClimb(Constants.ClimbConstants.climbRetractSpeed);
+    //   Constants.climbTarget = -3; // TODO: CONSTANTS
+    // }
+    SmartDashboard.putBoolean(
+        "This",
+        Constants.ClimbConstants.equals(
+            m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance));
     SmartDashboard.putBoolean("And That", !m_subsystem.getLimitSwitch());
   }
 

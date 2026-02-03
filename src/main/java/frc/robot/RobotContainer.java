@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Extend;
 import frc.robot.commands.HoldPosition;
+import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.drive.Drive;
@@ -177,8 +179,8 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem));
-    // controller.rightTrigger().whileTrue(new Extend(m_climbSubsystem));
-    controller.leftTrigger().whileTrue(new HoldPosition(m_climbSubsystem));
+    controller.rightBumper().whileTrue(new Extend(m_climbSubsystem));
+    controller.leftBumper().whileTrue(new Retract(m_climbSubsystem));
     controller
         .rightTrigger()
         .whileTrue(
