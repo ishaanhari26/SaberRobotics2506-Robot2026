@@ -60,7 +60,7 @@ public class ClimbSubsystem extends SubsystemBase {
     if (Constants.ClimbConstants.equals(
         getEncoder(), Constants.ClimbConstants.encoderClicksToTop, 0.1)) {
       currentState = ClimbState.EXTENDED;
-    } else if (limitSwitch.get()) {
+    } else if (getLimitSwitch()) {
       currentState = ClimbState.RETRACTED;
     } else if (Constants.ClimbConstants.equals(
         Constants.climbTarget, getEncoder(), Constants.ClimbConstants.holdTolerance)) {

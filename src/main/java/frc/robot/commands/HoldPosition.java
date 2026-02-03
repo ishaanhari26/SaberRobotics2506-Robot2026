@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 // import frc.robot.Constants.*;
@@ -48,11 +49,13 @@ public class HoldPosition extends Command {
       m_subsystem.resetEncoder();
     }
     // TODO: make sure this works
-    // if (Constants.ClimbConstants.equals(
-    //         m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance)
-    //     && !m_subsystem.getLimitSwitch()) {
-    //   m_subsystem.runClimb(Constants.ClimbConstants.climbRetractSpeed);
-    // }
+    if (Constants.ClimbConstants.equals(
+            m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance)
+        && !m_subsystem.getLimitSwitch()) {
+      m_subsystem.runClimb(Constants.ClimbConstants.climbRetractSpeed);
+    }
+    SmartDashboard.putNumber("This", m_subsystem.getEncoder());
+    SmartDashboard.putBoolean("And That", !m_subsystem.getLimitSwitch());
   }
 
   // Called once the command ends or is interrupted.

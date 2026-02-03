@@ -37,7 +37,7 @@ public final class Constants {
     // component ids
     public static final int climbMotorID = 31; // it's actually 31
     public static final int climbEncoderID = 32; // right for now
-    public static final int climbLimitSwitchID = 2; // temp value
+    public static final int climbLimitSwitchID = 0; // temp value
 
     // motor speeds
     public static final double climbExtendSpeed = 0.1; // temp value
