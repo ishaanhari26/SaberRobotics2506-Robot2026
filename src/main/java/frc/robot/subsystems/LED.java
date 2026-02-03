@@ -131,7 +131,6 @@ public class LED extends SubsystemBase {
   }
 
   public LEDConstants.Period getPeriod(double matchTime, String gameData, Alliance alliance) {
-    boolean inactiveFirst = (gameData.charAt(0)==Alliance.Blue.name().charAt(0));
     if(DriverStation.isAutonomous()){
       return LEDConstants.Period.AUTO;
     }
@@ -142,23 +141,22 @@ public class LED extends SubsystemBase {
       }
       if((matchTime<=LEDConstants.firstShiftStart&&matchTime>LEDConstants.secondShiftStart)||(matchTime<=LEDConstants.thirdShiftStart&&matchTime>LEDConstants.firstShiftStart))
       {
-        return (inactiveFirst)?LEDConstants.Period.INACTIVE:LEDConstants.Period.ACTIVE;
+        return ((gameData.charAt(0)==Alliance.Blue.name().charAt(0)))?LEDConstants.Period.INACTIVE:LEDConstants.Period.ACTIVE;
       }
       if((matchTime<=LEDConstants.secondShiftStart&&matchTime>LEDConstants.thirdShiftStart)||(matchTime<=LEDConstants.fourthShiftStart&&matchTime>LEDConstants.endPeriodStart))
       {
-        return (inactiveFirst)?LEDConstants.Period.ACTIVE:LEDConstants.Period.INACTIVE;
+        return ((gameData.charAt(0)==Alliance.Blue.name().charAt(0)))?LEDConstants.Period.ACTIVE:LEDConstants.Period.INACTIVE;
       }
       if(matchTime<=LEDConstants.endPeriodStart&&matchTime>0)
       {
-        return (inactiveFirst)?LEDConstants.Period.ACTIVE:LEDConstants.Period.ENDGAME;
+        return LEDConstants.Period.ENDGAME;
       }
     }
     return LEDConstants.Period.PREMATCH;
   }
 
   public boolean warn(double matchTime) {
-    Set<Integer> times = Set.of(LEDConstants.firstShiftStart, LEDConstants.secondShiftStart, LEDConstants.thirdShiftStart, LEDConstants.fourthShiftStart, LEDConstants.endPeriodStart, 0);
-    return (times.stream().anyMatch(num -> ((matchTime-num)<=LEDConstants.warningTime&&(matchTime-num)>0)));
+    return (Set.of(LEDConstants.firstShiftStart, LEDConstants.secondShiftStart, LEDConstants.thirdShiftStart, LEDConstants.fourthShiftStart, LEDConstants.endPeriodStart, 0).stream().anyMatch(num -> ((matchTime-num)<=LEDConstants.warningTime&&(matchTime-num)>0)));
   }
 
   /** <h2>LED Colors Meaning</h2>
