@@ -47,7 +47,7 @@ public final class Constants {
     public static final double IntakeLaunchSpeed = -0.88;
     public static final double IntakeLaunchSpeedRPM = -4000;
     // public static final double IntakeLaunchSpeed = -0.6;
-    public static final double FeederLaunchSpeed = -1;
+    public static final double FeederLaunchSpeed = 1;
     // public static final double FeederLaunchSpeed = -0.75;
 
     public static final double LaunchkS = 0.64;
