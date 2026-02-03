@@ -18,17 +18,22 @@ public class FuelSubsystem extends SubsystemBase {
   private double currentSpeed;
   private double errorPlusMotor;
   private double calShooter;
+  private double feedForwardCalc;
+  private double feedForwardset;
   private final TalonFX feederMotor;
-  private final PIDController ShooterPid = new PIDController(FuelConstants.LaunchkP, FuelConstants.LaunchkI, FuelConstants.LaunchkD);
+  private final PIDController ShooterPid =
+      new PIDController(FuelConstants.LaunchkP, FuelConstants.LaunchkI, FuelConstants.LaunchkD);
   // Creates a PIDController with gains kP, kI, and kD
-  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(FuelConstants.LaunchkS, FuelConstants.LaunchkV, FuelConstants.LaunchkA);
-   // Create a new SimpleMotorFeedforward with gains kS, kV, and kA
+  private final SimpleMotorFeedforward feedforward =
+      new SimpleMotorFeedforward(
+          FuelConstants.LaunchkS, FuelConstants.LaunchkV, FuelConstants.LaunchkA);
+  // Create a new SimpleMotorFeedforward with gains kS, kV, and kA
 
   public FuelSubsystem(TalonFX intakeMotor, TalonFX feederMotor) {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
-    // ShooterPid.setTolerance(100, 5);
+    ShooterPid.setTolerance(50, 5);
   }
 
   public void runIntake(double speed) {
@@ -40,9 +45,10 @@ public class FuelSubsystem extends SubsystemBase {
     // and sends it to a motor
     calShooter = ShooterPid.calculate(intakeMotor.getVelocity().getValueAsDouble() * 60, speed);
     currentSpeed = intakeMotor.getVelocity().getValueAsDouble() * 60;
-    errorPlusMotor = (calShooter + currentSpeed) / 6380;
-    feedforward.calculate(speed); // still edit this!!! NOT DONE!!!
-    intakeMotor.set(errorPlusMotor);
+    errorPlusMotor = (calShooter + currentSpeed);
+    feedForwardCalc = feedforward.calculate(speed) + calShooter; // still edit this!!! NOT DONE!!!
+    feedForwardset = feedForwardCalc + currentSpeed;
+    intakeMotor.set(feedForwardset / 6380);
   }
 
   public boolean getAtSetpoint() {
@@ -70,6 +76,7 @@ public class FuelSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
     SmartDashboard.putNumber("Calc shooter", calShooter);
     SmartDashboard.putNumber("error + motor", errorPlusMotor);
+    SmartDashboard.putNumber("FeedForward calc", feedForwardCalc);
     // SmartDashboard.putNumber("initial speed", initialSpeed);
   }
 
