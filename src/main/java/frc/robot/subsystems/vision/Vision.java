@@ -19,6 +19,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.LimelightHelpers;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
@@ -171,6 +172,9 @@ public class Vision extends SubsystemBase {
 
     tx = getTargetX(0).getRadians();
     ty = getTargetY(0).getRadians();
+
+    SmartDashboard.putNumber("limelightPoseX", LimelightHelpers.getBotPose2d(camera1Name).getX());
+    SmartDashboard.putNumber("limelightPoseY", LimelightHelpers.getBotPose2d(camera1Name).getY());
 
     // Log summary data
     Logger.recordOutput("Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[0]));
