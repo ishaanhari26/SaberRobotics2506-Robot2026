@@ -45,6 +45,7 @@ public class LED extends SubsystemBase {
     m_led.setData(m_buffer); // sets the led output dat
     m_led.start(); // start leds
     off(); // starts LEDS as off
+    LEDMode = Mode.NONE;
   }
 
   public void set(int red, int green, int blue) {
@@ -141,11 +142,11 @@ public class LED extends SubsystemBase {
       }
       if((matchTime<=LEDConstants.firstShiftStart&&matchTime>LEDConstants.secondShiftStart)||(matchTime<=LEDConstants.thirdShiftStart&&matchTime>LEDConstants.firstShiftStart))
       {
-        return ((gameData.charAt(0)==Alliance.Blue.name().charAt(0)))?LEDConstants.Period.INACTIVE:LEDConstants.Period.ACTIVE;
+        return ((gameData.charAt(0)==alliance.name().charAt(0)))?LEDConstants.Period.INACTIVE:LEDConstants.Period.ACTIVE;
       }
       if((matchTime<=LEDConstants.secondShiftStart&&matchTime>LEDConstants.thirdShiftStart)||(matchTime<=LEDConstants.fourthShiftStart&&matchTime>LEDConstants.endPeriodStart))
       {
-        return ((gameData.charAt(0)==Alliance.Blue.name().charAt(0)))?LEDConstants.Period.ACTIVE:LEDConstants.Period.INACTIVE;
+        return ((gameData.charAt(0)==alliance.name().charAt(0)))?LEDConstants.Period.ACTIVE:LEDConstants.Period.INACTIVE;
       }
       if(matchTime<=LEDConstants.endPeriodStart&&matchTime>0)
       {
