@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -42,7 +43,12 @@ public final class Constants {
     public static final int thirdShiftStart = 80;
     public static final int fourthShiftStart = 55;
     public static final int endPeriodStart = 30;
-    public static final int warningTime = 5;
+    public static final int warningTime = 3;
+    public static final int endWarningTime = 10;
+    public static final Color activeColor = Color.kGreen;
+    public static final Color activeWarningColor = Color.kGreen;
+    public static final Color inactiveColor = Color.kOrange;
+    public static final Color inactiveWarningColor = Color.kOrange;
 
     public static enum Mode {
       SHOOT,
