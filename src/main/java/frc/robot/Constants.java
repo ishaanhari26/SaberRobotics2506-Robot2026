@@ -37,7 +37,7 @@ public final class Constants {
     // speeds for intake and feeder motors when intaking
     public static final double IntakeIntakeSpeed = -0.84;
     // public static final double IntakeIntakeSpeed = -0.6;
-    public static final double FeederIntakeSpeed = 1;
+    public static final double FeederIntakeSpeed = -1;
 
     // speeds for intake and feeder motors when ejecting
     public static final double IntakeEjectSpeed = 0.84;
@@ -51,11 +51,11 @@ public final class Constants {
     // public static final double FeederLaunchSpeed = -0.75;
 
     public static final double LaunchkS = 0.64;
-    public static final double LaunchkV = 0.1199;
+    public static final double LaunchkV = 0.19; // 0.1199 , 0.2, 0.1500
     public static final double LaunchkA = 0;
 
-    public static final double LaunchkP = 8; // .1, .6, 1.0, 1.4,5 , 4, 3,2
+    public static final double LaunchkP = 0; // .1, .6, 1.0, 1.4,5 , 4, 3,2 (8)
     public static final double LaunchkI = 0;
-    public static final double LaunchkD = 0.01;
+    public static final double LaunchkD = 0; // 0.01
   }
 }
