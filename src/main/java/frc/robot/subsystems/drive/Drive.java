@@ -27,7 +27,6 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -51,6 +50,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.lib.LimelightHelpers;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.CommandFactory;
@@ -194,6 +194,8 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
     }
 
+    LimelightHelpers.SetRobotOrientation(VisionConstants.camera0Name, getYaw(), 0, 0, 0, 0, 0);
+
     // Update odometry
     double[] sampleTimestamps =
         modules[0].getOdometryTimestamps(); // All signals are sampled together
@@ -231,6 +233,9 @@ public class Drive extends SubsystemBase {
     }
 
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+
+    SmartDashboard.putNumber(
+        "tagcount", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight").tagCount);
 
     field.setRobotPose(getPose());
     SmartDashboard.putData("Field", field);

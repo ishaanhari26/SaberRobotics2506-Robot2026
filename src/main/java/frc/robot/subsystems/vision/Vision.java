@@ -11,7 +11,6 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,6 +18,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.LimelightHelpers;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
@@ -34,7 +34,6 @@ public class Vision extends SubsystemBase {
 
   public static double tx;
   public static double ty;
-
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
     this.consumer = consumer;
@@ -70,6 +69,9 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("tv", LimelightHelpers.getTV(camera0Name));
+    SmartDashboard.putNumber("pipeline", LimelightHelpers.getCurrentPipelineIndex(camera0Name));
+
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
@@ -93,7 +95,12 @@ public class Vision extends SubsystemBase {
       List<Pose3d> robotPosesRejected = new LinkedList<>();
 
       // Add tag poses
+      // SmartDashboard.putNumber("cameraIndex", cameraIndex);
+
+      SmartDashboard.putNumber("tagidlength", inputs[cameraIndex].tagIds.length);
+
       for (int tagId : inputs[cameraIndex].tagIds) {
+        SmartDashboard.putString("tagidtest", "works");
         var tagPose = aprilTagLayout.getTagPose(tagId);
         if (tagPose.isPresent()) {
           tagPoses.add(tagPose.get());
@@ -102,6 +109,7 @@ public class Vision extends SubsystemBase {
 
       // Loop over pose observations
       for (var observation : inputs[cameraIndex].poseObservations) {
+        SmartDashboard.putString("observationtest", "works");
         // Check whether to reject pose
         boolean rejectPose =
             observation.tagCount() == 0 // Must have at least one tag
@@ -128,6 +136,8 @@ public class Vision extends SubsystemBase {
         if (rejectPose) {
           continue;
         }
+
+        SmartDashboard.putBoolean("rejectpose", rejectPose);
 
         // Calculate standard deviations
         double stdDevFactor =
@@ -171,6 +181,9 @@ public class Vision extends SubsystemBase {
 
     tx = getTargetX(0).getRadians();
     ty = getTargetY(0).getRadians();
+
+    SmartDashboard.putNumber("limelightPoseX", LimelightHelpers.getBotPose2d(camera1Name).getX());
+    SmartDashboard.putNumber("limelightPoseY", LimelightHelpers.getBotPose2d(camera1Name).getY());
 
     // Log summary data
     Logger.recordOutput("Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[0]));
