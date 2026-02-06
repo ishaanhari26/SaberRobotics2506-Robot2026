@@ -135,6 +135,7 @@ public class LED extends SubsystemBase {
     if(DriverStation.isAutonomous()){
       return LEDConstants.Period.AUTO;
     }
+    SmartDashboard.putString("Alliance Color", Character.toString(alliance.name().charAt(0)));
     if(DriverStation.isTeleop()&&gameData.length()>0){
       if(matchTime<=LEDConstants.transitionPeriodStart&&matchTime>LEDConstants.firstShiftStart)
       {
