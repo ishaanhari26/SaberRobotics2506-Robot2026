@@ -35,9 +35,10 @@ public final class Constants {
   // climb constants
   public static class ClimbConstants {
     // component ids
-    public static final int climbMotorID = 31; // it's actually 31
-    public static final int climbEncoderID = 32; // right for now
-    public static final int climbLimitSwitchID = 0; // temp value
+    public static final int climbMotorID = 31;
+    public static final int climbEncoderID = 32;
+    public static final int climbLimitSwitchID = 0;
+    public static final int climbMetalDetectorID = 2;
 
     // motor speeds
     public static final double climbExtendSpeed = 0.2; // temp value
@@ -56,13 +57,21 @@ public final class Constants {
     public static final int gearRatio = 36; // real
 
     public static enum ClimbState {
-      // probably what we start at
-      RETRACTED,
+      RETRACTED, // probably what we start at
       EXTENDED,
       RETRACTING,
       EXTENDING,
       ATSETPOINT,
       WhatHaveYouDone // in case something's wrong, probably removed for actual
+    }
+
+    public static enum AutoClimbState {
+      IDLE,
+      POSITIONING,
+      FORWARD,
+      RIGHT,
+      RETRACTING,
+      RETRACTED
     }
 
     // function because I need it

@@ -7,7 +7,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-// import frc.robot.Constants.*;
 import frc.robot.subsystems.ClimbSubsystem;
 
 /** An example command that uses an example subsystem. */
@@ -29,7 +28,7 @@ public class HoldPosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.setEncoder(Constants.ClimbConstants.initialRetractValue);
+    m_subsystem.setEncoder(Constants.ClimbConstants.initialRetractValue); //TODO: move to a separate button for A. safety and B. it janks up when the command is called again
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,23 +48,15 @@ public class HoldPosition extends Command {
     }
     if (m_subsystem.getLimitSwitch()) {
       m_subsystem.resetEncoder();
-      if(m_subsystem.getClimbState()==Constants.ClimbConstants.ClimbState.EXTENDING){
-        Constants.climbTarget = 0; 
+      if (m_subsystem.getClimbState() == Constants.ClimbConstants.ClimbState.EXTENDING) {
+        Constants.climbTarget = 0;
       }
     }
-    // TODO: make sure this works
-    // if (Constants.ClimbConstants.equals(
-    //         m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance)
-    //     && !m_subsystem.getLimitSwitch()
-    //     && m_subsystem.getClimbState() != ClimbState.EXTENDING) {
-    //   m_subsystem.runClimb(Constants.ClimbConstants.climbRetractSpeed);
-    //   Constants.climbTarget = -3; // TODO: CONSTANTS
-    // }
     SmartDashboard.putBoolean(
-        "This",
+        "Enc = 0",
         Constants.ClimbConstants.equals(
             m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance));
-    SmartDashboard.putBoolean("And That", !m_subsystem.getLimitSwitch());
+    SmartDashboard.putBoolean("Not Limit Switch", !m_subsystem.getLimitSwitch());
   }
 
   // Called once the command ends or is interrupted.

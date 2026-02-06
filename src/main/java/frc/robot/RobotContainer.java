@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutomaticClimb;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Extend;
 import frc.robot.commands.HoldPosition;
@@ -52,9 +53,11 @@ public class RobotContainer {
   public final DigitalInput climbLimitSwitch =
       new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
   public final CANcoder climbEncoder = new CANcoder(Constants.ClimbConstants.climbEncoderID);
+  public final DigitalInput climbMetalDetector =
+      new DigitalInput(Constants.ClimbConstants.climbMetalDetectorID);
 
   private final ClimbSubsystem m_climbSubsystem =
-      new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder);
+      new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder, climbMetalDetector);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -201,6 +204,7 @@ public class RobotContainer {
                     Constants.climbTarget = 0;
                   }
                 }));
+    controller.povUp().onChange(new AutomaticClimb(m_climbSubsystem));
   }
 
   /**
