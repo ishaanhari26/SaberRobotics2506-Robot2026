@@ -33,6 +33,8 @@ public class VisionConstants {
   public static double maxAmbiguity = 0.1;
   public static double maxZError = 0.75;
 
+  public static double limelightTolerance = 0.1;
+
   // Standard deviation baselines, for 1 meter distance and 1 tag
   // (Adjusted automatically based on distance and # of tags)
   public static double linearStdDevBaseline = 0.02; // Meters

@@ -21,6 +21,7 @@ import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AprilTagEstimator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -39,7 +40,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  public final Vision aprilTagEstimator;
+  public final AprilTagEstimator aprilTagEstimator;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -67,10 +68,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
         aprilTagEstimator =
-            new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOLimelight(camera0Name, drive::getRotation),
-                new VisionIOLimelight(camera1Name, drive::getRotation));
+            // new Vision(
+            //     drive::addVisionMeasurement,
+            //     new VisionIOLimelight(camera0Name, drive::getRotation),
+            //     new VisionIOLimelight(camera1Name, drive::getRotation));
+            new AprilTagEstimator(drive);
 
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
@@ -102,7 +104,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackRight));
 
         aprilTagEstimator =
-            new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+            new AprilTagEstimator(drive);
 
         break;
 
@@ -117,7 +119,7 @@ public class RobotContainer {
                 new ModuleIO() {});
 
         aprilTagEstimator =
-            new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+            new AprilTagEstimator(drive);
 
         break;
     }
