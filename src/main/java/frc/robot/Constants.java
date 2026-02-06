@@ -46,9 +46,9 @@ public final class Constants {
     public static final int warningTime = 3;
     public static final int endWarningTime = 10;
     public static final Color activeColor = Color.kGreen;
-    public static final Color activeWarningColor = Color.kGreen;
-    public static final Color inactiveColor = Color.kOrange;
-    public static final Color inactiveWarningColor = Color.kOrange;
+    public static final Color activeWarningColor = Color.kDarkOrange;
+    public static final Color inactiveColor = Color.kDarkOrange;
+    public static final Color inactiveWarningColor = Color.kGreen;
 
     public static enum Mode {
       SHOOT,

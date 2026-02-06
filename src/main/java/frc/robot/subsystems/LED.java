@@ -79,7 +79,9 @@ public class LED extends SubsystemBase {
   }
 
   public void warnActive() {
-    setPattern(LEDPattern.solid(LEDConstants.inactiveWarningColor).blink(Seconds.of(LEDConstants.blinkSpeed)));
+    setPattern(
+        LEDPattern.solid(LEDConstants.activeWarningColor)
+            .blink(Seconds.of(LEDConstants.blinkSpeed)));
   }
 
   public void hotPink() {
@@ -91,7 +93,8 @@ public class LED extends SubsystemBase {
   }
 
   public void warnInactive() {
-    setPattern(LEDPattern.solid(LEDConstants.inactiveColor).blink(Seconds.of(LEDConstants.blinkSpeed)));
+    setPattern(
+        LEDPattern.solid(LEDConstants.inactiveWarningColor).blink(Seconds.of(LEDConstants.blinkSpeed)));
   }
 
   public void purple() {
@@ -282,7 +285,7 @@ public class LED extends SubsystemBase {
         break;
       case TRANSITION:
       case ACTIVE:
-        if(warn(matchTime, LEDConstants.warningTime)){
+        if (warn(matchTime, LEDConstants.warningTime)) {
           warnActive();
           SmartDashboard.putBoolean("WarnTime:", true);
         } else {
@@ -291,7 +294,7 @@ public class LED extends SubsystemBase {
         }
         break;
       case INACTIVE:
-        if(warn(matchTime, LEDConstants.warningTime)){
+        if (warn(matchTime, LEDConstants.warningTime)) {
           warnInactive();
           SmartDashboard.putBoolean("WarnTime:", true);
         } else {
@@ -301,7 +304,7 @@ public class LED extends SubsystemBase {
         break;
       case ENDGAME:
         purple();
-        if(warn(matchTime, LEDConstants.endWarningTime)){
+        if (warn(matchTime, LEDConstants.endWarningTime)) {
           blink();
           SmartDashboard.putBoolean("WarnTime:", true);
         } else {
