@@ -19,7 +19,6 @@ public class AprilTagEstimator extends SubsystemBase {
   private String bestLimelight = "none";
   private final Drive drivetrain;
 
-
   // Main Limelight
   NetworkTable mainTable = NetworkTableInstance.getDefault().getTable("limelight");
   NetworkTableEntry mainTx = mainTable.getEntry("tx");
@@ -34,7 +33,7 @@ public class AprilTagEstimator extends SubsystemBase {
   // NetworkTableEntry aprilTz = aprilTable.getEntry("tz");
   // NetworkTableEntry aprilTa = aprilTable.getEntry("ta");
 
-  //Limelight 4
+  // Limelight 4
   NetworkTable newTable = NetworkTableInstance.getDefault().getTable("limelight-new");
   NetworkTableEntry april4Tx = newTable.getEntry("tx");
   NetworkTableEntry april4Ty = newTable.getEntry("ty");
@@ -50,12 +49,9 @@ public class AprilTagEstimator extends SubsystemBase {
     processLimelight("limelight", mainTa);
 
     // processLimelight("limelight-april", aprilTa);
-    
-    processLimelight("limelight-new", april4Ta);
 
+    // processLimelight("limelight-new", april4Ta);
 
-
-    
     // double mainArea = april4Ta.getDouble(0.0);
     // double aprilArea = aprilTa.getDouble(0.0);
 
@@ -72,7 +68,7 @@ public class AprilTagEstimator extends SubsystemBase {
     SmartDashboard.putNumber(name + "/FiducialID", LimelightHelpers.getFiducialID(name));
     SmartDashboard.putBoolean(name + "/Target", LimelightHelpers.getTV(name));
 
-    limeLightPose = LimelightHelpers.getBotPose3d_wpiBlue(name);
+    limeLightPose = LimelightHelpers.getBotPose3d_TargetSpace(name);
     limeLightPose2D = limeLightPose.toPose2d();
     LimelightHelpers.PoseEstimate measurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 
@@ -123,11 +119,8 @@ public class AprilTagEstimator extends SubsystemBase {
               - (LimelightHelpers.getLatency_Pipeline(limelightName) / 1000.0)
               - (LimelightHelpers.getLatency_Capture(limelightName) / 1000.0);
 
-            
-
       drivetrain.addVisionMeasurement(
           limelightPose, timestamp, VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds)));
     }
-
   }
 }

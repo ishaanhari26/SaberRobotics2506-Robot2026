@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -69,9 +67,9 @@ public class RobotContainer {
         aprilTagEstimator =
             // new Vision(
             //     drive::addVisionMeasurement,
-            //     new VisionIOLimelight(camera0Name, drive::getRotation),
-            //     new VisionIOLimelight(camera1Name, drive::getRotation));
-            new AprilTagEstimator(drive);
+            //     new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation));
+        // new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
+        new AprilTagEstimator(drive);
 
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
@@ -102,8 +100,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
 
-        aprilTagEstimator =
-            new AprilTagEstimator(drive);
+        aprilTagEstimator = new AprilTagEstimator(drive);
 
         break;
 
@@ -117,8 +114,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
 
-        aprilTagEstimator =
-            new AprilTagEstimator(drive);
+        aprilTagEstimator = new AprilTagEstimator(drive);
 
         break;
     }
