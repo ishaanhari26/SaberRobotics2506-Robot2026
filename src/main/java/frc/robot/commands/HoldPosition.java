@@ -47,9 +47,9 @@ public class HoldPosition extends Command {
     } else {
       m_subsystem.stopMotor();
     }
-    if (m_subsystem.getClimbState().name() == "RETRACTED") {
+    if (m_subsystem.getLimitSwitch()) {
       m_subsystem.resetEncoder();
-      if(Constants.climbTarget==Constants.ClimbConstants.initialRetractValue){
+      if(m_subsystem.getClimbState()==Constants.ClimbConstants.ClimbState.EXTENDING){
         Constants.climbTarget = 0; 
       }
     }
