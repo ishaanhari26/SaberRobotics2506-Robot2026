@@ -284,7 +284,7 @@ public class LED extends SubsystemBase {
     /**
      * Match Times In Seconds: Auto: 20 - 00
      *
-     * Teleop: - Transition Shift: 140 - 130 - Shift 1: 130 - 105 - Shift 2: 105 - 80 - Shift 3:
+     * <p>Teleop: - Transition Shift: 140 - 130 - Shift 1: 130 - 105 - Shift 2: 105 - 80 - Shift 3:
      * 80 - 55 - Shift 4: 55 - 30 - End Game: 30 - 00
      */
     matchTime = Timer.getMatchTime();
@@ -297,7 +297,7 @@ public class LED extends SubsystemBase {
       case TRANSITION:
       case ACTIVE:
         if (warn(matchTime, LEDConstants.warningTime)) {
-          if(matchTime-LEDConstants.endPeriodStart<=LEDConstants.warningTime){
+          if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
             purple();
             blink();
           } else {
@@ -311,7 +311,7 @@ public class LED extends SubsystemBase {
         break;
       case INACTIVE:
         if (warn(matchTime, LEDConstants.warningTime)) {
-          if(matchTime-LEDConstants.endPeriodStart<=LEDConstants.warningTime){
+          if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
             purple();
             blink();
           } else {

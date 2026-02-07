@@ -61,7 +61,8 @@ public final class Constants {
     /** The time in seconds that is left in the game at the start of the end game period. */
     public static final int endPeriodStart = 30;
 
-    // The times left when the LEDs will warn that the game is approaching the next period, or when the game is over respectively.
+    // The times left when the LEDs will warn that the game is approaching the next period, or when
+    // the game is over respectively.
     /** The time in seconds that is left in the game before the next period. */
     public static final int warningTime = 3;
     /** The time in seconds that is left in the game before the game is over. */
