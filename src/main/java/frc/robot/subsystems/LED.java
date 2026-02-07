@@ -297,7 +297,7 @@ public class LED extends SubsystemBase {
       case TRANSITION:
       case ACTIVE:
         if (warn(matchTime, LEDConstants.warningTime)) {
-          if(matchTime-LEDConstants.endPeriodStart<=LEDConstants.warningTime){
+          if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
             purple();
             blink();
           } else {
@@ -311,7 +311,7 @@ public class LED extends SubsystemBase {
         break;
       case INACTIVE:
         if (warn(matchTime, LEDConstants.warningTime)) {
-          if(matchTime-LEDConstants.endPeriodStart<=LEDConstants.warningTime){
+          if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
             purple();
             blink();
           } else {
