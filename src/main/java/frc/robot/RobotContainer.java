@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.Target;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -44,6 +43,9 @@ public class RobotContainer {
 
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+
+  private final SlewRateLimiter lockedxLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter lockedyLimiter = new SlewRateLimiter(3);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -161,6 +163,14 @@ public class RobotContainer {
             () -> yLimiter.calculate(controller.getLeftX()),
             () -> controller.getRightX()));
 
+    controller
+        .rightTrigger()
+        .whileTrue(
+            DriveCommands.lockedTargetJoystickDrive(
+                drive,
+                () -> lockedxLimiter.calculate(controller.getLeftY()),
+                () -> lockedyLimiter.calculate(controller.getLeftX())));
+
     // Lock to 0° when A button is held
     // controller
     //     .a()
@@ -178,7 +188,7 @@ public class RobotContainer {
         .a()
         .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
 
-    controller.b().whileTrue(new Target(drive));
+    controller.b().whileTrue(drive.target());
 
     // Reset gyro to 0° when B button is pressed
     // controller

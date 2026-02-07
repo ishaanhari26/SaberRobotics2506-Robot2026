@@ -49,19 +49,20 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.LimelightHelpers;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.CommandFactory;
-import frc.robot.commands.Target;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.DoubleStream;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -251,8 +252,6 @@ public class Drive extends SubsystemBase {
         "targetValue",
         LimelightHelpers.getTargetPose3d_RobotSpace("limelight").getRotation().getAngle());
 
-    SmartDashboard.putNumber("omegaValue", Target.omegaValue);
-
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
 
     SmartDashboard.putNumber(
@@ -307,10 +306,22 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
   }
 
-  // public Command target() {
-  //   turnAnglePID.setSetpoint(0);
-  //   return new Command(() -> runVelocity(new ChassisSpeeds(0, 0, turnAnglePID.calculate(Vision.tx))));
-  // }
+  public static boolean validTargetTags() {
+    if (DoubleStream.of(CommandFactory.validTargets)
+        .anyMatch(x -> x == LimelightHelpers.getFiducialID("limelight"))) {
+      return true;
+    }
+    return false;
+  }
+
+  public Command target() {
+    if (validTargetTags()) {
+      turnAnglePID.setSetpoint(0);
+      return Commands.run(
+          () -> runVelocity(new ChassisSpeeds(0, 0, turnAnglePID.calculate(Vision.tx))), this);
+    }
+    return Commands.run(() -> runVelocity(new ChassisSpeeds()));
+  }
 
   /** Runs the drive in a straight line with the specified drive output. */
   public void runCharacterization(double output) {
