@@ -297,7 +297,12 @@ public class LED extends SubsystemBase {
       case TRANSITION:
       case ACTIVE:
         if (warn(matchTime, LEDConstants.warningTime)) {
-          warnActive();
+          if(matchTime-LEDConstants.endPeriodStart<=LEDConstants.warningTime){
+            purple();
+            blink();
+          } else {
+            warnActive();
+          }
           SmartDashboard.putBoolean("WarnTime:", true);
         } else {
           active();
@@ -306,7 +311,12 @@ public class LED extends SubsystemBase {
         break;
       case INACTIVE:
         if (warn(matchTime, LEDConstants.warningTime)) {
-          warnInactive();
+          if(matchTime-LEDConstants.endPeriodStart<=LEDConstants.warningTime){
+            purple();
+            blink();
+          } else {
+            warnInactive();
+          }
           SmartDashboard.putBoolean("WarnTime:", true);
         } else {
           inactive();
