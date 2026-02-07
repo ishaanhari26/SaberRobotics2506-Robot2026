@@ -14,20 +14,34 @@ public class HoldPosition extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
   private final ClimbSubsystem m_subsystem;
 
+  private boolean reset;
+
   /**
-   * Creates a new ExampleCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   *
+   * <h1>BINGUS BINGERS GIMME YOUR FINGERS</h1>
+   *
+   * @param subsystem subsystem, duh
+   * @param reset if true, reset the arm
    */
-  public HoldPosition(ClimbSubsystem subsystem) {//TODO: make HoldPos run even when autoclimb is (or re-call holdpos after autoclimb positions itself?)
+  public HoldPosition(
+      ClimbSubsystem subsystem,
+      boolean reset) { // TODO: make HoldPos run even when autoclimb is (or re-call holdpos after
+    // autoclimb positions itself?)
     m_subsystem = subsystem;
+    this.reset = reset;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    // reset
+    if (reset) {
+      m_subsystem.setEncoder(Constants.ClimbConstants.initialRetractValue);
+    }
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -55,6 +69,7 @@ public class HoldPosition extends Command {
         Constants.ClimbConstants.equals(
             m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance));
     SmartDashboard.putBoolean("Not Limit Switch", !m_subsystem.getLimitSwitch());
+    SmartDashboard.putNumber("HoldPos active tester", Math.random());
   }
 
   // Called once the command ends or is interrupted.

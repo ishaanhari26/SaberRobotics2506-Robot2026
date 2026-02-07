@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.Constants.ClimbConstants.AutoClimbState;
 import frc.robot.subsystems.ClimbSubsystem;
 
 /** An example command that uses an example subsystem. */
@@ -25,14 +27,51 @@ public class AutomaticClimb extends Command {
 
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Wah wah wah wah", m_subsystem.getEncoder());
+    // IDLE, POSITIONING, FORWARD, RIGHT, RETRACTING, EXTENDING
+    if (false /* not at position yet but is running */) {
+      // drive to general position
+      // orient
+      // extend
+      Constants.currentAutoClimbMode = AutoClimbState.POSITIONING;
+    } else if (false /* at initial position but no pressure on motors */) {
+      // drive right
+      Constants.currentAutoClimbMode = AutoClimbState.RIGHT;
+    } else if (false /* moving forward but no sensor input */) {
+      // drive forward
+      Constants.currentAutoClimbMode = AutoClimbState.FORWARD;
+    } else if (m_subsystem.getMetalSensor()
+        && !Constants.ClimbConstants.equals(
+            m_subsystem.getEncoder(),
+            Constants.ClimbConstants.autoRetractPos,
+            Constants.ClimbConstants.holdTolerance)) {
+      // metalsensor and encoder not equal: retract
+      Constants.currentAutoClimbMode = AutoClimbState.RETRACTING;
+    } else if (m_subsystem.getMetalSensor()
+        && Constants.ClimbConstants.equals(
+            m_subsystem.getEncoder(),
+            Constants.ClimbConstants.autoRetractPos,
+            Constants.ClimbConstants.holdTolerance)) {
+      // hold
+      Constants.currentAutoClimbMode = AutoClimbState.RETRACTED;
+    } else if (false /*figure out when it should leave. at certain time? (end of auto and end of match?)*/) {
+      // extend to leave bar
+      Constants.currentAutoClimbMode = AutoClimbState.EXTENDING;
+    } else {
+      Constants.currentAutoClimbMode = AutoClimbState.IDLE;
+    }
+    SmartDashboard.putString(
+        "Auto Climb Mode - from AC.java", Constants.currentAutoClimbMode.name());
   }
 
   @Override
+  // NTS: end is called when isFinished returns true
   public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
+    // if(Constants.currentAutoClimbMode == AutoClimbState.RETRACTED){
+    //   return true;
+    // }
     return false;
   }
 }

@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.Constants.ClimbConstants.AutoClimbState;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -29,8 +30,9 @@ public final class Constants {
     REPLAY
   }
 
-  // climb not constant
+  // climb not constants
   public static double climbTarget = 0.0;
+  public static AutoClimbState currentAutoClimbMode = ClimbConstants.AutoClimbState.IDLE;
 
   // climb constants
   public static class ClimbConstants {
@@ -48,9 +50,13 @@ public final class Constants {
     public static final double targetChangeSpeed = 0.2;
     public static final double holdTolerance = 0.05;
 
+    public static final double autoRetractPos = 0.0;
+    public static final double autoExtendPos = 2.4;
+
     // encoder
     public static final double encoderClicksToTop = 2.4; // temp value
-    public static final double initialRetractValue = -10.0; // this is negative because the encoder is backwards.
+    public static final double initialRetractValue =
+        -10.0; // this is negative because the encoder is backwards.
 
     // Wanted this to know how many rotations are needed if we get it from the motor
     // e.g. if we need 20 clicks when ratio is 36:1, we need 720 clicks if the ratio is 1:1
@@ -71,7 +77,8 @@ public final class Constants {
       FORWARD,
       RIGHT,
       RETRACTING,
-      RETRACTED
+      RETRACTED,
+      EXTENDING
     }
 
     // function because I need it

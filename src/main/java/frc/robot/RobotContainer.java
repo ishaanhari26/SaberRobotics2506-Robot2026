@@ -15,12 +15,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.AutomaticClimb;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Extend;
 import frc.robot.commands.HoldPosition;
@@ -181,7 +183,7 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem));
+    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, true));
     controller.rightBumper().whileTrue(new Extend(m_climbSubsystem));
     controller.leftBumper().whileTrue(new Retract(m_climbSubsystem));
     controller
@@ -204,13 +206,43 @@ public class RobotContainer {
                     Constants.climbTarget = 0;
                   }
                 }));
-    controller.povUp().onChange(new AutomaticClimb(m_climbSubsystem));
-    controller.povDown().whileTrue(
-      new InstantCommand(
-          () -> {
-            m_climbSubsystem.setEncoder(Constants.ClimbConstants.initialRetractValue);
-          }));
-
+    controller
+        .povRight()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.ClimbConstants.climbExtendSpeed += 0.05;
+                  Constants.ClimbConstants.climbRetractSpeed -= 0.05;
+                }));
+    controller
+        .povLeft()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.ClimbConstants.climbExtendSpeed -= 0.05;
+                  Constants.ClimbConstants.climbRetractSpeed += 0.05;
+                }));
+    controller
+        .povUp()
+        .onTrue(
+            // Commands.runOnce( //TODO: do that
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    new InstantCommand(
+                        () -> {
+                          Constants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+                        }),
+                    /*drive and orient to position*/
+                    /*move right until tower*/
+                    /*move forward until sensor*/
+                    new InstantCommand(
+                        () -> {
+                          // Constants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+                          SmartDashboard.putNumber("PSCG Tester", Math.random());
+                        })),
+                new HoldPosition(m_climbSubsystem, false))
+                // )
+                );
   }
 
   /**

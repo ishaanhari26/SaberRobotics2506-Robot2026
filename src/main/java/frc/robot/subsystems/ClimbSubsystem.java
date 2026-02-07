@@ -32,7 +32,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new HoldPosition(this));
+    setDefaultCommand(new HoldPosition(this, true));
   }
 
   public double getEncoder() {
@@ -88,26 +88,8 @@ public class ClimbSubsystem extends SubsystemBase {
     return currentState;
   }
 
-  public ClimbState getAutoClimbState() {
-    // IDLE, POSITIONING, FORWARD, RIGHT, RETRACTING, EXTENDING
-    if (false /*not at position yet but is running*/) {
-      autoCurrentState = AutoClimbState.POSITIONING;
-    } else if (false /*at initial position but no pressure on motors*/) {
-      autoCurrentState = AutoClimbState.RIGHT;
-    } else if (false /*moving forward but no sensor input*/) {
-      autoCurrentState = AutoClimbState.FORWARD;
-    } else if (getMetalSensor()) {
-      autoCurrentState = AutoClimbState.RETRACTING;
-    } else if (getMetalSensor()
-        && Constants.ClimbConstants.equals(
-            getEncoder(),
-            Constants.ClimbConstants.encoderClicksToTop,
-            Constants.ClimbConstants.holdTolerance)) {
-      autoCurrentState = AutoClimbState.RETRACTED;
-    } else {
-      autoCurrentState = AutoClimbState.IDLE;
-    }
-    return currentState;
+  public AutoClimbState getAutoClimbState() {
+    return Constants.currentAutoClimbMode;
   }
 
   @Override
