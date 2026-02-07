@@ -94,7 +94,8 @@ public class LED extends SubsystemBase {
 
   public void warnInactive() {
     setPattern(
-        LEDPattern.solid(LEDConstants.inactiveWarningColor).blink(Seconds.of(LEDConstants.blinkSpeed)));
+        LEDPattern.solid(LEDConstants.inactiveWarningColor)
+            .blink(Seconds.of(LEDConstants.blinkSpeed)));
   }
 
   public void purple() {
