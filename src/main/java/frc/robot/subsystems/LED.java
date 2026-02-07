@@ -155,7 +155,13 @@ public class LED extends SubsystemBase {
     }
   }
 
-  public LEDConstants.Period getPeriod(double matchTime, String gameData, Alliance alliance) {
+  /**
+   * {@code getPeriod} is a method that returns the current period of the game as enum of type
+   * {@link LEDConstants.Period}.
+   *
+   * @return {@link LEDConstants.Period}
+   */
+  public LEDConstants.Period getPeriod() {
     if (DriverStation.isAutonomous()) {
       return LEDConstants.Period.AUTO;
     }
@@ -263,6 +269,10 @@ public class LED extends SubsystemBase {
    */
   @Override
   public void periodic() {
+    /**
+     * gameData is what alliance is inactive first. This is the alliance that scored the most points
+     * in Autonomous.
+     */
     gameData = DriverStation.getGameSpecificMessage();
     alliance = DriverStation.getAlliance().get();
 
@@ -278,7 +288,7 @@ public class LED extends SubsystemBase {
      * 80 - 55 - Shift 4: 55 - 30 - End Game: 30 - 00
      */
     matchTime = Timer.getMatchTime();
-    state = getPeriod(matchTime, gameData, alliance);
+    state = getPeriod();
     SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:
