@@ -13,13 +13,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.LED;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AprilTagEstimator;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -39,6 +39,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   public final AprilTagEstimator aprilTagEstimator;
+  private final LED led = new LED();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -69,8 +70,8 @@ public class RobotContainer {
             // new Vision(
             //     drive::addVisionMeasurement,
             //     new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation));
-        // new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
-        new AprilTagEstimator(drive);
+            // new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
+            new AprilTagEstimator(drive);
 
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
