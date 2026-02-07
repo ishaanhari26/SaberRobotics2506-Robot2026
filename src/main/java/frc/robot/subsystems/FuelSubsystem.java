@@ -33,7 +33,7 @@ public class FuelSubsystem extends SubsystemBase {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
-    ShooterPid.setTolerance(50, 5);
+    ShooterPid.setTolerance(250, 10); // 5 too little, 10 (way) and 8 (barley) too much
   }
 
   public void runIntake(double speed) {
@@ -71,7 +71,8 @@ public class FuelSubsystem extends SubsystemBase {
     intakeMotor.get();
     SmartDashboard.putNumber(
         "intake motor speed", intakeMotor.getVelocity().getValueAsDouble() * 60);
-    SmartDashboard.putNumber("feeder motor speed", feederMotor.get());
+    SmartDashboard.putNumber(
+        "feeder motor speed", feederMotor.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
     SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
     SmartDashboard.putNumber("Calc shooter", calShooter);

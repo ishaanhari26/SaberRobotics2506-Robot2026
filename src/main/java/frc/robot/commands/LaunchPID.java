@@ -35,7 +35,9 @@ public class LaunchPID extends Command {
     m_subsystem.runIntakePID(Constants.FuelConstants.IntakeLaunchSpeedRPM);
     if (m_subsystem.getAtSetpoint()) {
       m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
-    }
+    } // else {
+    //   m_subsystem.runFeeder(0);
+    // }
   }
 
   // Called once the command ends or is interrupted.
