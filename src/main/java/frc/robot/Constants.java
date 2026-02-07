@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -27,5 +28,86 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+
+  /** Constants for the LED subsytem. */
+  public static final class LEDConstants {
+
+    /** The LED strip port. */
+    public static final int port = 0;
+    /** The LED strip length */
+    public static final int length = 13;
+
+    /** The length of time in seconds that the LEDs blink when blinking. */
+    public static final double blinkSpeed = 0.25;
+    /**
+     * The frequency of time as a percentage of a second it takes the LEDs to scroll through the
+     * full strip.
+     */
+    public static final int percentFrequency = 100;
+
+    // The times for the start of periods and shifts in a match. Found from section 6.4 of the Game
+    // Manual.
+    /** The time in seconds that is left in the game at the start of the transition period. */
+    public static final int transitionPeriodStart = 140;
+    /** The time in seconds that is left in the game at the start of the first shift. */
+    public static final int firstShiftStart = 130;
+    /** The time in seconds that is left in the game at the start of the second shift. */
+    public static final int secondShiftStart = 105;
+    /** The time in seconds that is left in the game at the start of the third shift. */
+    public static final int thirdShiftStart = 80;
+    /** The time in seconds that is left in the game at the start of the fourth shift. */
+    public static final int fourthShiftStart = 55;
+    /** The time in seconds that is left in the game at the start of the end game period. */
+    public static final int endPeriodStart = 30;
+
+    // The times left when the LEDs will warn that the game is approaching the next period, or when
+    // the game is over respectively.
+    /** The time in seconds that is left in the game before the next period. */
+    public static final int warningTime = 3;
+    /** The time in seconds that is left in the game before the game is over. */
+    public static final int endWarningTime = 10;
+
+    // The Colors for active and inactive shifts.
+    /** The color of the robot in an active shift. */
+    public static final Color activeColor = Color.kGreen;
+    /** The color of the robot when approaching an inactive shift. */
+    public static final Color activeWarningColor = Color.kBrown;
+    /** The color of the robot in an inactive shift. */
+    public static final Color inactiveColor = Color.kBrown;
+    /** The color of the robot when approaching an active shift. */
+    public static final Color inactiveWarningColor = Color.kGreen;
+
+    /** The mode the robot is in */
+    public static enum Mode {
+      /** The robot is shooting */
+      SHOOT,
+      /** The robot is intaking */
+      INTAKE,
+      /** The robot is climbing */
+      CLIMB,
+      /** The robot is E Stopped */
+      ESTOP,
+      /** The robot is A Stopped */
+      ASTOP,
+      /** The robot is not doing anything besides driving */
+      NONE
+    }
+
+    /** The period the game is in */
+    public static enum Period {
+      /** The match hasn't started */
+      PREMATCH,
+      /** It is the Autonomous period */
+      AUTO,
+      /** It is the Transition period */
+      TRANSITION,
+      /** It is an Active shift */
+      ACTIVE,
+      /** It is an Inactive shift */
+      INACTIVE,
+      /** It is the End Game period */
+      ENDGAME
+    }
   }
 }
