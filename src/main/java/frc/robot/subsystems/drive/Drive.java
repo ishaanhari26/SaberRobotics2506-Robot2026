@@ -27,6 +27,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -54,7 +55,9 @@ import frc.lib.LimelightHelpers;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.CommandFactory;
+import frc.robot.commands.Target;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -117,6 +120,8 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator autoPoseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
+  public PIDController turnAnglePID;
+
   private static Field2d field = new Field2d();
 
   public Drive(
@@ -169,6 +174,12 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+
+    turnAnglePID =
+        new PIDController(
+            VisionConstants.TURN_ANGLE_KP,
+            VisionConstants.TURN_ANGLE_KI,
+            VisionConstants.TURN_ANGLE_KD);
   }
 
   @Override
@@ -232,6 +243,16 @@ public class Drive extends SubsystemBase {
       }
     }
 
+    SmartDashboard.putNumber(
+        "rotationValue",
+        LimelightHelpers.getBotPose3d_TargetSpace("limelight").getRotation().getAngle());
+
+    SmartDashboard.putNumber(
+        "targetValue",
+        LimelightHelpers.getTargetPose3d_RobotSpace("limelight").getRotation().getAngle());
+
+    SmartDashboard.putNumber("omegaValue", Target.omegaValue);
+
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
 
     SmartDashboard.putNumber(
@@ -286,6 +307,11 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
   }
 
+  // public Command target() {
+  //   turnAnglePID.setSetpoint(0);
+  //   return new Command(() -> runVelocity(new ChassisSpeeds(0, 0, turnAnglePID.calculate(Vision.tx))));
+  // }
+
   /** Runs the drive in a straight line with the specified drive output. */
   public void runCharacterization(double output) {
     for (int i = 0; i < 4; i++) {
@@ -325,7 +351,7 @@ public class Drive extends SubsystemBase {
     return false;
   }
 
-  private boolean withinMargin(double margin, double a, double b) {
+  public static boolean withinMargin(double margin, double a, double b) {
     if (a + margin >= b && a - margin <= b) {
       return true;
     }

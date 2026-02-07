@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Target;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AprilTagEstimator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -37,7 +37,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  public final AprilTagEstimator aprilTagEstimator;
+  public final Vision aprilTagEstimator;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -65,11 +65,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
         aprilTagEstimator =
-            // new Vision(
-            //     drive::addVisionMeasurement,
-            //     new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation));
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation));
         // new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
-        new AprilTagEstimator(drive);
+        // new AprilTagEstimator(drive);
 
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
@@ -100,7 +100,9 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
 
-        aprilTagEstimator = new AprilTagEstimator(drive);
+        aprilTagEstimator =
+            new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        // new AprilTagEstimator(drive);
 
         break;
 
@@ -114,7 +116,9 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
 
-        aprilTagEstimator = new AprilTagEstimator(drive);
+        aprilTagEstimator =
+            new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        // new AprilTagEstimator(drive);
 
         break;
     }
@@ -153,8 +157,8 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> xLimiter.calculate(-controller.getLeftY()),
-            () -> yLimiter.calculate(-controller.getLeftX()),
+            () -> xLimiter.calculate(controller.getLeftY()),
+            () -> yLimiter.calculate(controller.getLeftX()),
             () -> controller.getRightX()));
 
     // Lock to 0° when A button is held
@@ -173,6 +177,8 @@ public class RobotContainer {
     controller
         .a()
         .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
+
+    controller.b().whileTrue(new Target(drive));
 
     // Reset gyro to 0° when B button is pressed
     // controller

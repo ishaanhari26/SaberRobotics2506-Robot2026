@@ -9,14 +9,14 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import java.util.stream.DoubleStream;
 
-public class Angle extends Command {
+public class Target extends Command {
   public double tx;
   public double ty;
   // private double[] positions;
   // private double[] target;
   private double target;
   private double rotation;
-  private double omegaValue;
+  public static double omegaValue;
 
   private double tagID = -1;
   private double[] validTargets = {8, 9, 10, 11, 24, 25, 26, 27};
@@ -26,9 +26,9 @@ public class Angle extends Command {
 
   public PIDController turnAnglePID;
 
-  public Angle(Drive drive) {
+  public Target(Drive drive) {
     this.drive = drive;
-    limelightName = "limelight-new";
+    limelightName = "limelight";
     turnAnglePID =
         new PIDController(
             VisionConstants.TURN_ANGLE_KP,
@@ -49,20 +49,22 @@ public class Angle extends Command {
 
     target = LimelightHelpers.getTargetPose3d_RobotSpace(limelightName).getRotation().getAngle();
 
-    turnAnglePID.setSetpoint(target);
-    turnAnglePID.setTolerance(1);
+    turnAnglePID.setSetpoint(0);
+    // turnAnglePID.setTolerance(0.5);
   }
 
   @Override
   public void execute() {
+
+    // drive.runVelocity(new ChassisSpeeds(0, 0, Math.copySign(3, tx)));
+    drive.runVelocity(new ChassisSpeeds(0, 0, turnAnglePID.calculate(tx)));
+
+
     if (LimelightHelpers.getTV(limelightName)
         && LimelightHelpers.getFiducialID(limelightName) == tagID) {
-      rotation = LimelightHelpers.getBotPose3d_TargetSpace(limelightName).getRotation().getAngle();
-      omegaValue = -turnAnglePID.calculate(rotation);
 
-      drive.runVelocity(new ChassisSpeeds(0, 0, omegaValue));
     } else {
-      drive.runVelocity(new ChassisSpeeds());
+      // drive.runVelocity(new ChassisSpeeds());
     }
   }
 
@@ -73,6 +75,9 @@ public class Angle extends Command {
 
   @Override
   public boolean isFinished() {
-    return turnAnglePID.atSetpoint() ? true : false;
+    // return turnAnglePID.atSetpoint() ? true : false;
+
+    // return Drive.withinMargin(0.5, Vision.tx, 0) ? true : false;
+    return false;
   }
 }

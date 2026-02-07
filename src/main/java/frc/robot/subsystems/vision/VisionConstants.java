@@ -11,8 +11,6 @@ import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.drive.Drive;
 
 public class VisionConstants {
   // AprilTag layout
@@ -54,10 +52,7 @@ public class VisionConstants {
   public static double angularStdDevMegatag2Factor =
       Double.POSITIVE_INFINITY; // No rotation data available
 
-  public static final double TURN_ANGLE_KP =
-      (TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) / Drive.DRIVE_BASE_RADIUS)
-          * 0.5
-          / 45.0; // TODO
+  public static final double TURN_ANGLE_KP = 0.1; // TODO
   public static final double TURN_ANGLE_KI = 0.0;
   public static final double TURN_ANGLE_KD = 0.0;
 }
