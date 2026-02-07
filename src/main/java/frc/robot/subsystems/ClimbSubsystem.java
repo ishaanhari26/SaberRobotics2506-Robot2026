@@ -27,7 +27,6 @@ public class ClimbSubsystem extends SubsystemBase {
     this.limitSwitch = limitSwitch;
     this.encoder = encoder;
     this.metalDetector = metalDetector;
-    if (!getLimitSwitch()) {}
     resetEncoder();
   }
 
@@ -94,9 +93,9 @@ public class ClimbSubsystem extends SubsystemBase {
     if (false /*not at position yet but is running*/) {
       autoCurrentState = AutoClimbState.POSITIONING;
     } else if (false /*at initial position but no pressure on motors*/) {
-      autoCurrentState = AutoClimbState.FORWARD;
-    } else if (false /*moving forward but no sensor input*/) {
       autoCurrentState = AutoClimbState.RIGHT;
+    } else if (false /*moving forward but no sensor input*/) {
+      autoCurrentState = AutoClimbState.FORWARD;
     } else if (getMetalSensor()) {
       autoCurrentState = AutoClimbState.RETRACTING;
     } else if (getMetalSensor()

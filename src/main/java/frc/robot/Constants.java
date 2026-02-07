@@ -41,8 +41,8 @@ public final class Constants {
     public static final int climbMetalDetectorID = 2;
 
     // motor speeds
-    public static final double climbExtendSpeed = 0.2; // temp value
-    public static final double climbRetractSpeed = -0.2; // temp value
+    public static double climbExtendSpeed = 0.2; // temp value //TODO: see how fast these can go
+    public static double climbRetractSpeed = -0.2; // temp value
 
     // AAAAAAAAAAAAAAAAAAa
     public static final double targetChangeSpeed = 0.2;
@@ -50,7 +50,7 @@ public final class Constants {
 
     // encoder
     public static final double encoderClicksToTop = 2.4; // temp value
-    public static final double initialRetractValue = -10.0;
+    public static final double initialRetractValue = -10.0; // this is negative because the encoder is backwards.
 
     // Wanted this to know how many rotations are needed if we get it from the motor
     // e.g. if we need 20 clicks when ratio is 36:1, we need 720 clicks if the ratio is 1:1

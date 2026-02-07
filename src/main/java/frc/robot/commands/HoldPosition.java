@@ -19,7 +19,7 @@ public class HoldPosition extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public HoldPosition(ClimbSubsystem subsystem) {
+  public HoldPosition(ClimbSubsystem subsystem) {//TODO: make HoldPos run even when autoclimb is (or re-call holdpos after autoclimb positions itself?)
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -27,9 +27,7 @@ public class HoldPosition extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_subsystem.setEncoder(Constants.ClimbConstants.initialRetractValue); //TODO: move to a separate button for A. safety and B. it janks up when the command is called again
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -48,7 +46,7 @@ public class HoldPosition extends Command {
     }
     if (m_subsystem.getLimitSwitch()) {
       m_subsystem.resetEncoder();
-      if (m_subsystem.getClimbState() == Constants.ClimbConstants.ClimbState.EXTENDING) {
+      if (!(Constants.climbTarget > 0)) {
         Constants.climbTarget = 0;
       }
     }

@@ -205,6 +205,12 @@ public class RobotContainer {
                   }
                 }));
     controller.povUp().onChange(new AutomaticClimb(m_climbSubsystem));
+    controller.povDown().whileTrue(
+      new InstantCommand(
+          () -> {
+            m_climbSubsystem.setEncoder(Constants.ClimbConstants.initialRetractValue);
+          }));
+
   }
 
   /**
