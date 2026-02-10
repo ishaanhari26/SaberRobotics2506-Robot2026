@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 // import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,6 +28,7 @@ public class ClimbSubsystem extends SubsystemBase {
     this.limitSwitch = limitSwitch;
     this.encoder = encoder;
     this.metalDetector = metalDetector;
+    climbMotor.setNeutralMode(NeutralModeValue.Brake);
     resetEncoder();
   }
 
@@ -101,6 +103,7 @@ public class ClimbSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Motor Speed", getMotorSpeed());
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
     SmartDashboard.putBoolean("Metal Detector", getMetalSensor());
+
     SmartDashboard.putBoolean(
         "Target Matches Encoder",
         Constants.ClimbConstants.equals(

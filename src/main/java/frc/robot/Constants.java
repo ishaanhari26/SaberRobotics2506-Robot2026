@@ -43,18 +43,18 @@ public final class Constants {
     public static final int climbMetalDetectorID = 2;
 
     // motor speeds
-    public static double climbExtendSpeed = 0.2; // temp value //TODO: see how fast these can go
-    public static double climbRetractSpeed = -0.2; // temp value
+    public static double climbExtendSpeed = 0.85; // temp value //TODO: see how fast these can go
+    public static double climbRetractSpeed = -0.7; // temp value
 
     // AAAAAAAAAAAAAAAAAAa
     public static final double targetChangeSpeed = 0.2;
     public static final double holdTolerance = 0.05;
 
     public static final double autoRetractPos = 0.0;
-    public static final double autoExtendPos = 2.4;
+    public static final double autoExtendPos = 2.5;
 
     // encoder
-    public static final double encoderClicksToTop = 2.4; // temp value
+    public static final double encoderClicksToTop = 2.5; // temp value
     public static final double initialRetractValue =
         -10.0; // this is negative because the encoder is backwards.
 
