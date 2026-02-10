@@ -178,7 +178,12 @@ public class RobotContainer {
     controller.leftBumper().whileTrue(new Intake(m_fuelSubsystem));
     controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
-    controller.rightTrigger().whileTrue(new LaunchPID(m_fuelSubsystem));
+    controller
+        .rightTrigger()
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
+    controller
+        .leftTrigger()
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakePushSpeed));
   }
 
   /**

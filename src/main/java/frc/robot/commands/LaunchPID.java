@@ -14,13 +14,16 @@ public class LaunchPID extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
   private final FuelSubsystem m_subsystem;
 
+  private double m_speed;
+
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public LaunchPID(FuelSubsystem subsystem) {
+  public LaunchPID(FuelSubsystem subsystem, double speed) {
     m_subsystem = subsystem;
+    m_speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -32,12 +35,12 @@ public class LaunchPID extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.runIntakePID(Constants.FuelConstants.IntakeLaunchSpeedRPM);
+    m_subsystem.runIntakePID(m_speed);
     if (m_subsystem.getAtSetpoint()) {
       m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
-    } // else {
-    //   m_subsystem.runFeeder(0);
-    // }
+    } else {
+      m_subsystem.runFeeder(0);
+    }
   }
 
   // Called once the command ends or is interrupted.

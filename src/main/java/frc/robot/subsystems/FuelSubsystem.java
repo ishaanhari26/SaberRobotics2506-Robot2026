@@ -33,7 +33,7 @@ public class FuelSubsystem extends SubsystemBase {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
-    ShooterPid.setTolerance(250, 10); // 5 too little, 10 (way) and 8 (barley) too much
+    ShooterPid.setTolerance(49.899997);
   }
 
   public void runIntake(double speed) {
@@ -46,7 +46,7 @@ public class FuelSubsystem extends SubsystemBase {
     calShooter = ShooterPid.calculate(intakeMotor.getVelocity().getValueAsDouble() * 60, speed);
     currentSpeed = intakeMotor.getVelocity().getValueAsDouble() * 60;
     errorPlusMotor = (calShooter + currentSpeed);
-    feedForwardCalc = feedforward.calculate(speed) + calShooter; // still edit this!!! NOT DONE!!!
+    feedForwardCalc = feedforward.calculate(speed) + calShooter;
     feedForwardset = feedForwardCalc + currentSpeed;
     intakeMotor.set(feedForwardset / 6380);
   }
@@ -68,17 +68,12 @@ public class FuelSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    intakeMotor.get();
     SmartDashboard.putNumber(
         "intake motor speed", intakeMotor.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber(
         "feeder motor speed", feederMotor.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
     SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
-    SmartDashboard.putNumber("Calc shooter", calShooter);
-    SmartDashboard.putNumber("error + motor", errorPlusMotor);
-    SmartDashboard.putNumber("FeedForward calc", feedForwardCalc);
-    // SmartDashboard.putNumber("initial speed", initialSpeed);
   }
 
   @Override
