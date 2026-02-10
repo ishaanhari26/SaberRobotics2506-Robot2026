@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -14,10 +15,16 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.*;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Eject;
+import frc.robot.commands.Intake;
+import frc.robot.commands.Launch;
+import frc.robot.commands.LaunchPID;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.AprilTagEstimator;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.drive.Drive;
@@ -44,6 +51,10 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
+  public final TalonFX intakeMotor = new TalonFX(Constants.FuelConstants.IntakeMotor);
+  public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
+
+  private final FuelSubsystem m_fuelSubsystem = new FuelSubsystem(intakeMotor, feederMotor);
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
@@ -52,6 +63,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     switch (Constants.currentMode) {
       default:
       case REAL:
@@ -158,6 +170,9 @@ public class RobotContainer {
             () -> xLimiter.calculate(-controller.getLeftY()),
             () -> yLimiter.calculate(-controller.getLeftX()),
             () -> controller.getRightX()));
+    
+    controller.a()
+        .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
 
     // Lock to 0° when A button is held
     // controller
@@ -172,9 +187,17 @@ public class RobotContainer {
     // Switch to X pattern when X button is pressed
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
+    // fuelSubsystem buttons Intake, Launch, Eject
+    controller.leftBumper().whileTrue(new Intake(m_fuelSubsystem));
+    controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
+    controller.y().whileTrue(new Eject(m_fuelSubsystem));
     controller
-        .a()
-        .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
+        .rightTrigger()
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
+    controller
+        .leftTrigger()
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakePushSpeed));
+        
 
     // Reset gyro to 0° when B button is pressed
     // controller
