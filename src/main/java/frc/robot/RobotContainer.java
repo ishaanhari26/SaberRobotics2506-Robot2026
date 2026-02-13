@@ -24,8 +24,8 @@ import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.AprilTagEstimator;
+import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -53,8 +53,11 @@ public class RobotContainer {
 
   public final TalonFX intakeMotor = new TalonFX(Constants.FuelConstants.IntakeMotor);
   public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
+  public final TalonFX launchMotor = new TalonFX(Constants.FuelConstants.LaunchMotor);
+  public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
 
-  private final FuelSubsystem m_fuelSubsystem = new FuelSubsystem(intakeMotor, feederMotor);
+
+  private final FuelSubsystem m_fuelSubsystem = new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2);
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
@@ -170,8 +173,9 @@ public class RobotContainer {
             () -> xLimiter.calculate(-controller.getLeftY()),
             () -> yLimiter.calculate(-controller.getLeftX()),
             () -> controller.getRightX()));
-    
-    controller.a()
+
+    controller
+        .a()
         .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
 
     // Lock to 0° when A button is held
@@ -197,7 +201,6 @@ public class RobotContainer {
     controller
         .leftTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakePushSpeed));
-        
 
     // Reset gyro to 0° when B button is pressed
     // controller

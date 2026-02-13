@@ -34,6 +34,8 @@ public final class Constants {
     // this is the motor id
     public static final int IntakeMotor = 52;
     public static final int FeederMotor = 54;
+    public static final int LaunchMotor = 1;
+    public static final int LaunchMotor2 = 2;
 
     // speeds for intake and feeder motors when intaking
     public static final double IntakeIntakeSpeed = -0.84;
@@ -47,7 +49,7 @@ public final class Constants {
     // speeds for intake and feeder motors when launching
     public static final double IntakeLaunchSpeed = -0.88;
     public static final double IntakePushSpeed = -2500;
-    public static final double IntakeLaunchSpeedRPM = -4000; //4800 is the max possible
+    public static final double IntakeLaunchSpeedRPM = -4000; // 4800 is the max possible
     // public static final double IntakeLaunchSpeed = -0.6;
     public static final double FeederLaunchSpeed = 1;
     // public static final double FeederLaunchSpeed = -0.75;
@@ -59,6 +61,7 @@ public final class Constants {
     public static final double LaunchkP = 11; // .1, .6, 1.0, 1.4,5 , 4, 3,2 (8)
     public static final double LaunchkI = 0;
     public static final double LaunchkD = 0.03; // 0.01  0.09
+  }
   /** Constants for the LED subsytem. */
   public static final class LEDConstants {
 
