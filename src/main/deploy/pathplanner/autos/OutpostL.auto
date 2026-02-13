@@ -3,7 +3,26 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubOutpostL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "OutpostHubL"
+          }
+        }
+      ]
     }
   },
   "resetOdom": true,
