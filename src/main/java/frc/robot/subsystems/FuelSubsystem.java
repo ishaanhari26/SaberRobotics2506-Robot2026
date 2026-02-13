@@ -84,8 +84,13 @@ public class FuelSubsystem extends SubsystemBase {
         "intake motor speed", intakeMotor.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber(
         "feeder motor speed", feederMotor.getVelocity().getValueAsDouble() * 60);
+    SmartDashboard.putNumber(
+        "Launch motor speed", LaunchMotor.getVelocity().getValueAsDouble() * 60);
+    SmartDashboard.putNumber(
+        "Launch motor2 speed", launchMotor2.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
     SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
+    SmartDashboard.putData("shooter PID controller", ShooterPid);
   }
 
   @Override
