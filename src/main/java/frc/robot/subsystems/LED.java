@@ -127,6 +127,14 @@ public class LED extends SubsystemBase {
             .overlayOn(currentPattern));
   }
 
+  public void auto(int selected) {
+    setPattern(
+        currentPattern.mask(
+        LEDPattern.steps(
+              Map.of((m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kWhite))
+            .offsetBy(selected)));
+  }
+
   public void blink() {
     setPattern(currentPattern.blink(Seconds.of(LEDConstants.blinkSpeed)));
   }
@@ -293,6 +301,10 @@ public class LED extends SubsystemBase {
     switch (state) {
       case AUTO:
         // Autonomous code
+        auto(1);
+        if(warn(matchTime, LEDConstants.warningTime)){
+          blink();
+        }
         break;
       case TRANSITION:
       case ACTIVE:
