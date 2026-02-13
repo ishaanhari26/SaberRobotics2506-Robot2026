@@ -7,25 +7,25 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.IntakeV3Subsystem;
 
 /** An example command that uses an example subsystem. */
-public class HoldPosition extends Command {
+public class HoldIntakeV3 extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
-  private final ClimbSubsystem m_subsystem;
+  private final IntakeV3Subsystem m_subsystem;
 
   private boolean reset;
 
   /**
    *
    *
-   * <h1>BINGUS BINGERS GIMME YOUR FINGERS</h1>
+   * <h1>om nom nom</h1>
    *
    * @param subsystem subsystem, duh
    * @param reset if true, reset the arm
    */
-  public HoldPosition(
-      ClimbSubsystem subsystem,
+  public HoldIntakeV3(
+      IntakeV3Subsystem subsystem,
       boolean reset) { 
     m_subsystem = subsystem;
     this.reset = reset;
@@ -63,12 +63,6 @@ public class HoldPosition extends Command {
         Constants.climbTarget = 0;
       }
     }
-    SmartDashboard.putBoolean(
-        "Enc = 0",
-        Constants.equals(
-            m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance));
-    SmartDashboard.putBoolean("Not Limit Switch", !m_subsystem.getLimitSwitch());
-    SmartDashboard.putNumber("HoldPos active tester", Math.random());
   }
 
   // Called once the command ends or is interrupted.

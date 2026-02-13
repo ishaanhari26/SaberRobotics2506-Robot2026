@@ -30,13 +30,29 @@ public final class Constants {
     REPLAY
   }
 
+  public static class IntakeV3Constants {
+    public static final int motorId = 2506; //mm yes
+
+    public static final double extendSpeed = 0.2;
+    public static final double retractSpeed = -0.2;
+
+    public static final double tolerance = 0.1;
+
+    public static final double maxExtendDistance = 1;
+
+    public static enum IntakeState {
+      IN,
+      OUT
+    }
+  }
+
   // climb not constants
   public static double climbTarget = 0.0;
   public static AutoClimbState currentAutoClimbMode = ClimbConstants.AutoClimbState.IDLE;
 
   // climb constants
   public static class ClimbConstants {
-    // component ids
+    // component ids 
     public static final int climbMotorID = 31;
     public static final int climbEncoderID = 32;
     public static final int climbLimitSwitchID = 0;
@@ -47,7 +63,7 @@ public final class Constants {
     public static double climbRetractSpeed = -0.7; // temp value
 
     // AAAAAAAAAAAAAAAAAAa
-    public static final double targetChangeSpeed = 0.2;
+    public static final double targetChangeSpeed = 0.2;//testing thing
     public static final double holdTolerance = 0.05;
 
     public static final double autoRetractPos = 0.0;
@@ -80,13 +96,13 @@ public final class Constants {
       RETRACTED,
       EXTENDING
     }
+  }
 
-    // function because I need it
-    public static boolean equals(double one, double two, double tol) {
-      if (one - tol < two && one + tol > two) {
-        return true;
-      }
-      return false;
+  // function because I need it
+  public static boolean equals(double one, double two, double tol) {
+    if (one - tol < two && one + tol > two) {
+      return true;
     }
+    return false;
   }
 }

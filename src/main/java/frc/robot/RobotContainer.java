@@ -222,28 +222,30 @@ public class RobotContainer {
                   Constants.ClimbConstants.climbExtendSpeed -= 0.05;
                   Constants.ClimbConstants.climbRetractSpeed += 0.05;
                 }));
-    controller
-        .povUp()
-        .onTrue(
-            new SequentialCommandGroup(
-                new InstantCommand(
-                    () -> {
-                      SmartDashboard.putBoolean("Button", controller.povDown().getAsBoolean());
-                      Constants.climbTarget = Constants.ClimbConstants.autoExtendPos;
-                    }),
-                /* drive and orient to position */
-                new WaitUntilCommand(() -> true),
-                /* stop driving bro */
-                /* move right to some sensor */
-                new WaitUntilCommand(() -> true),
-                /* stop driving bro */
-                /* move forward until sensor */
-                new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
-                /* stop driving bro */
-                new InstantCommand(
-                    () -> {
-                      Constants.climbTarget = Constants.ClimbConstants.autoRetractPos;
-                    })));
+    controller.povUp().onTrue(AutoClimb());
+  }
+
+  public Command AutoClimb() {
+    return new SequentialCommandGroup(
+      new InstantCommand(
+          () -> {
+            Constants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+          }),
+      /* drive and orient to position */
+      new WaitUntilCommand(() -> true),
+      /* stop driving bro */
+      /* move right to some sensor */
+      new WaitUntilCommand(() -> true),
+      /* stop driving bro */
+      /* move forward until sensor */
+
+      //replace this with metal sensor
+      new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
+      /* stop driving bro */
+      new InstantCommand(
+          () -> {
+            Constants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+          }));
   }
 
   /**
