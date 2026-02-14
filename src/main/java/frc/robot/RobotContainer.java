@@ -9,10 +9,13 @@ package frc.robot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.*;
@@ -61,6 +64,9 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
+  public Command AutoClimb(){
+    return new SequentialCommandGroup();
+  }
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -133,6 +139,10 @@ public class RobotContainer {
         break;
     }
 
+    NamedCommands.registerCommand("Launch", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
+    NamedCommands.registerCommand("Intake", new Intake(m_fuelSubsystem));
+    NamedCommands.registerCommand("Climb", AutoClimb());
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -151,7 +161,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -197,7 +206,9 @@ public class RobotContainer {
     controller
         .leftTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakePushSpeed));
-        
+      controller
+        .a()
+        .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
 
     // Reset gyro to 0° when B button is pressed
     // controller
@@ -210,7 +221,6 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
