@@ -8,7 +8,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.Constants.ClimbConstants.AutoClimbState;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -31,12 +30,14 @@ public final class Constants {
   }
 
   public static class IntakeV3Constants {
-    public static final int motorId = 2506; //mm yes
+    public static final int motorId = 56; // mm yes
 
-    public static final double extendSpeed = 0.2;
-    public static final double retractSpeed = -0.2;
+    public static double extendSpeed = 0.05;
+    public static double retractSpeed = -0.05;
 
     public static final double tolerance = 0.1;
+
+    public static double target = 0.0;
 
     public static final double maxExtendDistance = 1;
 
@@ -46,24 +47,25 @@ public final class Constants {
     }
   }
 
-  // climb not constants
-  public static double climbTarget = 0.0;
-  public static AutoClimbState currentAutoClimbMode = ClimbConstants.AutoClimbState.IDLE;
-
   // climb constants
   public static class ClimbConstants {
-    // component ids 
+
+    // climb not constants
+    public static double climbTarget = 0.0;
+    public static AutoClimbState currentAutoClimbMode = ClimbConstants.AutoClimbState.IDLE;
+
+    // component ids
     public static final int climbMotorID = 31;
     public static final int climbEncoderID = 32;
     public static final int climbLimitSwitchID = 0;
     public static final int climbMetalDetectorID = 2;
 
     // motor speeds
-    public static double climbExtendSpeed = 0.85; // temp value //TODO: see how fast these can go
-    public static double climbRetractSpeed = -0.7; // temp value
+    public static double climbExtendSpeed = 0.1; // 85 //TODO: see how fast these can go
+    public static double climbRetractSpeed = -0.1; // 7
 
     // AAAAAAAAAAAAAAAAAAa
-    public static final double targetChangeSpeed = 0.2;//testing thing
+    public static final double targetChangeSpeed = 0.2; // testing thing
     public static final double holdTolerance = 0.05;
 
     public static final double autoRetractPos = 0.0;

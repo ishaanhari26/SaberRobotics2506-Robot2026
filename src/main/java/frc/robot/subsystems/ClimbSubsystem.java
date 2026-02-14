@@ -70,19 +70,19 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public ClimbState getClimbState() {
-    if (Constants.equals(
-        climbMotor.get(), Constants.ClimbConstants.climbRetractSpeed, 0.05)) {
+    if (Constants.equals(climbMotor.get(), Constants.ClimbConstants.climbRetractSpeed, 0.05)) {
       currentState = ClimbState.RETRACTING;
     } else if (Constants.equals(
         climbMotor.get(), Constants.ClimbConstants.climbExtendSpeed, 0.05)) {
       currentState = ClimbState.EXTENDING;
-    } else if (Constants.equals(
-        getEncoder(), Constants.ClimbConstants.encoderClicksToTop, 0.1)) {
+    } else if (Constants.equals(getEncoder(), Constants.ClimbConstants.encoderClicksToTop, 0.1)) {
       currentState = ClimbState.EXTENDED;
     } else if (getLimitSwitch()) {
       currentState = ClimbState.RETRACTED;
     } else if (Constants.equals(
-        Constants.climbTarget, getEncoder(), Constants.ClimbConstants.holdTolerance)) {
+        Constants.ClimbConstants.climbTarget,
+        getEncoder(),
+        Constants.ClimbConstants.holdTolerance)) {
       currentState = ClimbState.ATSETPOINT;
     } else {
       currentState = ClimbState.WhatHaveYouDone;
@@ -91,7 +91,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public AutoClimbState getAutoClimbState() {
-    return Constants.currentAutoClimbMode;
+    return Constants.ClimbConstants.currentAutoClimbMode;
   }
 
   @Override
@@ -107,8 +107,10 @@ public class ClimbSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean(
         "Target Matches Encoder",
         Constants.equals(
-            Constants.climbTarget, getEncoder(), Constants.ClimbConstants.holdTolerance));
-    SmartDashboard.putNumber("Target", Constants.climbTarget);
+            Constants.ClimbConstants.climbTarget,
+            getEncoder(),
+            Constants.ClimbConstants.holdTolerance));
+    SmartDashboard.putNumber("Target", Constants.ClimbConstants.climbTarget);
   }
 
   @Override

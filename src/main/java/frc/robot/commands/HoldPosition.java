@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -19,14 +18,20 @@ public class HoldPosition extends Command {
   /**
    *
    *
-   * <h1>BINGUS BINGERS GIMME YOUR FINGERS</h1>
+   * <h1>HOLD</h1>
+   *
+   * <h1>HOLD</h1>
+   *
+   * <h1>. . .</h1>
+   *
+   * <h1>. . . . . . . . . .</h1>
+   *
+   * <h1>KEEP HOLDING</h1>
    *
    * @param subsystem subsystem, duh
    * @param reset if true, reset the arm
    */
-  public HoldPosition(
-      ClimbSubsystem subsystem,
-      boolean reset) { 
+  public HoldPosition(ClimbSubsystem subsystem, boolean reset) {
     m_subsystem = subsystem;
     this.reset = reset;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -46,11 +51,13 @@ public class HoldPosition extends Command {
   @Override
   public void execute() {
     if (!Constants.equals(
-        Constants.climbTarget, m_subsystem.getEncoder(), Constants.ClimbConstants.holdTolerance)) {
-      if (Constants.climbTarget > m_subsystem.getEncoder()) {
+        Constants.ClimbConstants.climbTarget,
+        m_subsystem.getEncoder(),
+        Constants.ClimbConstants.holdTolerance)) {
+      if (Constants.ClimbConstants.climbTarget > m_subsystem.getEncoder()) {
         // extend
         m_subsystem.runClimb(Constants.ClimbConstants.climbExtendSpeed);
-      } else if (Constants.climbTarget < m_subsystem.getEncoder()) {
+      } else if (Constants.ClimbConstants.climbTarget < m_subsystem.getEncoder()) {
         // retract
         m_subsystem.runClimb(Constants.ClimbConstants.climbRetractSpeed);
       }
@@ -59,16 +66,10 @@ public class HoldPosition extends Command {
     }
     if (m_subsystem.getLimitSwitch()) {
       m_subsystem.resetEncoder();
-      if (!(Constants.climbTarget > 0)) {
-        Constants.climbTarget = 0;
+      if (!(Constants.ClimbConstants.climbTarget > 0)) {
+        Constants.ClimbConstants.climbTarget = 0;
       }
     }
-    SmartDashboard.putBoolean(
-        "Enc = 0",
-        Constants.equals(
-            m_subsystem.getEncoder(), 0, Constants.ClimbConstants.holdTolerance));
-    SmartDashboard.putBoolean("Not Limit Switch", !m_subsystem.getLimitSwitch());
-    SmartDashboard.putNumber("HoldPos active tester", Math.random());
   }
 
   // Called once the command ends or is interrupted.

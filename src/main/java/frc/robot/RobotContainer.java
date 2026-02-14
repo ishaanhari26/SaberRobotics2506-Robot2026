@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -24,11 +23,11 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.Extend;
+import frc.robot.commands.HoldIntakeV3;
 import frc.robot.commands.HoldPosition;
-import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.IntakeV3Subsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -60,6 +59,11 @@ public class RobotContainer {
 
   private final ClimbSubsystem m_climbSubsystem =
       new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder, climbMetalDetector);
+
+  // InV3take
+  public final TalonFX intakeV3Motor = new TalonFX(Constants.IntakeV3Constants.motorId);
+
+  private final IntakeV3Subsystem m_intakeV3Subsystem = new IntakeV3Subsystem(intakeV3Motor);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -184,16 +188,19 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, true));
-    controller.rightBumper().whileTrue(new Extend(m_climbSubsystem));
-    controller.leftBumper().whileTrue(new Retract(m_climbSubsystem));
+    // controller.rightBumper().whileTrue(new Extend(m_climbSubsystem));
+    // controller.leftBumper().whileTrue(new Retract(m_climbSubsystem));
     controller
         .rightTrigger()
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  Constants.climbTarget += Constants.ClimbConstants.targetChangeSpeed;
-                  if (Constants.climbTarget > Constants.ClimbConstants.encoderClicksToTop) {
-                    Constants.climbTarget = Constants.ClimbConstants.encoderClicksToTop;
+                  Constants.ClimbConstants.climbTarget +=
+                      Constants.ClimbConstants.targetChangeSpeed;
+                  if (Constants.ClimbConstants.climbTarget
+                      > Constants.ClimbConstants.encoderClicksToTop) {
+                    Constants.ClimbConstants.climbTarget =
+                        Constants.ClimbConstants.encoderClicksToTop;
                   }
                 }));
     controller
@@ -201,9 +208,10 @@ public class RobotContainer {
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  Constants.climbTarget -= Constants.ClimbConstants.targetChangeSpeed;
-                  if (Constants.climbTarget < 0) {
-                    Constants.climbTarget = 0;
+                  Constants.ClimbConstants.climbTarget -=
+                      Constants.ClimbConstants.targetChangeSpeed;
+                  if (Constants.ClimbConstants.climbTarget < 0) {
+                    Constants.ClimbConstants.climbTarget = 0;
                   }
                 }));
     controller
@@ -211,41 +219,66 @@ public class RobotContainer {
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  Constants.ClimbConstants.climbExtendSpeed += 0.05;
-                  Constants.ClimbConstants.climbRetractSpeed -= 0.05;
+                  Constants.IntakeV3Constants.extendSpeed += 0.05;
+                  Constants.IntakeV3Constants.retractSpeed -= 0.05;
                 }));
     controller
         .povLeft()
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  Constants.ClimbConstants.climbExtendSpeed -= 0.05;
-                  Constants.ClimbConstants.climbRetractSpeed += 0.05;
+                  Constants.IntakeV3Constants.extendSpeed -= 0.05;
+                  Constants.IntakeV3Constants.retractSpeed += 0.05;
                 }));
     controller.povUp().onTrue(AutoClimb());
+
+    m_intakeV3Subsystem.setDefaultCommand(new HoldIntakeV3(m_intakeV3Subsystem, true));
+
+    controller
+        .rightBumper()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.IntakeV3Constants.target += 0.2;
+                  if (Constants.IntakeV3Constants.target
+                      > Constants.IntakeV3Constants.maxExtendDistance) {
+                    Constants.IntakeV3Constants.target =
+                        Constants.IntakeV3Constants.maxExtendDistance;
+                  }
+                }));
+    controller
+        .leftBumper()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.IntakeV3Constants.target -= 0.2;
+                  if (Constants.IntakeV3Constants.target < 0) {
+                    Constants.IntakeV3Constants.target = 0;
+                  }
+                }));
   }
 
   public Command AutoClimb() {
     return new SequentialCommandGroup(
-      new InstantCommand(
-          () -> {
-            Constants.climbTarget = Constants.ClimbConstants.autoExtendPos;
-          }),
-      /* drive and orient to position */
-      new WaitUntilCommand(() -> true),
-      /* stop driving bro */
-      /* move right to some sensor */
-      new WaitUntilCommand(() -> true),
-      /* stop driving bro */
-      /* move forward until sensor */
+        new InstantCommand(
+            () -> {
+              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+            }),
+        /* drive and orient to position */
+        new WaitUntilCommand(() -> true),
+        /* stop driving bro */
+        /* move right to some sensor */
+        new WaitUntilCommand(() -> true),
+        /* stop driving bro */
+        /* move forward until sensor */
 
-      //replace this with metal sensor
-      new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
-      /* stop driving bro */
-      new InstantCommand(
-          () -> {
-            Constants.climbTarget = Constants.ClimbConstants.autoRetractPos;
-          }));
+        // replace this with metal sensor
+        new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
+        /* stop driving bro */
+        new InstantCommand(
+            () -> {
+              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+            }));
   }
 
   /**

@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.IntakeV3Subsystem;
@@ -22,11 +21,10 @@ public class HoldIntakeV3 extends Command {
    * <h1>om nom nom</h1>
    *
    * @param subsystem subsystem, duh
-   * @param reset if true, reset the arm
+   * @param reset if true, reset the encoder value (should only be used when being fully in is
+   *     known)
    */
-  public HoldIntakeV3(
-      IntakeV3Subsystem subsystem,
-      boolean reset) { 
+  public HoldIntakeV3(IntakeV3Subsystem subsystem, boolean reset) {
     m_subsystem = subsystem;
     this.reset = reset;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -38,7 +36,7 @@ public class HoldIntakeV3 extends Command {
   public void initialize() {
     // reset
     if (reset) {
-      m_subsystem.setEncoder(Constants.ClimbConstants.initialRetractValue);
+      m_subsystem.resetEncoder();
     }
   }
 
@@ -46,22 +44,18 @@ public class HoldIntakeV3 extends Command {
   @Override
   public void execute() {
     if (!Constants.equals(
-        Constants.climbTarget, m_subsystem.getEncoder(), Constants.ClimbConstants.holdTolerance)) {
-      if (Constants.climbTarget > m_subsystem.getEncoder()) {
+        Constants.IntakeV3Constants.target,
+        m_subsystem.getEncoder(),
+        Constants.IntakeV3Constants.tolerance)) {
+      if (Constants.IntakeV3Constants.target > m_subsystem.getEncoder()) {
         // extend
-        m_subsystem.runClimb(Constants.ClimbConstants.climbExtendSpeed);
-      } else if (Constants.climbTarget < m_subsystem.getEncoder()) {
+        m_subsystem.runMotor(Constants.IntakeV3Constants.extendSpeed);
+      } else if (Constants.IntakeV3Constants.target < m_subsystem.getEncoder()) {
         // retract
-        m_subsystem.runClimb(Constants.ClimbConstants.climbRetractSpeed);
+        m_subsystem.runMotor(Constants.IntakeV3Constants.retractSpeed);
       }
     } else {
       m_subsystem.stopMotor();
-    }
-    if (m_subsystem.getLimitSwitch()) {
-      m_subsystem.resetEncoder();
-      if (!(Constants.climbTarget > 0)) {
-        Constants.climbTarget = 0;
-      }
     }
   }
 
