@@ -36,7 +36,7 @@ public final class Constants {
     /** The LED strip port. */
     public static final int port = 0;
     /** The LED strip length */
-    public static final int length = 13;
+    public static final int length = 27;
 
     /** The length of time in seconds that the LEDs blink when blinking. */
     public static final double blinkSpeed = 0.25;
