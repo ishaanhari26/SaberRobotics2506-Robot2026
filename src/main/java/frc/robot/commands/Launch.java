@@ -28,7 +28,7 @@ public class Launch extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.runLaunch(Constants.FuelConstants.IntakeLaunchSpeed);
+    m_subsystem.runLaunch(Constants.FuelConstants.LaunchSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

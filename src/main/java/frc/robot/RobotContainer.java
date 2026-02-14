@@ -12,7 +12,6 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -66,9 +65,9 @@ public class RobotContainer {
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
   // Dashboard inputs
-    private final LoggedDashboardChooser<Command> autoChooser;
+  private final LoggedDashboardChooser<Command> autoChooser;
 
-  public Command AutoClimb(){
+  public Command AutoClimb() {
     return new SequentialCommandGroup();
   }
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -142,7 +141,8 @@ public class RobotContainer {
         break;
     }
 
-    NamedCommands.registerCommand("Launch", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
+    NamedCommands.registerCommand(
+        "Launch", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
     NamedCommands.registerCommand("Intake", new Intake(m_fuelSubsystem));
     NamedCommands.registerCommand("Climb", AutoClimb());
 
@@ -209,9 +209,9 @@ public class RobotContainer {
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
     controller
         .leftTrigger()
-        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakePushSpeed));
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.passingSpeed));
     controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
-      controller
+    controller
         .a()
         .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
 
@@ -231,7 +231,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-    public Command getAutonomousCommand() {
-      return autoChooser.get();
-    }
+  public Command getAutonomousCommand() {
+    return autoChooser.get();
+  }
 }
