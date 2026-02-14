@@ -38,8 +38,6 @@ public class LED extends SubsystemBase {
   private LEDConstants.Period state;
   private String gameData;
   private Alliance alliance;
-  private boolean isWarn;
-  private boolean isEndWarn;
   // Timer
   private double matchTime;
 
@@ -299,54 +297,20 @@ public class LED extends SubsystemBase {
      */
     matchTime = Timer.getMatchTime();
     state = getPeriod();
-    isWarn = warn(matchTime, LEDConstants.warningTime);
-    isEndWarn = warn(matchTime, LEDConstants.endWarningTime);
     SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:
-        // Autonomous code
         auto(1);
-        if(isWarn){
-          blink();
-        }
         break;
       case TRANSITION:
       case ACTIVE:
-        if (isWarn) {
-          if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
-            purple();
-            blink();
-          } else {
-            warnActive();
-          }
-          SmartDashboard.putBoolean("WarnTime:", true);
-        } else {
-          active();
-          SmartDashboard.putBoolean("WarnTime:", false);
-        }
+        active();
         break;
       case INACTIVE:
-        if (isWarn) {
-          if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
-            purple();
-            blink();
-          } else {
-            warnInactive();
-          }
-          SmartDashboard.putBoolean("WarnTime:", true);
-        } else {
-          inactive();
-          SmartDashboard.putBoolean("WarnTime:", false);
-        }
+        inactive();
         break;
       case ENDGAME:
         purple();
-        if (isEndWarn) {
-          blink();
-          SmartDashboard.putBoolean("WarnTime:", true);
-        } else {
-          SmartDashboard.putBoolean("WarnTime:", false);
-        }
         break;
       default:
         break;
@@ -373,6 +337,10 @@ public class LED extends SubsystemBase {
         break;
     }
 
+    if(warn(matchTime, (matchTime>LEDConstants.endWarningTime)?LEDConstants.warningTime:LEDConstants.endWarningTime){
+      blink();
+    }
+    
     m_led.setData(m_buffer);
     SmartDashboard.putString("DriverStation Game Data", gameData);
     SmartDashboard.putString("Led Color", m_buffer.getLED(0).toString());
