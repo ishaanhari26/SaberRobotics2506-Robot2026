@@ -38,6 +38,8 @@ public class LED extends SubsystemBase {
   private LEDConstants.Period state;
   private String gameData;
   private Alliance alliance;
+  private boolean isWarn;
+  private boolean isEndWarn;
   // Timer
   private double matchTime;
 
@@ -127,6 +129,14 @@ public class LED extends SubsystemBase {
             .overlayOn(currentPattern));
   }
 
+  public void auto(int selected) {
+    setPattern(
+        currentPattern.mask(
+        LEDPattern.steps(
+              Map.of((m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kWhite))
+            .offsetBy(selected)));
+  }
+
   public void blink() {
     setPattern(currentPattern.blink(Seconds.of(LEDConstants.blinkSpeed)));
   }
@@ -203,6 +213,7 @@ public class LED extends SubsystemBase {
         .stream()
         .anyMatch(num -> ((matchTime - num) <= warningTime && (matchTime - num) > 0)));
   }
+
 
   /**
    *
@@ -289,14 +300,20 @@ public class LED extends SubsystemBase {
      */
     matchTime = Timer.getMatchTime();
     state = getPeriod();
+    isWarn = warn(matchTime, LEDConstants.warningTime);
+    isEndWarn = warn(matchTime, LEDConstants.endWarningTime);
     SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:
         // Autonomous code
+        auto(1);
+        if(isWarn){
+          blink();
+        }
         break;
       case TRANSITION:
       case ACTIVE:
-        if (warn(matchTime, LEDConstants.warningTime)) {
+        if (isWarn) {
           if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
             purple();
             blink();
@@ -310,7 +327,7 @@ public class LED extends SubsystemBase {
         }
         break;
       case INACTIVE:
-        if (warn(matchTime, LEDConstants.warningTime)) {
+        if (isWarn) {
           if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
             purple();
             blink();
@@ -325,7 +342,7 @@ public class LED extends SubsystemBase {
         break;
       case ENDGAME:
         purple();
-        if (warn(matchTime, LEDConstants.endWarningTime)) {
+        if (isEndWarn) {
           blink();
           SmartDashboard.putBoolean("WarnTime:", true);
         } else {
