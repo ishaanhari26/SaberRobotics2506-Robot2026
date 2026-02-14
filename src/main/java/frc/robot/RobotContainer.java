@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -15,7 +17,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.*;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 import frc.robot.commands.DriveCommands;
@@ -33,7 +34,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.vision.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -56,8 +56,8 @@ public class RobotContainer {
   public final TalonFX launchMotor = new TalonFX(Constants.FuelConstants.LaunchMotor);
   public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
 
-
-  private final FuelSubsystem m_fuelSubsystem = new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2);
+  private final FuelSubsystem m_fuelSubsystem =
+      new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2);
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
@@ -66,7 +66,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
     switch (Constants.currentMode) {
       default:
       case REAL:
