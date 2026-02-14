@@ -59,13 +59,14 @@ public final class Constants {
     public static final double LaunchkP = 11; // .1, .6, 1.0, 1.4,5 , 4, 3,2 (8)
     public static final double LaunchkI = 0;
     public static final double LaunchkD = 0.03; // 0.01  0.09
+  }
   /** Constants for the LED subsytem. */
   public static final class LEDConstants {
 
     /** The LED strip port. */
     public static final int port = 0;
     /** The LED strip length */
-    public static final int length = 13;
+    public static final int length = 27;
 
     /** The length of time in seconds that the LEDs blink when blinking. */
     public static final double blinkSpeed = 0.25;
