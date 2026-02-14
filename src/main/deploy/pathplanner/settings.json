@@ -2,7 +2,11 @@
   "robotWidth": 0.9,
   "robotLength": 0.9,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "L",
+    "M",
+    "R"
+  ],
   "autoFolders": [
     "ClimbAndShoot",
     "Depot",
