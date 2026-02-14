@@ -30,7 +30,7 @@ public final class Constants {
   }
 
   public static class IntakeV3Constants {
-    public static final int motorId = 56; // mm yes
+    public static final int motorId = 56; // mm yes 1
 
     public static double extendSpeed = 0.05;
     public static double retractSpeed = -0.05;
