@@ -197,7 +197,9 @@ public class RobotContainer {
     controller
         .leftTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakePushSpeed));
-        
+      controller
+        .a()
+        .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
 
     // Reset gyro to 0° when B button is pressed
     // controller
