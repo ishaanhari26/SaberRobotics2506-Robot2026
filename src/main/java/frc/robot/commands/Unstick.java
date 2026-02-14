@@ -10,7 +10,7 @@ import frc.robot.Constants.*;
 import frc.robot.subsystems.FuelSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class Launch extends Command {
+public class Unstick extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
   private final FuelSubsystem m_subsystem;
 
@@ -19,7 +19,7 @@ public class Launch extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public Launch(FuelSubsystem subsystem) {
+  public Unstick(FuelSubsystem subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -28,16 +28,12 @@ public class Launch extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.runLaunch(Constants.FuelConstants.IntakeLaunchSpeed);
+    m_subsystem.runIntake(Constants.FuelConstants.IntakeEjectSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    // if (m_subsystem.getAtSetpoint()) {
-    m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
-    // }
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
