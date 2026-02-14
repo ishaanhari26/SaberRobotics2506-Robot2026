@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -62,12 +63,14 @@ public class FuelSubsystem extends SubsystemBase {
   }
 
   public void runLaunch(double speed) {
+    LaunchMotor2.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Aligned));
     LaunchMotor.set(speed);
   }
 
   public void runLaunchPID(double speed) {
     // Calculates the output of the PID algorithm based on the sensor reading
     // and sends it to a motor
+    LaunchMotor2.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Aligned));
     calShooter = ShooterPid.calculate(LaunchMotor.getVelocity().getValueAsDouble() * 60, speed);
     currentSpeed = LaunchMotor.getVelocity().getValueAsDouble() * 60;
     errorPlusMotor = (calShooter + currentSpeed);
@@ -85,6 +88,7 @@ public class FuelSubsystem extends SubsystemBase {
   }
 
   public void ConfigureMotors() {
+    LaunchMotor2.setNeutralMode(NeutralModeValue.Coast);
     LaunchMotor2.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Aligned));
   }
 

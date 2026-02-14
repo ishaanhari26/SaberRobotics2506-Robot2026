@@ -24,6 +24,7 @@ import frc.robot.commands.Eject;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
+import frc.robot.commands.Unstick;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AprilTagEstimator;
 import frc.robot.subsystems.FuelSubsystem;
@@ -62,7 +63,7 @@ public class RobotContainer {
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+    private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -200,6 +201,7 @@ public class RobotContainer {
     controller
         .leftTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakePushSpeed));
+    controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
     // Reset gyro to 0° when B button is pressed
     // controller
@@ -218,7 +220,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return autoChooser.get();
-  }
+    public Command getAutonomousCommand() {
+      return autoChooser.get();
+    }
 }

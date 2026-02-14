@@ -34,17 +34,17 @@ public final class Constants {
     // this is the motor id
     public static final int IntakeMotor = 52;
     public static final int FeederMotor = 54;
-    public static final int LaunchMotor = 1;
-    public static final int LaunchMotor2 = 2;
+    public static final int LaunchMotor = 41;
+    public static final int LaunchMotor2 = 42;
 
     // speeds for intake and feeder motors when intaking
-    public static final double IntakeIntakeSpeed = -0.84;
+    public static final double IntakeIntakeSpeed = -1; // 0.84
     // public static final double IntakeIntakeSpeed = -0.6;
     public static final double FeederIntakeSpeed = -1;
 
     // speeds for intake and feeder motors when ejecting
     public static final double IntakeEjectSpeed = 0.84;
-    public static final double FeederEjectSpeed = -1;
+    public static final double FeederEjectSpeed = 1;
 
     // speeds for intake and feeder motors when launching
     public static final double IntakeLaunchSpeed = -0.88;
@@ -68,7 +68,7 @@ public final class Constants {
     /** The LED strip port. */
     public static final int port = 0;
     /** The LED strip length */
-    public static final int length = 13;
+    public static final int length = 27;
 
     /** The length of time in seconds that the LEDs blink when blinking. */
     public static final double blinkSpeed = 0.25;
