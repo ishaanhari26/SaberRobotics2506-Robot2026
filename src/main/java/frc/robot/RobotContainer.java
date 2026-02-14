@@ -209,7 +209,7 @@ public class RobotContainer {
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
     controller
         .leftTrigger()
-        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.passingSpeed));
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
     controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
     controller
         .a()
