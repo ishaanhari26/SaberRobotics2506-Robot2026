@@ -38,6 +38,8 @@ public class LED extends SubsystemBase {
   private LEDConstants.Period state;
   private String gameData;
   private Alliance alliance;
+  private boolean isWarn;
+  private boolean isEndWarn;
   // Timer
   private double matchTime;
 
@@ -293,23 +295,25 @@ public class LED extends SubsystemBase {
     /**
      * Match Times In Seconds: Auto: 20 - 00
      *
-     * Teleop: - Transition Shift: 140 - 130 - Shift 1: 130 - 105 - Shift 2: 105 - 80 - Shift 3:
+     * <p>Teleop: - Transition Shift: 140 - 130 - Shift 1: 130 - 105 - Shift 2: 105 - 80 - Shift 3:
      * 80 - 55 - Shift 4: 55 - 30 - End Game: 30 - 00
      */
     matchTime = Timer.getMatchTime();
     state = getPeriod();
+    isWarn = warn(matchTime, LEDConstants.warningTime);
+    isEndWarn = warn(matchTime, LEDConstants.endWarningTime);
     SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:
         // Autonomous code
         auto(1);
-        if(warn(matchTime, LEDConstants.warningTime)){
+        if(isWarn){
           blink();
         }
         break;
       case TRANSITION:
       case ACTIVE:
-        if (warn(matchTime, LEDConstants.warningTime)) {
+        if (isWarn) {
           if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
             purple();
             blink();
@@ -323,7 +327,7 @@ public class LED extends SubsystemBase {
         }
         break;
       case INACTIVE:
-        if (warn(matchTime, LEDConstants.warningTime)) {
+        if (isWarn) {
           if (matchTime - LEDConstants.endPeriodStart <= LEDConstants.warningTime) {
             purple();
             blink();
@@ -338,7 +342,7 @@ public class LED extends SubsystemBase {
         break;
       case ENDGAME:
         purple();
-        if (warn(matchTime, LEDConstants.endWarningTime)) {
+        if (isEndWarn) {
           blink();
           SmartDashboard.putBoolean("WarnTime:", true);
         } else {
