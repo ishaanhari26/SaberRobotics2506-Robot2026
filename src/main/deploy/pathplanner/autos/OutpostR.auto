@@ -11,9 +11,39 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Launch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "HubOutpostR"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "OutpostHubR"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch"
           }
         }
       ]
