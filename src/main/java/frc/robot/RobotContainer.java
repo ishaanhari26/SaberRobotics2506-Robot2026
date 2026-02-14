@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
+import frc.robot.commands.CommandFactory.DriveDirection;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.HoldIntakeV3;
 import frc.robot.commands.HoldPosition;
@@ -310,20 +312,60 @@ public class RobotContainer {
                 }));
   }
 
+   public Command driveDistance(Double distance, DriveDirection direction) {
+        double speedMetersPerSecond = 1;
+        double timeToRun = distance/speedMetersPerSecond;
+        switch (direction) {
+            case FORWARD:
+                return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
+                    .withTimeout(timeToRun)
+                    .andThen(new InstantCommand(() -> drive.stop(), drive));
+            case REVERSE:
+                return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
+                    .withTimeout(timeToRun)
+                    .andThen(new InstantCommand(() -> drive.stop(), drive));
+            default:
+                return new InstantCommand();
+        }
+    }
+
+    public Command driveUntilBool(boolean condition, DriveDirection direction, double speedMetersPerSecond) {
+        switch (direction) {
+            case FORWARD:
+                return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
+                    .until(() -> condition)
+                    .andThen(new InstantCommand(() -> drive.stop(), drive));
+            case REVERSE:
+                return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
+                    .until(() -> condition)
+                    .andThen(new InstantCommand(() -> drive.stop(), drive));
+            case LEFT:
+                return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, speedMetersPerSecond, 0)), drive)
+                    .until(() -> condition)
+                    .andThen(new InstantCommand(() -> drive.stop(), drive));
+            case RIGHT:
+                return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -speedMetersPerSecond, 0)), drive)
+                    .until(() -> condition)
+                    .andThen(new InstantCommand(() -> drive.stop(), drive));
+            default:
+                return new InstantCommand();
+        }
+    }
+
   public Command AutoClimb() {
     return new SequentialCommandGroup(
         new InstantCommand(
             () -> {
               Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
             }),
-        /* drive and orient to position */
+        new AutoAlignCommand(CommandFactory.getAutoClimbPose(), drive),
         new WaitUntilCommand(() -> true),
-        /* stop driving bro */
+        driveUntilBool(false, DriveDirection.RIGHT, 0.1)
         /* move right to some sensor */
         new WaitUntilCommand(() -> true),
         /* stop driving bro */
         /* move forward until sensor */
-
+        driveUntilBool(false, DriveDirection.FORWARD, 0.1)
         // replace this with metal sensor
         new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
         /* stop driving bro */
