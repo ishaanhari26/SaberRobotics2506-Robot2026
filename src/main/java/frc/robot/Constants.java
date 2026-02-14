@@ -47,10 +47,10 @@ public final class Constants {
     public static final double FeederEjectSpeed = 1;
 
     // speeds for intake and feeder motors when launching
-    public static final double IntakeLaunchSpeed = -0.88;
-    public static final double IntakePushSpeed = -2500;
+    public static final double LaunchSpeed = -0.88;
+    public static final double PassingSpeed = -2500;
     public static final double IntakeLaunchSpeedRPM = -4000; // 4800 is the max possible
-    // public static final double IntakeLaunchSpeed = -0.6;
+    // public static final double LaunchSpeed = -0.6;
     public static final double FeederLaunchSpeed = 1;
     // public static final double FeederLaunchSpeed = -0.75;
 
