@@ -47,20 +47,27 @@ public final class Constants {
     public static final double FeederEjectSpeed = 1;
 
     // speeds for intake and feeder motors when launching
-    public static final double LaunchSpeed = -0.88;
-    public static final double PassingSpeed = -2500;
-    public static final double IntakeLaunchSpeedRPM = -4000; // 4800 is the max possible
+    public static final double LaunchSpeed = -.6;
+    public static final double PassingSpeed = -3000;
+    public static final double IntakeLaunchSpeedRPM =
+        -3500; // 3000,3500,4000; 4800 is the max possible
     // public static final double LaunchSpeed = -0.6;
     public static final double FeederLaunchSpeed = 1;
     // public static final double FeederLaunchSpeed = -0.75;
 
-    public static final double LaunchkS = 0.64;
-    public static final double LaunchkV = 0.28; // 0.1199 , 0.2, 0.1500,.19, 0.3
+    /*
+     * -4000 RPM - 12.5 ft.
+     * 3500 RPM - just over 8ft.
+     * -2500 RPM - invaild.
+     */
+
+    public static final double LaunchkS = 0.23;
+    public static final double LaunchkV = 0.1; // 0.1199 , 0.2, 0.1500,.19, 0.3
     public static final double LaunchkA = 0;
 
-    public static final double LaunchkP = 11; // .1, .6, 1.0, 1.4,5 , 4, 3,2 (8)
+    public static final double LaunchkP = 10; // .1, .6, 1.0, 1.4,5 , 4, 3,2 (8), 11
     public static final double LaunchkI = 0;
-    public static final double LaunchkD = 0.03; // 0.01  0.09
+    public static final double LaunchkD = 0; // 0.01  0.09, 0.03
   }
   /** Constants for the LED subsytem. */
   public static final class LEDConstants {
