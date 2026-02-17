@@ -135,11 +135,11 @@ public class CommandFactory {
   //     }
   // }
 
-    public static Function<Pose2d, Pose2d> getAutoClimbPose() { //TODO: find the actual position
-        return (Pose2d pose) -> {
-            return new Pose2d(2.5, 0.6, new Rotation2d(Math.PI));
-        };
-    }
+  public static Function<Pose2d, Pose2d> getAutoClimbPose() { // TODO: find the actual position
+    return (Pose2d pose) -> {
+      return new Pose2d(2.5, 0.6, new Rotation2d(Math.PI));
+    };
+  }
 
   public static void initialize() {
     refreshAlliance();
