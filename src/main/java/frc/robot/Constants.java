@@ -58,6 +58,7 @@ public final class Constants {
     /*
      * -4000 RPM - 12.5 ft.
      * 3500 RPM - just over 8ft.
+     * 3500 RPM - 6ft 2 in.
      * -2500 RPM - invaild.
      */
 
