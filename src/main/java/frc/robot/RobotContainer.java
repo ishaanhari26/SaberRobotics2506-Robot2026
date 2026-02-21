@@ -283,13 +283,6 @@ public class RobotContainer {
     controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
 
     controller.povUp().whileTrue(AutoClimb());
-    controller
-        .povDown()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  SmartDashboard.putNumber("Encoder Test", m_climbSubsystem.getEncoder());
-                }));
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
   }
