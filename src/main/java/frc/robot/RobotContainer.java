@@ -14,7 +14,6 @@ import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -22,7 +21,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 // import frc.robot.commands.AutoAlignCommand;
 // import frc.robot.commands.DriveCommands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -42,7 +40,6 @@ import frc.robot.subsystems.LED;
 // import frc.robot.subsystems.drive.ModuleIO;
 // import frc.robot.subsystems.drive.ModuleIOSim;
 // import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -84,7 +81,7 @@ public class RobotContainer {
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+  //   private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -164,7 +161,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Climb", AutoClimb());
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
     // autoChooser.addOption(
@@ -208,10 +205,9 @@ public class RobotContainer {
             () ->
                 drive
                     .withVelocityX(
-                        -controller.getLeftY()
-                            * MaxSpeed) // Drive forward with negative Y (forward)
+                        controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(
-                        -controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(
                         -controller.getRightX()
                             * MaxAngularRate) // Drive counterclockwise with negative X (left)
@@ -244,6 +240,7 @@ public class RobotContainer {
         .leftTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
     controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
+
     // controller
     //     .a()
     //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
@@ -311,7 +308,8 @@ public class RobotContainer {
     return new SequentialCommandGroup(
         new InstantCommand(
             () -> {
-              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+              //   SmartDashboard.putNumber("encoder", climb.getPosition().getValueAsDouble());
+              //   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
             }),
         // new AutoAlignCommand(CommandFactory.getAutoClimbPose(), drive),
         // driveUntilBool(false /* detect side impact */, DriveDirection.RIGHT, 0.1),
@@ -320,10 +318,10 @@ public class RobotContainer {
         //     .andThen(new InstantCommand(() -> drive.stop(), drive)),
         // driveUntilBool(m_climbSubsystem.getMetalSensor(), DriveDirection.FORWARD, 0.1),
         // replace this with metal sensor
-        new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
+        // new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
         new InstantCommand(
             () -> {
-              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+              //   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
             }));
   }
 
@@ -333,6 +331,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return null; // autoChooser.get();
   }
 }
