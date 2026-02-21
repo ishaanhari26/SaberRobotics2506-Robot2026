@@ -21,6 +21,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -41,7 +42,6 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FuelSubsystem;
-import frc.robot.subsystems.IntakeV3Subsystem;
 import frc.robot.subsystems.LED;
 // import frc.robot.subsystems.drive.Drive;
 // import frc.robot.subsystems.drive.GyroIO;
@@ -92,9 +92,9 @@ public class RobotContainer {
       new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder, climbMetalDetector);
 
   // InV3take
-  public final TalonFX intakeV3Motor = new TalonFX(Constants.IntakeV3Constants.motorId);
+  //   public final TalonFX intakeV3Motor = new TalonFX(Constants.IntakeV3Constants.motorId);
 
-  private final IntakeV3Subsystem m_intakeV3Subsystem = new IntakeV3Subsystem(intakeV3Motor);
+  //   private final IntakeV3Subsystem m_intakeV3Subsystem = new IntakeV3Subsystem(intakeV3Motor);
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
@@ -108,7 +108,7 @@ public class RobotContainer {
 
   // Dashboard inputs
   //   private final LoggedDashboardChooser<Command> autoChooser;
-    private final LoggedDashboardChooser<Command> autoChooser;
+  private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -279,7 +279,20 @@ public class RobotContainer {
     controller.povRight().whileTrue(new Extend(m_climbSubsystem));
     controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
 
-    controller.povUp().whileTrue(AutoClimb());
+    controller
+        .povUp()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+                }));
+    controller
+        .povDown()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+                }));
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
   }
@@ -362,7 +375,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // return autoChooser.get();
-    return null;
+    return autoChooser.get();
   }
 }

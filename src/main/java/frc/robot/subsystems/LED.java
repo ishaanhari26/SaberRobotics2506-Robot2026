@@ -332,10 +332,10 @@ public class LED extends SubsystemBase {
     SmartDashboard.putString("LEDMode:", LED.LEDMode.name());
     switch (LED.LEDMode) {
       case SHOOT:
-        scrollWhite();
+        // scrollWhite();
         break;
       case INTAKE:
-        scrollAquamarine();
+        // scrollAquamarine();
         break;
       case CLIMB:
         gold();

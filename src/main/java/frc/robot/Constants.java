@@ -183,8 +183,8 @@ public final class Constants {
     public static final int climbMetalDetectorID = 2;
 
     // motor speeds
-    public static double climbExtendSpeed = 0.1; // 85 //TODO: see how fast these can go
-    public static double climbRetractSpeed = -0.1; // 7
+    public static double climbExtendSpeed = 0.7; // 85 //TODO: see how fast these can go
+    public static double climbRetractSpeed = -0.7; // 7
 
     // AAAAAAAAAAAAAAAAAAa
     public static final double targetChangeSpeed = 0.2; // testing thing
