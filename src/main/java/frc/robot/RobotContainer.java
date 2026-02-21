@@ -19,24 +19,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.AutoAlignCommand;
+// import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
-import frc.robot.commands.DriveCommands;
+// import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Eject;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Unstick;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AprilTagEstimator;
+// import frc.robot.subsystems.AprilTagEstimator;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.LED;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
-import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.drive.ModuleIOTalonFX;
+// import frc.robot.subsystems.drive.Drive;
+// import frc.robot.subsystems.drive.GyroIO;
+// import frc.robot.subsystems.drive.GyroIOPigeon2;
+// import frc.robot.subsystems.drive.ModuleIO;
+// import frc.robot.subsystems.drive.ModuleIOSim;
+// import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -47,8 +48,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final Drive drive;
-  public final AprilTagEstimator aprilTagEstimator;
+  private final CommandSwerveDrivetrain drive = TunerConstants.createDrivetrain();
+//   public final AprilTagEstimator aprilTagEstimator;
   private final LED led = new LED();
 
   // Controller
@@ -72,74 +73,74 @@ public class RobotContainer {
   }
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    switch (Constants.currentMode) {
-      default:
-      case REAL:
-        // Real robot, instantiate hardware IO implementations
-        // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
-        // a CANcoder
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
+    // switch (Constants.currentMode) {
+    //   default:
+    //   case REAL:
+    //     // Real robot, instantiate hardware IO implementations
+    //     // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
+    //     // a CANcoder
+    //     drive =
+    //         new Drive(
+    //             new GyroIOPigeon2(),
+    //             new ModuleIOTalonFX(TunerConstants.FrontLeft),
+    //             new ModuleIOTalonFX(TunerConstants.FrontRight),
+    //             new ModuleIOTalonFX(TunerConstants.BackLeft),
+    //             new ModuleIOTalonFX(TunerConstants.BackRight));
 
-        aprilTagEstimator =
-            // new Vision(
-            //     drive::addVisionMeasurement,
-            //     new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation));
-            // new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
-            new AprilTagEstimator(drive);
+    //     aprilTagEstimator =
+    //         // new Vision(
+    //         //     drive::addVisionMeasurement,
+    //         //     new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation));
+    //         // new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
+    //         new AprilTagEstimator(drive);
 
-        // The ModuleIOTalonFXS implementation provides an example implementation for
-        // TalonFXS controller connected to a CANdi with a PWM encoder. The
-        // implementations
-        // of ModuleIOTalonFX, ModuleIOTalonFXS, and ModuleIOSpark (from the Spark
-        // swerve
-        // template) can be freely intermixed to support alternative hardware
-        // arrangements.
-        // Please see the AdvantageKit template documentation for more information:
-        // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
-        //
-        // drive =
-        // new Drive(
-        // new GyroIOPigeon2(),
-        // new ModuleIOTalonFXS(TunerConstants.FrontLeft),
-        // new ModuleIOTalonFXS(TunerConstants.FrontRight),
-        // new ModuleIOTalonFXS(TunerConstants.BackLeft),
-        // new ModuleIOTalonFXS(TunerConstants.BackRight));
-        break;
+    //     // The ModuleIOTalonFXS implementation provides an example implementation for
+    //     // TalonFXS controller connected to a CANdi with a PWM encoder. The
+    //     // implementations
+    //     // of ModuleIOTalonFX, ModuleIOTalonFXS, and ModuleIOSpark (from the Spark
+    //     // swerve
+    //     // template) can be freely intermixed to support alternative hardware
+    //     // arrangements.
+    //     // Please see the AdvantageKit template documentation for more information:
+    //     // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
+    //     //
+    //     // drive =
+    //     // new Drive(
+    //     // new GyroIOPigeon2(),
+    //     // new ModuleIOTalonFXS(TunerConstants.FrontLeft),
+    //     // new ModuleIOTalonFXS(TunerConstants.FrontRight),
+    //     // new ModuleIOTalonFXS(TunerConstants.BackLeft),
+    //     // new ModuleIOTalonFXS(TunerConstants.BackRight));
+    //     break;
 
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
+    //   case SIM:
+    //     // Sim robot, instantiate physics sim IO implementations
+    //     drive =
+    //         new Drive(
+    //             new GyroIO() {},
+    //             new ModuleIOSim(TunerConstants.FrontLeft),
+    //             new ModuleIOSim(TunerConstants.FrontRight),
+    //             new ModuleIOSim(TunerConstants.BackLeft),
+    //             new ModuleIOSim(TunerConstants.BackRight));
 
-        aprilTagEstimator = new AprilTagEstimator(drive);
+    //     aprilTagEstimator = new AprilTagEstimator(drive);
 
-        break;
+    //     break;
 
-      case REPLAY:
-        // Replayed robot, disable IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+    //   case REPLAY:
+    //     // Replayed robot, disable IO implementations
+    //     drive =
+    //         new Drive(
+    //             new GyroIO() {},
+    //             new ModuleIO() {},
+    //             new ModuleIO() {},
+    //             new ModuleIO() {},
+    //             new ModuleIO() {});
 
-        aprilTagEstimator = new AprilTagEstimator(drive);
+    //     aprilTagEstimator = new AprilTagEstimator(drive);
 
-        break;
-    }
+    //     break;
+    // }
 
     NamedCommands.registerCommand(
         "Launch", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
@@ -150,10 +151,10 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
     autoChooser.addOption(
         "Drive SysId (Quasistatic Forward)",
         drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
@@ -176,16 +177,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> xLimiter.calculate(-controller.getLeftY()),
-            () -> yLimiter.calculate(-controller.getLeftX()),
-            () -> controller.getRightX()));
+    // drive.setDefaultCommand(
+    //     DriveCommands.joystickDrive(
+    //         drive,
+    //         () -> xLimiter.calculate(-controller.getLeftY()),
+    //         () -> yLimiter.calculate(-controller.getLeftX()),
+    //         () -> controller.getRightX()));
 
-    controller
-        .a()
-        .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
+    // controller
+    //     .a()
+    //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
 
     // Lock to 0° when A button is held
     // controller
@@ -211,9 +212,9 @@ public class RobotContainer {
         .leftTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
     controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
-    controller
-        .a()
-        .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
+    // controller
+    //     .a()
+    //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
 
     // Reset gyro to 0° when B button is pressed
     // controller
