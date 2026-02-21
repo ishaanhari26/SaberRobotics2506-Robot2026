@@ -114,7 +114,12 @@ public class LED extends SubsystemBase {
 
   public void scrollWhite() {
     setPattern(
-        LEDPattern.steps(Map.of(0, Color.kBlack, (m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kWhite))
+        LEDPattern.steps(
+                Map.of(
+                    0,
+                    Color.kBlack,
+                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    Color.kWhite))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
   }
@@ -122,7 +127,11 @@ public class LED extends SubsystemBase {
   public void scrollAquamarine() {
     setPattern(
         LEDPattern.steps(
-                Map.of(0, Color.kBlack, (m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kAquamarine))
+                Map.of(
+                    0,
+                    Color.kBlack,
+                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    Color.kAquamarine))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
   }
@@ -131,7 +140,11 @@ public class LED extends SubsystemBase {
     setPattern(
         currentPattern.mask(
             LEDPattern.steps(
-                    Map.of(0, Color.kBlack, (m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kWhite))
+                    Map.of(
+                        0,
+                        Color.kBlack,
+                        (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                        Color.kWhite))
                 .offsetBy(selected)));
   }
 
@@ -300,7 +313,7 @@ public class LED extends SubsystemBase {
     SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:
-        auto(1);
+        // auto(1);
         break;
       case TRANSITION:
       case ACTIVE:
@@ -341,7 +354,9 @@ public class LED extends SubsystemBase {
         matchTime,
         (matchTime > LEDConstants.endWarningTime)
             ? LEDConstants.warningTime
-            : (!DriverStation.isAutonomous())?LEDConstants.endWarningTime:LEDConstants.warningTime)) {
+            : (!DriverStation.isAutonomous())
+                ? LEDConstants.endWarningTime
+                : LEDConstants.warningTime)) {
       blink();
     }
 

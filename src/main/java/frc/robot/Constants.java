@@ -231,7 +231,7 @@ public final class Constants {
   }
 
   public static class AutoConstants {
-    public static final int launchTime = 5;
-    public static final int intakeTime = 5;
+    public static final double launchTime = 5;
+    public static final double intakeTime = 5;
   }
 }
