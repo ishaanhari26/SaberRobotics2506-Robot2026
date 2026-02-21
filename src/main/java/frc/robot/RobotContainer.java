@@ -318,52 +318,52 @@ public class RobotContainer {
     //                 }));
   }
 
-  public Command driveDistance(Double distance, DriveDirection direction) {
-    double speedMetersPerSecond = 1;
-    double timeToRun = distance / speedMetersPerSecond;
-    switch (direction) {
-      case FORWARD:
-        return Commands.run(
-                () -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
-            .withTimeout(timeToRun)
-            .andThen(new InstantCommand(() -> drive.stop(), drive));
-      case REVERSE:
-        return Commands.run(
-                () -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
-            .withTimeout(timeToRun)
-            .andThen(new InstantCommand(() -> drive.stop(), drive));
-      default:
-        return new InstantCommand();
-    }
-  }
+//   public Command driveDistance(Double distance, DriveDirection direction) {
+//     double speedMetersPerSecond = 1;
+//     double timeToRun = distance / speedMetersPerSecond;
+//     switch (direction) {
+//       case FORWARD:
+//         return Commands.run(
+//                 () -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
+//             .withTimeout(timeToRun)
+//             .andThen(new InstantCommand(() -> drive.stop(), drive));
+//       case REVERSE:
+//         return Commands.run(
+//                 () -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
+//             .withTimeout(timeToRun)
+//             .andThen(new InstantCommand(() -> drive.stop(), drive));
+//       default:
+//         return new InstantCommand();
+//     }
+//   }
 
-  public Command driveUntilBool(
-      boolean condition, DriveDirection direction, double speedMetersPerSecond) {
-    switch (direction) {
-      case FORWARD:
-        return Commands.run(
-                () -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
-            .until(() -> condition)
-            .andThen(new InstantCommand(() -> drive.stop(), drive));
-      case REVERSE:
-        return Commands.run(
-                () -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
-            .until(() -> condition)
-            .andThen(new InstantCommand(() -> drive.stop(), drive));
-      case LEFT:
-        return Commands.run(
-                () -> drive.runVelocity(new ChassisSpeeds(0, speedMetersPerSecond, 0)), drive)
-            .until(() -> condition)
-            .andThen(new InstantCommand(() -> drive.stop(), drive));
-      case RIGHT:
-        return Commands.run(
-                () -> drive.runVelocity(new ChassisSpeeds(0, -speedMetersPerSecond, 0)), drive)
-            .until(() -> condition)
-            .andThen(new InstantCommand(() -> drive.stop(), drive));
-      default:
-        return new InstantCommand();
-    }
-  }
+//   public Command driveUntilBool(
+//       boolean condition, DriveDirection direction, double speedMetersPerSecond) {
+//     switch (direction) {
+//       case FORWARD:
+//         return Commands.run(
+//                 () -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
+//             .until(() -> condition)
+//             .andThen(new InstantCommand(() -> drive.stop(), drive));
+//       case REVERSE:
+//         return Commands.run(
+//                 () -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
+//             .until(() -> condition)
+//             .andThen(new InstantCommand(() -> drive.stop(), drive));
+//       case LEFT:
+//         return Commands.run(
+//                 () -> drive.runVelocity(new ChassisSpeeds(0, speedMetersPerSecond, 0)), drive)
+//             .until(() -> condition)
+//             .andThen(new InstantCommand(() -> drive.stop(), drive));
+//       case RIGHT:
+//         return Commands.run(
+//                 () -> drive.runVelocity(new ChassisSpeeds(0, -speedMetersPerSecond, 0)), drive)
+//             .until(() -> condition)
+//             .andThen(new InstantCommand(() -> drive.stop(), drive));
+//       default:
+//         return new InstantCommand();
+//     }
+//   }
 
   public Command AutoClimb() {
     return new SequentialCommandGroup(
