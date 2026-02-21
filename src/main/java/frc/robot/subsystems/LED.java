@@ -337,11 +337,7 @@ public class LED extends SubsystemBase {
         break;
     }
 
-    if (warn(
-        matchTime,
-        (matchTime > LEDConstants.endWarningTime)
-            ? LEDConstants.warningTime
-            : LEDConstants.endWarningTime)) {
+    if(warn(matchTime, (matchTime>LEDConstants.endWarningTime)?LEDConstants.warningTime:LEDConstants.endWarningTime)){
       blink();
     }
 
