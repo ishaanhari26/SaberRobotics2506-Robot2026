@@ -159,8 +159,8 @@ public class RobotContainer {
     // }
 
     NamedCommands.registerCommand(
-        "Launch", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM).withTimeout(1));
-    NamedCommands.registerCommand("Intake", new Intake(m_fuelSubsystem).withTimeout(1));
+        "Launch", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM).withTimeout(5));
+    NamedCommands.registerCommand("Intake", new Intake(m_fuelSubsystem).withTimeout(5));
     NamedCommands.registerCommand("Climb", AutoClimb());
 
     // Set up auto routines
@@ -168,7 +168,7 @@ public class RobotContainer {
 
     // Set up SysId routines
     autoChooser.addOption(
-        "JustShoot", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM).withTimeout(1));
+        "JustShoot", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM).withTimeout(5));
     // Configure the button bindings
     configureButtonBindings();
   }
