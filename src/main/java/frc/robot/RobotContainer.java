@@ -7,9 +7,13 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,6 +22,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -28,18 +33,24 @@ import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 import frc.robot.commands.CommandFactory.DriveDirection;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Eject;
+import frc.robot.commands.Intake;
+import frc.robot.commands.Launch;
+import frc.robot.commands.LaunchPID;
+import frc.robot.commands.Unstick;
 import frc.robot.commands.HoldIntakeV3;
 import frc.robot.commands.HoldPosition;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeV3Subsystem;
+import frc.robot.subsystems.FuelSubsystem;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.vision.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -52,10 +63,18 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   public final Vision aprilTagEstimator;
+  private final LED led = new LED();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
+  public final TalonFX intakeMotor = new TalonFX(Constants.FuelConstants.IntakeMotor);
+  public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
+  public final TalonFX launchMotor = new TalonFX(Constants.FuelConstants.LaunchMotor);
+  public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
+
+  private final FuelSubsystem m_fuelSubsystem =
+      new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2);
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
@@ -81,6 +100,9 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
+  public Command AutoClimb() {
+    return new SequentialCommandGroup();
+  }
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -98,6 +120,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
         aprilTagEstimator =
+            // new Vision(
+            //     drive::addVisionMeasurement,
+            //     new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation));
+            // new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
+            new AprilTagEstimator(drive);
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation));
@@ -156,6 +183,11 @@ public class RobotContainer {
         break;
     }
 
+    NamedCommands.registerCommand(
+        "Launch", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
+    NamedCommands.registerCommand("Intake", new Intake(m_fuelSubsystem));
+    NamedCommands.registerCommand("Climb", AutoClimb());
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -174,7 +206,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -193,6 +224,10 @@ public class RobotContainer {
             () -> xLimiter.calculate(controller.getLeftY()),
             () -> yLimiter.calculate(controller.getLeftX()),
             () -> controller.getRightX()));
+
+    controller
+        .a()
+        .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
 
     controller
         .rightTrigger()
@@ -215,6 +250,17 @@ public class RobotContainer {
     // Switch to X pattern when X button is pressed
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
+    // fuelSubsystem buttons Intake, Launch, Eject
+    controller.leftBumper().whileTrue(new Intake(m_fuelSubsystem));
+    controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
+    controller.y().whileTrue(new Eject(m_fuelSubsystem));
+    controller
+        .rightTrigger()
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
+    controller
+        .leftTrigger()
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
+    controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
     controller
         .a()
         .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
@@ -231,160 +277,7 @@ public class RobotContainer {
     //                         new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
     //                 drive)
     //             .ignoringDisable(true));
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                    drive)
-                .ignoringDisable(true));
-
-    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, true));
-    // controller.rightBumper().whileTrue(new Extend(m_climbSubsystem));
-    // controller.leftBumper().whileTrue(new Retract(m_climbSubsystem));
-    controller
-        .rightTrigger()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget +=
-                      Constants.ClimbConstants.targetChangeSpeed;
-                  if (Constants.ClimbConstants.climbTarget
-                      > Constants.ClimbConstants.encoderClicksToTop) {
-                    Constants.ClimbConstants.climbTarget =
-                        Constants.ClimbConstants.encoderClicksToTop;
-                  }
-                }));
-    controller
-        .leftTrigger()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget -=
-                      Constants.ClimbConstants.targetChangeSpeed;
-                  if (Constants.ClimbConstants.climbTarget < 0) {
-                    Constants.ClimbConstants.climbTarget = 0;
-                  }
-                }));
-    controller
-        .povRight()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.IntakeV3Constants.extendSpeed += 0.05;
-                  Constants.IntakeV3Constants.retractSpeed -= 0.05;
-                }));
-    controller
-        .povLeft()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.IntakeV3Constants.extendSpeed -= 0.05;
-                  Constants.IntakeV3Constants.retractSpeed += 0.05;
-                }));
-    controller
-        .povUp()
-        .onTrue(
-            AutoClimb()
-            // driveUntilBool(controller.povDown().getAsBoolean(), DriveDirection.FORWARD, 0.01)
-            );
-    // there is no error here
-
-    m_intakeV3Subsystem.setDefaultCommand(new HoldIntakeV3(m_intakeV3Subsystem, true));
-
-    //     controller
-    //         .rightBumper()
-    //         .whileTrue(
-    //             new InstantCommand(
-    //                 () -> {
-    //                   Constants.IntakeV3Constants.target += 0.2;
-    //                   if (Constants.IntakeV3Constants.target
-    //                       > Constants.IntakeV3Constants.maxExtendDistance) {
-    //                     Constants.IntakeV3Constants.target =
-    //                         Constants.IntakeV3Constants.maxExtendDistance;
-    //                   }
-    //                 }));
-    //     controller
-    //         .leftBumper()
-    //         .whileTrue(
-    //             new InstantCommand(
-    //                 () -> {
-    //                   Constants.IntakeV3Constants.target -= 0.2;
-    //                   if (Constants.IntakeV3Constants.target < 0) {
-    //                     Constants.IntakeV3Constants.target = 0;
-    //                   }
-    //                 }));
   }
-
-//   public Command driveDistance(Double distance, DriveDirection direction) {
-//     double speedMetersPerSecond = 1;
-//     double timeToRun = distance / speedMetersPerSecond;
-//     switch (direction) {
-//       case FORWARD:
-//         return Commands.run(
-//                 () -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
-//             .withTimeout(timeToRun)
-//             .andThen(new InstantCommand(() -> drive.stop(), drive));
-//       case REVERSE:
-//         return Commands.run(
-//                 () -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
-//             .withTimeout(timeToRun)
-//             .andThen(new InstantCommand(() -> drive.stop(), drive));
-//       default:
-//         return new InstantCommand();
-//     }
-//   }
-
-//   public Command driveUntilBool(
-//       boolean condition, DriveDirection direction, double speedMetersPerSecond) {
-//     switch (direction) {
-//       case FORWARD:
-//         return Commands.run(
-//                 () -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
-//             .until(() -> condition)
-//             .andThen(new InstantCommand(() -> drive.stop(), drive));
-//       case REVERSE:
-//         return Commands.run(
-//                 () -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
-//             .until(() -> condition)
-//             .andThen(new InstantCommand(() -> drive.stop(), drive));
-//       case LEFT:
-//         return Commands.run(
-//                 () -> drive.runVelocity(new ChassisSpeeds(0, speedMetersPerSecond, 0)), drive)
-//             .until(() -> condition)
-//             .andThen(new InstantCommand(() -> drive.stop(), drive));
-//       case RIGHT:
-//         return Commands.run(
-//                 () -> drive.runVelocity(new ChassisSpeeds(0, -speedMetersPerSecond, 0)), drive)
-//             .until(() -> condition)
-//             .andThen(new InstantCommand(() -> drive.stop(), drive));
-//       default:
-//         return new InstantCommand();
-//     }
-//   }
-
-  public Command AutoClimb() {
-    return new SequentialCommandGroup(
-        new InstantCommand(
-            () -> {
-              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
-            }),
-        // new AutoAlignCommand(CommandFactory.getAutoClimbPose(), drive),
-        // driveUntilBool(true /* detect side impact */, DriveDirection.RIGHT, 0.1),
-        // Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -0.1, 0)), drive)
-        //     .withTimeout(3)
-        //     .andThen(new InstantCommand(() -> drive.stop(), drive)),
-        // driveUntilBool(m_climbSubsystem.getMetalSensor(), DriveDirection.FORWARD, 0.1),
-        // replace this with metal sensor
-        new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
-        new InstantCommand(
-            () -> {
-              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
-            }));
-  }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
