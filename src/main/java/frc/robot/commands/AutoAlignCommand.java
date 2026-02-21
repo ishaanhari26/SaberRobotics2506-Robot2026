@@ -72,11 +72,13 @@
 //           throttleGains.build().kI,
 //           throttleGains.build().kD,
 //           new Constraints(
-//               m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
+//               m_maxThrottle.in(MetersPerSecond),
+// m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
 //   private PIDController spinPID = new PIDController(5.25, 0.0, 0);
 
 //   /**
-//    * This command utilitzes the swerve drive while it isn't field relative. The swerve drive returns
+//    * This command utilitzes the swerve drive while it isn't field relative. The swerve drive
+// returns
 //    * back to field relative after the command is used.
 //    *
 //    * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a
@@ -85,20 +87,23 @@
 //    * @param name The LoggedTunableNumber's (should be) exclusive name
 //    */
 //   public AutoAlignCommand(
-//       Function<Pose2d, Pose2d> getTargetPoseFunction, CommandSwerveDrivetrain drivetrain, String name) {
+//       Function<Pose2d, Pose2d> getTargetPoseFunction, CommandSwerveDrivetrain drivetrain, String
+// name) {
 //     this.getTargetPoseFn = getTargetPoseFunction;
 //     this.drivetrain = drivetrain;
 //   }
 
 //   /**
-//    * This command utilitzes the swerve drive while it isn't field relative. The swerve drive returns
+//    * This command utilitzes the swerve drive while it isn't field relative. The swerve drive
+// returns
 //    * back to field relative after the command is used.
 //    *
 //    * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a
 //    *     target position.
 //    * @param drivetrain The Drive class to get the current pose from.
 //    */
-//   public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, CommandSwerveDrivetrain drivetrain) {
+//   public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, CommandSwerveDrivetrain
+// drivetrain) {
 //     this(getTargetPoseFunction, drivetrain, "AutoAlign");
 //   }
 
@@ -201,7 +206,8 @@
 //   public boolean isFinished() {
 //     return MathUtil.isNear(m_tx, 0.0, toleranceR.getAsDouble())
 //         && MathUtil.isNear(m_ty, 0.0, toleranceB.getAsDouble())
-//         && MathUtil.isNear(m_tr, 0.0, (toleranceB.getAsDouble() + toleranceR.getAsDouble()) / 2.0);
+//         && MathUtil.isNear(m_tr, 0.0, (toleranceB.getAsDouble() + toleranceR.getAsDouble()) /
+// 2.0);
 //   }
 
 //   @Override

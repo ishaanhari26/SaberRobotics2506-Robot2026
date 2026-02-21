@@ -64,7 +64,8 @@
 //   }
 
 //   /**
-//    * Field relative drive command using two joysticks (controlling linear and angular velocities).
+//    * Field relative drive command using two joysticks (controlling linear and angular
+// velocities).
 //    */
 //   public static Command joystickDrive(
 //       Drive drive,
@@ -127,7 +128,8 @@
 //             () -> {
 //               // Get linear velocity
 //               Translation2d linearVelocity =
-//                   getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+//                   getLinearVelocityFromJoysticks(xSupplier.getAsDouble(),
+// ySupplier.getAsDouble());
 
 //               // Calculate angular speed
 //               double omega =
@@ -293,7 +295,8 @@
 //                       for (int i = 0; i < 4; i++) {
 //                         wheelDelta += Math.abs(positions[i] - state.positions[i]) / 4.0;
 //                       }
-//                       double wheelRadius = (state.gyroDelta * Drive.DRIVE_BASE_RADIUS) / wheelDelta;
+//                       double wheelRadius = (state.gyroDelta * Drive.DRIVE_BASE_RADIUS) /
+// wheelDelta;
 
 //                       NumberFormat formatter = new DecimalFormat("#0.000");
 //                       System.out.println(

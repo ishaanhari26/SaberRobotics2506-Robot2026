@@ -7,9 +7,13 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -17,18 +21,16 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 // import frc.robot.commands.AutoAlignCommand;
-import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.DriveCommands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+// import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Unstick;
 import frc.robot.generated.TunerConstants;
-// import frc.robot.subsystems.AprilTagEstimator;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.LED;
@@ -48,9 +50,13 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final CommandSwerveDrivetrain drive = TunerConstants.createDrivetrain();
-//   public final AprilTagEstimator aprilTagEstimator;
+  //   public final AprilTagEstimator aprilTagEstimator;
   private final LED led = new LED();
+  private double MaxSpeed =
+      1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+  private double MaxAngularRate =
+      RotationsPerSecond.of(0.75)
+          .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -64,6 +70,16 @@ public class RobotContainer {
       new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2);
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+
+  private final SwerveRequest.FieldCentric drive =
+      new SwerveRequest.FieldCentric()
+          .withDeadband(MaxSpeed * 0.1)
+          .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDriveRequestType(
+              DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -102,7 +118,8 @@ public class RobotContainer {
     //     // template) can be freely intermixed to support alternative hardware
     //     // arrangements.
     //     // Please see the AdvantageKit template documentation for more information:
-    //     // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
+    //     //
+    // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
     //     //
     //     // drive =
     //     // new Drive(
@@ -155,16 +172,16 @@ public class RobotContainer {
     //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
     // autoChooser.addOption(
     //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Forward)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Reverse)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -172,18 +189,34 @@ public class RobotContainer {
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * edu.wpi.first.wpilibj.controller} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj2.command.button.controllerButton}.
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
     // drive.setDefaultCommand(
-    //     DriveCommands.joystickDrive(
+    //     DriveCommands.controllerDrive(
     //         drive,
     //         () -> xLimiter.calculate(-controller.getLeftY()),
     //         () -> yLimiter.calculate(-controller.getLeftX()),
     //         () -> controller.getRightX()));
 
+    controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
+
+    drivetrain.setDefaultCommand(
+        // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(
+            () ->
+                drive
+                    .withVelocityX(
+                        -controller.getLeftY()
+                            * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(
+                        -controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(
+                        -controller.getRightX()
+                            * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            ));
     // controller
     //     .a()
     //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
@@ -192,7 +225,7 @@ public class RobotContainer {
     // controller
     //     .a()
     //     .whileTrue(
-    //         DriveCommands.joystickDriveAtAngle(
+    //         DriveCommands.controllerDriveAtAngle(
     //             drive,
     //             () -> -controller.getLeftY(),
     //             () -> -controller.getLeftX(),
