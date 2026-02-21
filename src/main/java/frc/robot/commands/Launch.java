@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.FuelSubsystem;
+import frc.robot.subsystems.LED;
 
 /** An example command that uses an example subsystem. */
 public class Launch extends Command {
@@ -28,6 +29,7 @@ public class Launch extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    LED.setMode(Constants.LEDConstants.Mode.SHOOT);
     m_subsystem.runLaunch(Constants.FuelConstants.LaunchSpeed);
   }
 
@@ -42,6 +44,7 @@ public class Launch extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    LED.setMode(Constants.LEDConstants.Mode.NONE);
     m_subsystem.stopMotors();
   }
 

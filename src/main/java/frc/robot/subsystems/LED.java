@@ -61,7 +61,7 @@ public class LED extends SubsystemBase {
     pattern.applyTo(m_buffer);
   }
 
-  public void setMode(Mode mode) {
+  public static void setMode(Mode mode) {
     LED.LEDMode = mode;
   }
 
