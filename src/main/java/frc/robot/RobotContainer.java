@@ -30,10 +30,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
+import frc.robot.commands.Extend;
 import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
+import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -277,30 +279,8 @@ public class RobotContainer {
     //                         new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
     //                 drive)
     //             .ignoringDisable(true));
-    controller
-        .povRight()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget +=
-                      Constants.ClimbConstants.targetChangeSpeed;
-                  if (Constants.ClimbConstants.climbTarget
-                      > Constants.ClimbConstants.encoderClicksToTop) {
-                    Constants.ClimbConstants.climbTarget =
-                        Constants.ClimbConstants.encoderClicksToTop;
-                  }
-                }));
-    controller
-        .povLeft()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget -=
-                      Constants.ClimbConstants.targetChangeSpeed;
-                  if (Constants.ClimbConstants.climbTarget < 0) {
-                    Constants.ClimbConstants.climbTarget = 0;
-                  }
-                }));
+    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
+    controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
 
     controller.povUp().whileTrue(AutoClimb());
     controller

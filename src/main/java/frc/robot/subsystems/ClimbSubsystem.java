@@ -38,7 +38,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public double getEncoder() {
-    return -encoder.getAbsolutePosition().getValueAsDouble();
+    return -encoder.getPosition().getValueAsDouble();
   }
 
   public void setEncoder(double pos) {
