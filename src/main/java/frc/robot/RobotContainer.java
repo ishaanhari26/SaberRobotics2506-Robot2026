@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // import frc.robot.commands.AutoAlignCommand;
 // import frc.robot.commands.DriveCommands;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
@@ -266,7 +267,6 @@ public class RobotContainer {
         .leftTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
-    controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
     // controller
     //     .a()
@@ -298,7 +298,7 @@ public class RobotContainer {
                   drivetrain.applyRequest(
                       () ->
                           drive
-                              .withVelocityX(0.1 * MaxSpeed)
+                              .withVelocityX(0.3 * MaxSpeed)
                               .withVelocityY(0)
                               .withRotationalRate(0));
                 })
@@ -315,24 +315,50 @@ public class RobotContainer {
     return new SequentialCommandGroup(
         new InstantCommand(
             () -> {
-              //   SmartDashboard.putNumber("encoder", climb.getPosition().getValueAsDouble());
-              //   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+              SmartDashboard.putString("aC", "A");
             }),
+        new InstantCommand(
+            () -> {
+              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+            }),
+        new InstantCommand(
+            () -> {
+              SmartDashboard.putString("aC", "B");
+            }),
+        // new InstantCommand(
+        //     () -> {
+        //       drivetrain.applyRequest(
+        //           () -> drive.withVelocityX(0.3 *
+        // MaxSpeed).withVelocityY(0).withRotationalRate(0));
+        //     }),
+        // new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
         // new AutoAlignCommand(CommandFactory.getAutoClimbPose(), drive),
         // driveUntilBool(false /* detect side impact */, DriveDirection.RIGHT, 0.1),
         // Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -0.1, 0)), drive)
         //     .withTimeout(3)
         //     .andThen(new InstantCommand(() -> drive.stop(), drive)),
-        driveUntilBool(
-            controller.povDown().getAsBoolean() /*m_climbSubsystem.getMetalSensor()*/,
-            "FORWARD",
-            0.1),
+        // new InstantCommand(
+        //     () -> {
+        //       drivetrain.applyRequest(
+        //           () -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
+        //     }),
+        // driveUntilBool(
+        //     controller.povDown().getAsBoolean() /*m_climbSubsystem.getMetalSensor()*/,
+        //     "FORWARD",
+        //     0.1),
         // replace this with metal sensor
-        // new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
-        // new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
+        new WaitUntilCommand(() -> m_climbSubsystem.getEncoder() > 2.3),
         new InstantCommand(
             () -> {
-              //   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+              SmartDashboard.putString("aC", "C");
+            }),
+        new InstantCommand(
+            () -> {
+              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+            }),
+        new InstantCommand(
+            () -> {
+              SmartDashboard.putString("aC", "D");
             }));
   }
 
@@ -344,6 +370,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return autoChooser.get();
     return null;
-    return null; // autoChooser.get();
   }
 }

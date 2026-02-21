@@ -103,6 +103,7 @@ public class ClimbSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Motor Speed", getMotorSpeed());
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
     SmartDashboard.putBoolean("Metal Detector", getMetalSensor());
+    // SmartDashboard.putBoolean("Controller", RobotContainer.controller.povDown().getAsBoolean());
 
     SmartDashboard.putBoolean(
         "Target Matches Encoder",
