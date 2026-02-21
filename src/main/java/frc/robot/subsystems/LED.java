@@ -130,9 +130,9 @@ public class LED extends SubsystemBase {
   public void auto(int selected) {
     setPattern(
         currentPattern.mask(
-        LEDPattern.steps(
-              Map.of((m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kWhite))
-            .offsetBy(selected)));
+            LEDPattern.steps(
+                    Map.of((m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kWhite))
+                .offsetBy(selected)));
   }
 
   public void blink() {
@@ -211,7 +211,6 @@ public class LED extends SubsystemBase {
         .stream()
         .anyMatch(num -> ((matchTime - num) <= warningTime && (matchTime - num) > 0)));
   }
-
 
   /**
    *
@@ -341,7 +340,7 @@ public class LED extends SubsystemBase {
     if(warn(matchTime, (matchTime>LEDConstants.endWarningTime)?LEDConstants.warningTime:LEDConstants.endWarningTime)){
       blink();
     }
-    
+
     m_led.setData(m_buffer);
     SmartDashboard.putString("DriverStation Game Data", gameData);
     SmartDashboard.putString("Led Color", m_buffer.getLED(0).toString());
