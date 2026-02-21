@@ -17,7 +17,9 @@ public class CommandFactory {
 
   public enum DriveDirection {
     FORWARD,
-    REVERSE
+    REVERSE,
+    RIGHT,
+    LEFT
   }
 
   private static Alliance alliance;
@@ -26,6 +28,8 @@ public class CommandFactory {
   private static final int[] targetIdsBlue = {
     18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
   };
+
+  public static final double[] validTargets = {8, 9, 10, 11, 24, 25, 26, 27};
 
   private static int[] targetIds;
 
@@ -130,6 +134,12 @@ public class CommandFactory {
   //         };
   //     }
   // }
+
+  public static Function<Pose2d, Pose2d> getAutoClimbPose() { // TODO: find the actual position
+    return (Pose2d pose) -> {
+      return new Pose2d(2.5, 0.6, new Rotation2d(Math.PI));
+    };
+  }
 
   public static void initialize() {
     refreshAlliance();
