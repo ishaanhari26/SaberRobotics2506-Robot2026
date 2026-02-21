@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.LED;
 
 /** An example command that uses an example subsystem. */
 public class Extend extends Command {
@@ -27,6 +28,7 @@ public class Extend extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    LED.setMode(Constants.LEDConstants.Mode.CLIMB);
     m_subsystem.runClimb(Constants.ClimbConstants.climbExtendSpeed);
   }
 
@@ -41,6 +43,7 @@ public class Extend extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    LED.setMode(Constants.LEDConstants.Mode.NONE);
     m_subsystem.stopMotor();
   }
 
