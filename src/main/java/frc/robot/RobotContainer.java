@@ -105,9 +105,6 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  public Command AutoClimb() {
-    return new SequentialCommandGroup();
-  }
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -283,6 +280,67 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
   }
+
+//   public Command driveDistance(Double distance, DriveDirection direction) {
+//     double speedMetersPerSecond = 1;
+//     double timeToRun = distance/speedMetersPerSecond;
+//     switch (direction) {
+//         case FORWARD:
+//             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
+//                 .withTimeout(timeToRun)
+//                 .andThen(new InstantCommand(() -> drive.stop(), drive));
+//         case REVERSE:
+//             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
+//                 .withTimeout(timeToRun)
+//                 .andThen(new InstantCommand(() -> drive.stop(), drive));
+//         default:
+//             return new InstantCommand();
+//     }
+// }
+
+// public Command driveUntilBool(boolean condition, DriveDirection direction, double speedMetersPerSecond) {
+//     switch (direction) {
+//         case FORWARD:
+//             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond, 0, 0)), drive)
+//                 .until(() -> condition)
+//                 .andThen(new InstantCommand(() -> drive.stop(), drive));
+//         case REVERSE:
+//             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
+//                 .until(() -> condition)
+//                 .andThen(new InstantCommand(() -> drive.stop(), drive));
+//         case LEFT:
+//             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, speedMetersPerSecond, 0)), drive)
+//                 .until(() -> condition)
+//                 .andThen(new InstantCommand(() -> drive.stop(), drive));
+//         case RIGHT:
+//             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -speedMetersPerSecond, 0)), drive)
+//                 .until(() -> condition)
+//                 .andThen(new InstantCommand(() -> drive.stop(), drive));
+//         default:
+//             return new InstantCommand();
+//     }
+// }
+  
+  public Command AutoClimb() {
+    return new SequentialCommandGroup(
+        new InstantCommand(
+            () -> {
+              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+            }),
+        // new AutoAlignCommand(CommandFactory.getAutoClimbPose(), drive),
+        // driveUntilBool(false /* detect side impact */, DriveDirection.RIGHT, 0.1),
+        // Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -0.1, 0)), drive)
+        //     .withTimeout(3)
+        //     .andThen(new InstantCommand(() -> drive.stop(), drive)),
+        // driveUntilBool(m_climbSubsystem.getMetalSensor(), DriveDirection.FORWARD, 0.1),
+        // replace this with metal sensor
+        new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
+        new InstantCommand(
+            () -> {
+              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+            }));
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
