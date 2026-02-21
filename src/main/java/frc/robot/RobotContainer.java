@@ -11,14 +11,18 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // import frc.robot.commands.AutoAlignCommand;
@@ -26,13 +30,17 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
+import frc.robot.commands.Extend;
+import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
-import frc.robot.commands.Unstick;
+import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FuelSubsystem;
+import frc.robot.subsystems.IntakeV3Subsystem;
 import frc.robot.subsystems.LED;
 // import frc.robot.subsystems.drive.Drive;
 // import frc.robot.subsystems.drive.GyroIO;
@@ -70,6 +78,22 @@ public class RobotContainer {
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
+  // climb
+  public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
+  public final DigitalInput climbLimitSwitch =
+      new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
+  public final CANcoder climbEncoder = new CANcoder(Constants.ClimbConstants.climbEncoderID);
+  public final DigitalInput climbMetalDetector =
+      new DigitalInput(Constants.ClimbConstants.climbMetalDetectorID);
+
+  private final ClimbSubsystem m_climbSubsystem =
+      new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder, climbMetalDetector);
+
+  // InV3take
+  public final TalonFX intakeV3Motor = new TalonFX(Constants.IntakeV3Constants.motorId);
+
+  private final IntakeV3Subsystem m_intakeV3Subsystem = new IntakeV3Subsystem(intakeV3Motor);
+
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)
@@ -81,6 +105,7 @@ public class RobotContainer {
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   // Dashboard inputs
+  //   private final LoggedDashboardChooser<Command> autoChooser;
   //   private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -162,6 +187,7 @@ public class RobotContainer {
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
     // autoChooser.addOption(
@@ -239,6 +265,7 @@ public class RobotContainer {
     controller
         .leftTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
+    // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
     controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
     // controller
@@ -255,54 +282,34 @@ public class RobotContainer {
     //                         new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
     //                 drive)
     //             .ignoringDisable(true));
+    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
+    controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
+
+    controller.povUp().whileTrue(AutoClimb());
+
+    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
   }
 
-  //   public Command driveDistance(Double distance, DriveDirection direction) {
-  //     double speedMetersPerSecond = 1;
-  //     double timeToRun = distance/speedMetersPerSecond;
-  //     switch (direction) {
-  //         case FORWARD:
-  //             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond,
-  // 0, 0)), drive)
-  //                 .withTimeout(timeToRun)
-  //                 .andThen(new InstantCommand(() -> drive.stop(), drive));
-  //         case REVERSE:
-  //             return Commands.run(() -> drive.runVelocity(new
-  // ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
-  //                 .withTimeout(timeToRun)
-  //                 .andThen(new InstantCommand(() -> drive.stop(), drive));
-  //         default:
-  //             return new InstantCommand();
-  //     }
-  // }
-
-  // public Command driveUntilBool(boolean condition, DriveDirection direction, double
-  // speedMetersPerSecond) {
-  //     switch (direction) {
-  //         case FORWARD:
-  //             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(speedMetersPerSecond,
-  // 0, 0)), drive)
-  //                 .until(() -> condition)
-  //                 .andThen(new InstantCommand(() -> drive.stop(), drive));
-  //         case REVERSE:
-  //             return Commands.run(() -> drive.runVelocity(new
-  // ChassisSpeeds(-speedMetersPerSecond, 0, 0)), drive)
-  //                 .until(() -> condition)
-  //                 .andThen(new InstantCommand(() -> drive.stop(), drive));
-  //         case LEFT:
-  //             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0,
-  // speedMetersPerSecond, 0)), drive)
-  //                 .until(() -> condition)
-  //                 .andThen(new InstantCommand(() -> drive.stop(), drive));
-  //         case RIGHT:
-  //             return Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0,
-  // -speedMetersPerSecond, 0)), drive)
-  //                 .until(() -> condition)
-  //                 .andThen(new InstantCommand(() -> drive.stop(), drive));
-  //         default:
-  //             return new InstantCommand();
-  //     }
-  // }
+  public Command driveUntilBool(boolean condition, String direction, double speedMetersPerSecond) {
+    switch (direction) {
+      case "FORWARD":
+        return Commands.run(
+                () -> {
+                  drivetrain.applyRequest(
+                      () ->
+                          drive
+                              .withVelocityX(0.1 * MaxSpeed)
+                              .withVelocityY(0)
+                              .withRotationalRate(0));
+                })
+            .until(() -> condition)
+            .andThen(
+                drivetrain.applyRequest(
+                    () -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+      default:
+        return new InstantCommand();
+    }
+  }
 
   public Command AutoClimb() {
     return new SequentialCommandGroup(
@@ -316,8 +323,12 @@ public class RobotContainer {
         // Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -0.1, 0)), drive)
         //     .withTimeout(3)
         //     .andThen(new InstantCommand(() -> drive.stop(), drive)),
-        // driveUntilBool(m_climbSubsystem.getMetalSensor(), DriveDirection.FORWARD, 0.1),
+        driveUntilBool(
+            controller.povDown().getAsBoolean() /*m_climbSubsystem.getMetalSensor()*/,
+            "FORWARD",
+            0.1),
         // replace this with metal sensor
+        // new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
         // new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
         new InstantCommand(
             () -> {
@@ -331,6 +342,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    // return autoChooser.get();
+    return null;
     return null; // autoChooser.get();
   }
 }

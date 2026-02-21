@@ -43,7 +43,7 @@ public class HoldPosition extends Command {
   public void initialize() {
     // reset
     if (reset) {
-      m_subsystem.setEncoder(Constants.ClimbConstants.initialRetractValue);
+      // m_subsystem.setEncoder(Constants.ClimbConstants.initialRetractValue);
     }
   }
 
