@@ -29,7 +29,7 @@ public class ClimbSubsystem extends SubsystemBase {
     this.encoder = encoder;
     this.metalDetector = metalDetector;
     climbMotor.setNeutralMode(NeutralModeValue.Brake);
-    resetEncoder();
+    // resetEncoder();
   }
 
   public void initDefaultCommand() {
@@ -38,7 +38,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public double getEncoder() {
-    return -encoder.getPosition().getValueAsDouble();
+    return -encoder.getAbsolutePosition().getValueAsDouble();
   }
 
   public void setEncoder(double pos) {
