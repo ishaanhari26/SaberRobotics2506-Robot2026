@@ -20,7 +20,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -266,7 +265,6 @@ public class RobotContainer {
         .leftTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
-    controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
     // controller
     //     .a()
@@ -344,6 +342,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return autoChooser.get();
     return null;
-    return null; // autoChooser.get();
   }
 }
