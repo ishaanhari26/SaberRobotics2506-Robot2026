@@ -286,33 +286,36 @@ public class RobotContainer {
                 }));
     controller
         .povUp()
-        .onTrue( // AutoClimb()
-            driveUntilBool(controller.povDown().getAsBoolean(), DriveDirection.FORWARD, 0.01));
+        .onTrue(
+            AutoClimb()
+            // driveUntilBool(controller.povDown().getAsBoolean(), DriveDirection.FORWARD, 0.01)
+            );
+    // there is no error here
 
     m_intakeV3Subsystem.setDefaultCommand(new HoldIntakeV3(m_intakeV3Subsystem, true));
 
-    controller
-        .rightBumper()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.IntakeV3Constants.target += 0.2;
-                  if (Constants.IntakeV3Constants.target
-                      > Constants.IntakeV3Constants.maxExtendDistance) {
-                    Constants.IntakeV3Constants.target =
-                        Constants.IntakeV3Constants.maxExtendDistance;
-                  }
-                }));
-    controller
-        .leftBumper()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.IntakeV3Constants.target -= 0.2;
-                  if (Constants.IntakeV3Constants.target < 0) {
-                    Constants.IntakeV3Constants.target = 0;
-                  }
-                }));
+    //     controller
+    //         .rightBumper()
+    //         .whileTrue(
+    //             new InstantCommand(
+    //                 () -> {
+    //                   Constants.IntakeV3Constants.target += 0.2;
+    //                   if (Constants.IntakeV3Constants.target
+    //                       > Constants.IntakeV3Constants.maxExtendDistance) {
+    //                     Constants.IntakeV3Constants.target =
+    //                         Constants.IntakeV3Constants.maxExtendDistance;
+    //                   }
+    //                 }));
+    //     controller
+    //         .leftBumper()
+    //         .whileTrue(
+    //             new InstantCommand(
+    //                 () -> {
+    //                   Constants.IntakeV3Constants.target -= 0.2;
+    //                   if (Constants.IntakeV3Constants.target < 0) {
+    //                     Constants.IntakeV3Constants.target = 0;
+    //                   }
+    //                 }));
   }
 
   public Command driveDistance(Double distance, DriveDirection direction) {
@@ -368,12 +371,12 @@ public class RobotContainer {
             () -> {
               Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
             }),
-        new AutoAlignCommand(CommandFactory.getAutoClimbPose(), drive),
-        driveUntilBool(false /* detect side impact */, DriveDirection.RIGHT, 0.1),
-        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -0.1, 0)), drive)
-            .withTimeout(3)
-            .andThen(new InstantCommand(() -> drive.stop(), drive)),
-        driveUntilBool(m_climbSubsystem.getMetalSensor(), DriveDirection.FORWARD, 0.1),
+        // new AutoAlignCommand(CommandFactory.getAutoClimbPose(), drive),
+        // driveUntilBool(true /* detect side impact */, DriveDirection.RIGHT, 0.1),
+        // Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -0.1, 0)), drive)
+        //     .withTimeout(3)
+        //     .andThen(new InstantCommand(() -> drive.stop(), drive)),
+        // driveUntilBool(m_climbSubsystem.getMetalSensor(), DriveDirection.FORWARD, 0.1),
         // replace this with metal sensor
         new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
         new InstantCommand(
