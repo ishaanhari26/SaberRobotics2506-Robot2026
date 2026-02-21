@@ -229,4 +229,9 @@ public final class Constants {
     }
     return false;
   }
+
+  public static class AutoConstants {
+    public static final int launchTime = 5;
+    public static final int intakeTime = 5;
+  }
 }

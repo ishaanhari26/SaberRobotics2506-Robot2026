@@ -34,7 +34,7 @@ public class LED extends SubsystemBase {
   // m_buffer.getLength() - 1);
 
   private LEDPattern currentPattern;
-  private Mode LEDMode;
+  private static Mode LEDMode;
   private LEDConstants.Period state;
   private String gameData;
   private Alliance alliance;
@@ -46,7 +46,7 @@ public class LED extends SubsystemBase {
     m_led.setData(m_buffer); // sets the led output dat
     m_led.start(); // start leds
     off(); // starts LEDS as off
-    LEDMode = Mode.NONE;
+    LED.LEDMode = Mode.NONE;
   }
 
   public void set(int red, int green, int blue) {
@@ -62,7 +62,7 @@ public class LED extends SubsystemBase {
   }
 
   public void setMode(Mode mode) {
-    LEDMode = mode;
+    LED.LEDMode = mode;
   }
 
   // patterns
@@ -285,7 +285,7 @@ public class LED extends SubsystemBase {
     alliance = DriverStation.getAlliance().get();
 
     if (DriverStation.isEStopped()) {
-      LEDMode = LEDConstants.Mode.ASTOP;
+      LED.LEDMode = LEDConstants.Mode.ASTOP;
     } else if (!DriverStation.isEnabled()) {
       idles();
     }
@@ -316,8 +316,8 @@ public class LED extends SubsystemBase {
         break;
     }
 
-    SmartDashboard.putString("LEDMode:", LEDMode.name());
-    switch (LEDMode) {
+    SmartDashboard.putString("LEDMode:", LED.LEDMode.name());
+    switch (LED.LEDMode) {
       case SHOOT:
         scrollWhite();
         break;
