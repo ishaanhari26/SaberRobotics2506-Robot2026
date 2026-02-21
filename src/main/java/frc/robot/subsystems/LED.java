@@ -34,7 +34,7 @@ public class LED extends SubsystemBase {
   // m_buffer.getLength() - 1);
 
   private LEDPattern currentPattern;
-  private Mode LEDMode;
+  private static Mode LEDMode;
   private LEDConstants.Period state;
   private String gameData;
   private Alliance alliance;
@@ -46,7 +46,7 @@ public class LED extends SubsystemBase {
     m_led.setData(m_buffer); // sets the led output dat
     m_led.start(); // start leds
     off(); // starts LEDS as off
-    LEDMode = Mode.NONE;
+    LED.LEDMode = Mode.NONE;
   }
 
   public void set(int red, int green, int blue) {
@@ -61,8 +61,8 @@ public class LED extends SubsystemBase {
     pattern.applyTo(m_buffer);
   }
 
-  public void setMode(Mode mode) {
-    LEDMode = mode;
+  public static void setMode(Mode mode) {
+    LED.LEDMode = mode;
   }
 
   // patterns
@@ -114,7 +114,12 @@ public class LED extends SubsystemBase {
 
   public void scrollWhite() {
     setPattern(
-        LEDPattern.steps(Map.of((m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kWhite))
+        LEDPattern.steps(
+                Map.of(
+                    0,
+                    Color.kBlack,
+                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    Color.kWhite))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
   }
@@ -122,7 +127,11 @@ public class LED extends SubsystemBase {
   public void scrollAquamarine() {
     setPattern(
         LEDPattern.steps(
-                Map.of((m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kAquamarine))
+                Map.of(
+                    0,
+                    Color.kBlack,
+                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    Color.kAquamarine))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
   }
@@ -131,7 +140,11 @@ public class LED extends SubsystemBase {
     setPattern(
         currentPattern.mask(
             LEDPattern.steps(
-                    Map.of((m_buffer.getLength() - 1) / m_buffer.getLength(), Color.kWhite))
+                    Map.of(
+                        0,
+                        Color.kBlack,
+                        (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                        Color.kWhite))
                 .offsetBy(selected)));
   }
 
@@ -285,7 +298,7 @@ public class LED extends SubsystemBase {
     alliance = DriverStation.getAlliance().get();
 
     if (DriverStation.isEStopped()) {
-      LEDMode = LEDConstants.Mode.ASTOP;
+      LED.LEDMode = LEDConstants.Mode.ASTOP;
     } else if (!DriverStation.isEnabled()) {
       idles();
     }
@@ -300,7 +313,7 @@ public class LED extends SubsystemBase {
     SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:
-        auto(1);
+        // auto(1);
         break;
       case TRANSITION:
       case ACTIVE:
@@ -316,8 +329,8 @@ public class LED extends SubsystemBase {
         break;
     }
 
-    SmartDashboard.putString("LEDMode:", LEDMode.name());
-    switch (LEDMode) {
+    SmartDashboard.putString("LEDMode:", LED.LEDMode.name());
+    switch (LED.LEDMode) {
       case SHOOT:
         scrollWhite();
         break;
@@ -341,7 +354,9 @@ public class LED extends SubsystemBase {
         matchTime,
         (matchTime > LEDConstants.endWarningTime)
             ? LEDConstants.warningTime
-            : LEDConstants.endWarningTime)) {
+            : (!DriverStation.isAutonomous())
+                ? LEDConstants.endWarningTime
+                : LEDConstants.warningTime)) {
       blink();
     }
 
