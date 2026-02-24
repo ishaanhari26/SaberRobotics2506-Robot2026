@@ -52,7 +52,7 @@ public class VisionConstants {
   public static double angularStdDevMegatag2Factor =
       Double.POSITIVE_INFINITY; // No rotation data available
 
-  public static final double TURN_ANGLE_KP = 12; // TODO
+  public static final double TURN_ANGLE_KP = 5; // TODO
   public static final double TURN_ANGLE_KI = 0.01;
   public static final double TURN_ANGLE_KD = 0.0;
 }
