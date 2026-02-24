@@ -19,6 +19,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -134,6 +135,8 @@ public class RobotContainer {
     //             new ModuleIOTalonFX(TunerConstants.FrontRight),
     //             new ModuleIOTalonFX(TunerConstants.BackLeft),
     //             new ModuleIOTalonFX(TunerConstants.BackRight));
+
+    NetworkTableInstance.getDefault().setServer("localhost");
 
     aprilTagEstimator =
         new Vision(
