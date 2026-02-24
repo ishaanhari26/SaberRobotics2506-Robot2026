@@ -258,6 +258,8 @@ public class RobotContainer {
                                 ? lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
+    controller.y().whileTrue(new Eject(m_fuelSubsystem));
+
     opController
         .rightTrigger()
         .whileTrue(
@@ -268,19 +270,17 @@ public class RobotContainer {
                         .withVelocityY(robotyLimiter.calculate(controller.getLeftX()) * MaxSpeed)
                         .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
 
-
-    
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     // controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
-    controller.y().whileTrue(new Eject(m_fuelSubsystem));
+    
     controller
         .rightTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
     
-    
-    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
     controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
+    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
+    
 
     controller
         .povUp()
@@ -297,7 +297,9 @@ public class RobotContainer {
                   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
                 }));
 
-    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));                    
+    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false)); 
+    
+    
     // controller
     //     .b()
     //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87),
