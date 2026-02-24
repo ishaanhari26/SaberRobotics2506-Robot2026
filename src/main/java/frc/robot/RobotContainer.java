@@ -268,6 +268,36 @@ public class RobotContainer {
                         .withVelocityY(robotyLimiter.calculate(controller.getLeftX()) * MaxSpeed)
                         .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
 
+
+    
+    // fuelSubsystem buttons Intake, Launch, Eject
+    controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
+    // controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
+    controller.y().whileTrue(new Eject(m_fuelSubsystem));
+    controller
+        .rightTrigger()
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
+    
+    
+    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
+    controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
+
+    controller
+        .povUp()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+                }));
+    controller
+        .povDown()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+                }));
+
+    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));                    
     // controller
     //     .b()
     //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87),
@@ -286,13 +316,6 @@ public class RobotContainer {
     // Switch to X pattern when X button is pressed
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // fuelSubsystem buttons Intake, Launch, Eject
-    controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
-    // controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
-    controller.y().whileTrue(new Eject(m_fuelSubsystem));
-    controller
-        .rightTrigger()
-        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
     // controller
     //     .leftBumper()
     //     .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
@@ -312,25 +335,7 @@ public class RobotContainer {
     //                         new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
     //                 drive)
     //             .ignoringDisable(true));
-    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
-    controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
-
-    controller
-        .povUp()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
-                }));
-    controller
-        .povDown()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
-                }));
-
-    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
+    
   }
 
   public Command driveUntilBool(boolean condition, String direction, double speedMetersPerSecond) {
