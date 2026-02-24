@@ -8,10 +8,49 @@
         "layouts": [],
         "containers": [
           {
-            "title": "Auto Choices",
+            "title": "limelight-april",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight-april",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "limelight-new",
+            "x": 128.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight-new",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "limelight",
             "x": 0.0,
-            "y": 384.0,
+            "y": 256.0,
             "width": 256.0,
+            "height": 256.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "Auto Choices",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 128.0,
             "height": 128.0,
             "type": "ComboBox Chooser",
             "properties": {
@@ -21,32 +60,75 @@
             }
           },
           {
-            "title": "limelight",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 512.0,
-            "height": 384.0,
-            "type": "Camera Stream",
+            "title": "Position",
+            "x": 1024.0,
+            "y": 256.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
             "properties": {
-              "topic": "/CameraPublisher/limelight",
+              "topic": "/SmartDashboard/Position",
               "period": 0.06,
-              "rotation_turns": 0
+              "data_type": "double",
+              "show_submit_button": false
             }
           },
           {
-            "title": "MatchTime",
-            "x": 512.0,
-            "y": 0.0,
-            "width": 640.0,
-            "height": 384.0,
+            "title": " Arm Encoder Value",
+            "x": 1024.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/ Arm Encoder Value",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Arm Setpoint",
+            "x": 1024.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Arm Setpoint",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Match Time",
+            "x": 256.0,
+            "y": 256.0,
+            "width": 768.0,
+            "height": 256.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/AdvantageKit/DriverStation/MatchTime",
+              "topic": "/SmartDashboard/Match Time",
               "period": 0.06,
               "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 15,
               "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "ClosestTag",
+            "x": 1152.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/ClosestTag",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
             }
           }
         ]
@@ -54,13 +136,6 @@
     },
     {
       "name": "Autonomous",
-      "grid_layout": {
-        "layouts": [],
-        "containers": []
-      }
-    },
-    {
-      "name": "Tab 3",
       "grid_layout": {
         "layouts": [],
         "containers": []
