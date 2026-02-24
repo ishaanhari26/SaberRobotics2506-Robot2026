@@ -58,7 +58,13 @@ public class LED extends SubsystemBase {
   public void setPattern(LEDPattern pattern) {
     off();
     currentPattern = pattern;
-    pattern.applyTo(m_buffer);
+    try {
+      pattern.applyTo(m_buffer);
+    }
+    catch (Exception bad) {
+      off();
+      System.err.println(bad);
+    }
   }
 
   public static void setMode(Mode mode) {
@@ -118,7 +124,7 @@ public class LED extends SubsystemBase {
                 Map.of(
                     0,
                     Color.kBlack,
-                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    (LEDConstants.length - 1) / (double) LEDConstants.length,
                     Color.kWhite))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
@@ -130,7 +136,7 @@ public class LED extends SubsystemBase {
                 Map.of(
                     0,
                     Color.kBlack,
-                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    (LEDConstants.length - 1) / (double) LEDConstants.length,
                     Color.kAquamarine))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
@@ -332,10 +338,10 @@ public class LED extends SubsystemBase {
     SmartDashboard.putString("LEDMode:", LED.LEDMode.name());
     switch (LED.LEDMode) {
       case SHOOT:
-        // scrollWhite();
+        scrollWhite();
         break;
       case INTAKE:
-        // scrollAquamarine();
+        scrollAquamarine();
         break;
       case CLIMB:
         gold();
