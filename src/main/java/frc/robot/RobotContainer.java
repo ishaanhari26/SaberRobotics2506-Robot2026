@@ -74,8 +74,8 @@ public class RobotContainer {
   private final FuelSubsystem m_fuelSubsystem =
       new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2);
 
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(5);
 
   private final SlewRateLimiter robotxLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter robotyLimiter = new SlewRateLimiter(3);
@@ -258,6 +258,11 @@ public class RobotContainer {
                                 ? lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
+    controller
+        .povLeft()
+        .toggleOnTrue(new InstantCommand(() -> slowMode()))
+        .toggleOnFalse(new InstantCommand(() -> cancelSlowMode()));
+
     opController
         .rightTrigger()
         .whileTrue(
@@ -403,6 +408,16 @@ public class RobotContainer {
             () -> {
               SmartDashboard.putString("aC", "D");
             }));
+  }
+
+  public void slowMode() {
+    MaxSpeed *= 0.3;
+    MaxAngularRate *= 0.3;
+  }
+
+  public void cancelSlowMode() {
+    MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
   }
 
   /**
