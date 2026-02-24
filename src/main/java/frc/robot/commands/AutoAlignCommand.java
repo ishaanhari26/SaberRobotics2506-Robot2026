@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -17,9 +18,6 @@ import frc.robot.util.LoggedTunableGainsBuilder;
 import frc.robot.util.LoggedTunableNumber;
 import java.util.function.Function;
 import org.littletonrobotics.junction.Logger;
-
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest;
 
 public class AutoAlignCommand extends Command {
 
@@ -75,8 +73,7 @@ public class AutoAlignCommand extends Command {
           throttleGains.build().kI,
           throttleGains.build().kD,
           new Constraints(
-              m_maxThrottle.in(MetersPerSecond),
-m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
+              m_maxThrottle.in(MetersPerSecond), m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
   private PIDController spinPID = new PIDController(5.25, 0.0, 0);
 
   private double MaxSpeed =
@@ -86,8 +83,7 @@ m_maxAccelThrottle.in(MetersPerSecondPerSecond)));
           .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
   /**
-   * This command utilitzes the swerve drive while it isn't field relative. The swerve drive
-returns
+   * This command utilitzes the swerve drive while it isn't field relative. The swerve drive returns
    * back to field relative after the command is used.
    *
    * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a
@@ -96,23 +92,23 @@ returns
    * @param name The LoggedTunableNumber's (should be) exclusive name
    */
   public AutoAlignCommand(
-      Function<Pose2d, Pose2d> getTargetPoseFunction, CommandSwerveDrivetrain drivetrain, String
-name) {
+      Function<Pose2d, Pose2d> getTargetPoseFunction,
+      CommandSwerveDrivetrain drivetrain,
+      String name) {
     this.getTargetPoseFn = getTargetPoseFunction;
     this.drivetrain = drivetrain;
   }
 
   /**
-   * This command utilitzes the swerve drive while it isn't field relative. The swerve drive
-returns
+   * This command utilitzes the swerve drive while it isn't field relative. The swerve drive returns
    * back to field relative after the command is used.
    *
    * @param getDrivePoseFunction A function that takes a current drivetrain pose and returns a
    *     target position.
    * @param drivetrain The Drive class to get the current pose from.
    */
-  public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, CommandSwerveDrivetrain
-drivetrain) {
+  public AutoAlignCommand(
+      Function<Pose2d, Pose2d> getTargetPoseFunction, CommandSwerveDrivetrain drivetrain) {
     this(getTargetPoseFunction, drivetrain, "AutoAlign");
   }
 
@@ -223,6 +219,7 @@ drivetrain) {
   @Override
   public void end(boolean interrupted) {
     // drivetrain.runVelocity(new ChassisSpeeds());
-    drivetrain.applyRequest(() -> new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
+    drivetrain.applyRequest(
+        () -> new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
   }
 }

@@ -17,7 +17,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -30,14 +29,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.AutoAlignCommand;
-import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
 import frc.robot.commands.Extend;
 import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
-import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
@@ -68,6 +64,7 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController opController = new CommandXboxController(1);
 
   public final TalonFX intakeMotor = new TalonFX(Constants.FuelConstants.IntakeMotor);
   public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
@@ -76,8 +73,12 @@ public class RobotContainer {
 
   private final FuelSubsystem m_fuelSubsystem =
       new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2);
+
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+
+  private final SlewRateLimiter robotxLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter robotyLimiter = new SlewRateLimiter(3);
 
   // climb
   public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
@@ -101,6 +102,9 @@ public class RobotContainer {
           .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(
               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
+  private final SwerveRequest.RobotCentric robotDrive = new SwerveRequest.RobotCentric();
+
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -135,7 +139,7 @@ public class RobotContainer {
         new Vision(
             drivetrain::addVisionMeasurement,
             new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation));
-    // new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
+    // new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation));
     //         new AprilTagEstimator(drive);
 
     //     // The ModuleIOTalonFXS implementation provides an example implementation for
@@ -223,7 +227,7 @@ public class RobotContainer {
     //         () -> yLimiter.calculate(-controller.getLeftX()),
     //         () -> controller.getRightX()));
 
-    controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    // controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
     drivetrain.setDefaultCommand(
         // Drivetrain will execute this command periodically
@@ -231,30 +235,43 @@ public class RobotContainer {
             () ->
                 drive
                     .withVelocityX(
-                        xLimiter.calculate(controller.getLeftY()) * MaxSpeed) // Drive forward with negative Y (forward)
+                        xLimiter.calculate(-controller.getLeftY())
+                            * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(
-                        yLimiter.calculate(controller.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+                        yLimiter.calculate(-controller.getLeftX())
+                            * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(
                         -controller.getRightX()
                             * MaxAngularRate) // Drive counterclockwise with negative X (left)
             ));
 
-        controller.a().whileTrue(
-            drivetrain.applyRequest(
-            () ->
-                drive
-                    .withVelocityX(
-                        xLimiter.calculate(controller.getLeftY()) * MaxSpeed)
-                    .withVelocityY(
-                        yLimiter.calculate(controller.getLeftX()) * MaxSpeed)
-                    .withRotationalRate(
-                        CommandSwerveDrivetrain.validTargetTags() ? lockedTargetPID.calculate(Vision.tx) : 0)
-            ));
-
-
     controller
-        .b()
-        .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drivetrain));
+        .a()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    drive
+                        .withVelocityX(xLimiter.calculate(-controller.getLeftY()) * MaxSpeed)
+                        .withVelocityY(yLimiter.calculate(-controller.getLeftX()) * MaxSpeed)
+                        .withRotationalRate(
+                            CommandSwerveDrivetrain.validTargetTags()
+                                ? lockedTargetPID.calculate(Vision.tx)
+                                : 0)));
+
+    opController
+        .rightTrigger()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    robotDrive
+                        .withVelocityX(robotxLimiter.calculate(controller.getLeftY()) * MaxSpeed)
+                        .withVelocityY(robotyLimiter.calculate(controller.getLeftX()) * MaxSpeed)
+                        .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
+
+    // controller
+    //     .b()
+    //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87),
+    // drivetrain));
 
     // Lock to 0° when A button is held
     // controller
@@ -270,15 +287,15 @@ public class RobotContainer {
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // fuelSubsystem buttons Intake, Launch, Eject
-    controller.leftBumper().whileTrue(new Intake(m_fuelSubsystem));
-    controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
+    controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
+    // controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
     controller
         .rightTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
-    controller
-        .leftTrigger()
-        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
+    // controller
+    //     .leftBumper()
+    //     .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
     // controller
