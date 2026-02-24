@@ -149,7 +149,7 @@ public class LED extends SubsystemBase {
                     Map.of(
                         0,
                         Color.kBlack,
-                        (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                        (LEDConstants.length - 1) / (double) LEDConstants.length,
                         Color.kWhite))
                 .offsetBy(selected)));
   }
