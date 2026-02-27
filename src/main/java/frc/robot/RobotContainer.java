@@ -247,6 +247,8 @@ public class RobotContainer {
                             * MaxAngularRate) // Drive counterclockwise with negative X (left)
             ));
 
+
+
     controller
         .a()
         .whileTrue(
@@ -261,16 +263,6 @@ public class RobotContainer {
                                 : 0)));
 
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
-
-    opController
-        .rightTrigger()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () ->
-                    robotDrive
-                        .withVelocityX(robotxLimiter.calculate(controller.getLeftY()) * MaxSpeed)
-                        .withVelocityY(robotyLimiter.calculate(controller.getLeftX()) * MaxSpeed)
-                        .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
@@ -300,6 +292,17 @@ public class RobotContainer {
                 }));
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false)); 
+
+
+    opController
+        .rightTrigger()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    robotDrive
+                        .withVelocityX(robotxLimiter.calculate(controller.getLeftY()) * MaxSpeed)
+                        .withVelocityY(robotyLimiter.calculate(controller.getLeftX()) * MaxSpeed)
+                        .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
     
     
     // controller
