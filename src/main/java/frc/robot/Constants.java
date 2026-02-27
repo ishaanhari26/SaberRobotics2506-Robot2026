@@ -9,6 +9,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.generated.TunerConstants;
+
+import static edu.wpi.first.units.Units.*;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -18,6 +21,15 @@ import edu.wpi.first.wpilibj.util.Color;
 public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
+  public static double MaxSpeed =
+      1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+  public static double MaxAngularRate =
+      RotationsPerSecond.of(0.75)
+          .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+
+  public static double slowModeMaxSpeed = MaxSpeed * 0.3;
+  public static double slowModeMaxAngularRate = MaxAngularRate * 0.3;
 
   public static enum Mode {
     /** Running on a real robot. */

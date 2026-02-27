@@ -57,11 +57,6 @@ public class RobotContainer {
   // Subsystems
   public final Vision aprilTagEstimator;
   private final LED led = new LED();
-  private double MaxSpeed =
-      1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-  private double MaxAngularRate =
-      RotationsPerSecond.of(0.75)
-          .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -99,8 +94,8 @@ public class RobotContainer {
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.1)
-          .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDeadband(Constants.MaxSpeed * 0.1)
+          .withRotationalDeadband(Constants.MaxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(
               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
@@ -109,6 +104,8 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+  private boolean slowMode = false;
 
   private static PIDController lockedTargetPID =
       new PIDController(
@@ -239,14 +236,14 @@ public class RobotContainer {
                 drive
                     .withVelocityX(
                         xLimiter.calculate(-controller.getLeftY())
-                            * MaxSpeed) // Drive forward with negative Y (forward)
+                            * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed)) // Drive forward with negative Y (forward)
                     .withVelocityY(
                         yLimiter.calculate(-controller.getLeftX())
-                            * MaxSpeed) // Drive left with negative X (left)
+                            * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed)) // Drive left with negative X (left)
                     .withRotationalRate(
                         -controller.getRightX()
-                            * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            ));
+                            * (slowMode ? Constants.slowModeMaxAngularRate : Constants.MaxAngularRate)) // Drive counterclockwise with negative X (left)
+        ));
 
     controller
         .a()
@@ -254,17 +251,14 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(xLimiter.calculate(-controller.getLeftY()) * MaxSpeed)
-                        .withVelocityY(yLimiter.calculate(-controller.getLeftX()) * MaxSpeed)
+                        .withVelocityX(xLimiter.calculate(-controller.getLeftY()) * Constants.MaxSpeed)
+                        .withVelocityY(yLimiter.calculate(-controller.getLeftX()) * Constants.MaxSpeed)
                         .withRotationalRate(
                             CommandSwerveDrivetrain.validTargetTags()
                                 ? lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
-    controller
-        .povLeft()
-        .toggleOnTrue(new InstantCommand(() -> slowMode()))
-        .toggleOnFalse(new InstantCommand(() -> cancelSlowMode()));
+    controller.povLeft().onTrue(new InstantCommand(() -> slowMode = !slowMode));
 
     opController
         .rightTrigger()
@@ -272,9 +266,9 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     robotDrive
-                        .withVelocityX(robotxLimiter.calculate(controller.getLeftY()) * MaxSpeed)
-                        .withVelocityY(robotyLimiter.calculate(controller.getLeftX()) * MaxSpeed)
-                        .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
+                        .withVelocityX(robotxLimiter.calculate(controller.getLeftY()) * Constants.MaxSpeed)
+                        .withVelocityY(robotyLimiter.calculate(controller.getLeftX()) * Constants.MaxSpeed)
+                        .withRotationalRate(-controller.getRightX() * Constants.MaxAngularRate)));
 
     // controller
     //     .b()
@@ -349,7 +343,7 @@ public class RobotContainer {
                   drivetrain.applyRequest(
                       () ->
                           drive
-                              .withVelocityX(0.3 * MaxSpeed)
+                              .withVelocityX(0.3 * Constants.MaxSpeed)
                               .withVelocityY(0)
                               .withRotationalRate(0));
                 })
@@ -411,16 +405,6 @@ public class RobotContainer {
             () -> {
               SmartDashboard.putString("aC", "D");
             }));
-  }
-
-  public void slowMode() {
-    MaxSpeed *= 0.3;
-    MaxAngularRate *= 0.3;
-  }
-
-  public void cancelSlowMode() {
-    MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-    MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
   }
 
   /**
