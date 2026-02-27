@@ -197,16 +197,14 @@ public class LED extends SubsystemBase {
           && matchTime > LEDConstants.firstShiftStart) {
         return LEDConstants.Period.TRANSITION;
       }
-      if ((matchTime <= LEDConstants.firstShiftStart && matchTime >
-LEDConstants.secondShiftStart)
+      if ((matchTime <= LEDConstants.firstShiftStart && matchTime > LEDConstants.secondShiftStart)
           || (matchTime <= LEDConstants.thirdShiftStart
               && matchTime > LEDConstants.fourthShiftStart)) {
         return ((gameData.charAt(0) == alliance.name().charAt(0)))
             ? LEDConstants.Period.INACTIVE
             : LEDConstants.Period.ACTIVE;
       }
-      if ((matchTime <= LEDConstants.secondShiftStart && matchTime >
-LEDConstants.thirdShiftStart)
+      if ((matchTime <= LEDConstants.secondShiftStart && matchTime > LEDConstants.thirdShiftStart)
           || (matchTime <= LEDConstants.fourthShiftStart
               && matchTime > LEDConstants.endPeriodStart)) {
         return ((gameData.charAt(0) == alliance.name().charAt(0)))
@@ -240,8 +238,7 @@ LEDConstants.thirdShiftStart)
    * <h3>Autonomous:</h3>
    *
    * <ul>
-   *   <li>distinct pattern for each auto (currently a single LED lit up at a corresponding index
-on
+   *   <li>distinct pattern for each auto (currently a single LED lit up at a corresponding index on
    *       the LED strip, red or blue according to alliance)
    * </ul>
    *
@@ -299,8 +296,7 @@ on
   @Override
   public void periodic() {
     /**
-     * gameData is what alliance is inactive first. This is the alliance that scored the most
-points
+     * gameData is what alliance is inactive first. This is the alliance that scored the most points
      * in Autonomous.
      */
     gameData = DriverStation.getGameSpecificMessage();
@@ -314,8 +310,7 @@ points
     /**
      * Match Times In Seconds: Auto: 20 - 00
      *
-     * <p>Teleop: - Transition Shift: 140 - 130 - Shift 1: 130 - 105 - Shift 2: 105 - 80 - Shift
-3:
+     * <p>Teleop: - Transition Shift: 140 - 130 - Shift 1: 130 - 105 - Shift 2: 105 - 80 - Shift 3:
      * 80 - 55 - Shift 4: 55 - 30 - End Game: 30 - 00
      */
     matchTime = Timer.getMatchTime();

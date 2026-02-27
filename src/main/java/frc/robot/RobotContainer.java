@@ -56,7 +56,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Vision aprilTagEstimator;
-    private final LED led = new LED();
+  private final LED led = new LED();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -260,15 +260,20 @@ public class RobotContainer {
                 () ->
                     drive
                         .withVelocityX(
-                            xLimiter.calculate(-controller.getLeftY()) * Constants.MaxSpeed)
+                            xLimiter.calculate(-controller.getLeftY())
+                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withVelocityY(
-                            yLimiter.calculate(-controller.getLeftX()) * Constants.MaxSpeed)
+                            yLimiter.calculate(-controller.getLeftX())
+                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withRotationalRate(
                             CommandSwerveDrivetrain.validTargetTags()
                                 ? lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
-    controller.rightBumper().whileTrue(new InstantCommand(() -> slowMode = true)).onFalse(new InstantCommand(() -> slowMode = false));
+    controller
+        .rightBumper()
+        .whileTrue(new InstantCommand(() -> slowMode = true))
+        .onFalse(new InstantCommand(() -> slowMode = false));
 
     opController
         .rightTrigger()
@@ -277,10 +282,16 @@ public class RobotContainer {
                 () ->
                     robotDrive
                         .withVelocityX(
-                            robotxLimiter.calculate(controller.getLeftY()) * Constants.MaxSpeed)
+                            robotxLimiter.calculate(controller.getLeftY())
+                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withVelocityY(
-                            robotyLimiter.calculate(controller.getLeftX()) * Constants.MaxSpeed)
-                        .withRotationalRate(-controller.getRightX() * Constants.MaxAngularRate)));
+                            robotyLimiter.calculate(controller.getLeftX())
+                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+                        .withRotationalRate(
+                            -controller.getRightX()
+                                * (slowMode
+                                    ? Constants.slowModeMaxAngularRate
+                                    : Constants.MaxAngularRate))));
 
     // controller
     //     .b()
