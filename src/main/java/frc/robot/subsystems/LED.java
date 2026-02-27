@@ -219,7 +219,7 @@ public class LED extends SubsystemBase {
     return LEDConstants.Period.PREMATCH;
   }
 
-  public boolean warn(double matchTime, int warningTime) {
+  private boolean warn(int warningTime) {
     return (Set.of(
             LEDConstants.firstShiftStart,
             LEDConstants.secondShiftStart,
@@ -231,6 +231,21 @@ public class LED extends SubsystemBase {
         .anyMatch(num -> ((matchTime - num) <= warningTime && (matchTime - num) > 0)));
   }
 
+  /**
+   * A method that returns true if there is {@value LEDConstants#warningTime} seconds before the next period/shift of the match
+   * @return {@code boolean}
+   */
+  public boolean warn() {
+    return (Set.of(
+            LEDConstants.firstShiftStart,
+            LEDConstants.secondShiftStart,
+            LEDConstants.thirdShiftStart,
+            LEDConstants.fourthShiftStart,
+            LEDConstants.endPeriodStart,
+            0)
+        .stream()
+        .anyMatch(num -> ((matchTime - num) <= LEDConstants.warningTime && (matchTime - num) > 0)));
+  }
   /**
    *
    *
@@ -357,7 +372,6 @@ public class LED extends SubsystemBase {
     }
 
     if (warn(
-        matchTime,
         (matchTime > LEDConstants.endWarningTime)
             ? LEDConstants.warningTime
             : (!DriverStation.isAutonomous())
