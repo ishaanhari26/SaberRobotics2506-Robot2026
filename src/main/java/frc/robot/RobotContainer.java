@@ -118,6 +118,13 @@ public class RobotContainer {
   // Dashboard inputs
   //   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardChooser<Command> autoChooser;
+  
+    public Command DropClimb() {
+        return new InstantCommand(
+                () -> {
+                    Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+                });
+    }
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -198,6 +205,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
     NamedCommands.registerCommand("Climb", AutoClimb());
+    NamedCommands.registerCommand("Unclimb", DropClimb());
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
