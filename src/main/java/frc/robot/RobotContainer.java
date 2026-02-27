@@ -56,7 +56,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Vision aprilTagEstimator;
-  private final LED led = new LED();
+    private final LED led = new LED();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -236,14 +236,22 @@ public class RobotContainer {
                 drive
                     .withVelocityX(
                         xLimiter.calculate(-controller.getLeftY())
-                            * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed)) // Drive forward with negative Y (forward)
+                            * (slowMode
+                                ? Constants.slowModeMaxSpeed
+                                : Constants.MaxSpeed)) // Drive forward with negative Y (forward)
                     .withVelocityY(
                         yLimiter.calculate(-controller.getLeftX())
-                            * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed)) // Drive left with negative X (left)
+                            * (slowMode
+                                ? Constants.slowModeMaxSpeed
+                                : Constants.MaxSpeed)) // Drive left with negative X (left)
                     .withRotationalRate(
                         -controller.getRightX()
-                            * (slowMode ? Constants.slowModeMaxAngularRate : Constants.MaxAngularRate)) // Drive counterclockwise with negative X (left)
-        ));
+                            * (slowMode
+                                ? Constants.slowModeMaxAngularRate
+                                : Constants
+                                    .MaxAngularRate)) // Drive counterclockwise with negative X
+            // (left)
+            ));
 
     controller
         .a()
@@ -251,14 +259,16 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     drive
-                        .withVelocityX(xLimiter.calculate(-controller.getLeftY()) * Constants.MaxSpeed)
-                        .withVelocityY(yLimiter.calculate(-controller.getLeftX()) * Constants.MaxSpeed)
+                        .withVelocityX(
+                            xLimiter.calculate(-controller.getLeftY()) * Constants.MaxSpeed)
+                        .withVelocityY(
+                            yLimiter.calculate(-controller.getLeftX()) * Constants.MaxSpeed)
                         .withRotationalRate(
                             CommandSwerveDrivetrain.validTargetTags()
                                 ? lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
-    controller.povLeft().onTrue(new InstantCommand(() -> slowMode = !slowMode));
+    controller.rightBumper().whileTrue(new InstantCommand(() -> slowMode = true)).onFalse(new InstantCommand(() -> slowMode = false));
 
     opController
         .rightTrigger()
@@ -266,8 +276,10 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     robotDrive
-                        .withVelocityX(robotxLimiter.calculate(controller.getLeftY()) * Constants.MaxSpeed)
-                        .withVelocityY(robotyLimiter.calculate(controller.getLeftX()) * Constants.MaxSpeed)
+                        .withVelocityX(
+                            robotxLimiter.calculate(controller.getLeftY()) * Constants.MaxSpeed)
+                        .withVelocityY(
+                            robotyLimiter.calculate(controller.getLeftX()) * Constants.MaxSpeed)
                         .withRotationalRate(-controller.getRightX() * Constants.MaxAngularRate)));
 
     // controller

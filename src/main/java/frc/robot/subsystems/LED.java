@@ -60,8 +60,7 @@ public class LED extends SubsystemBase {
     currentPattern = pattern;
     try {
       pattern.applyTo(m_buffer);
-    }
-    catch (Exception bad) {
+    } catch (Exception bad) {
       off();
       System.err.println(bad);
     }
@@ -192,20 +191,22 @@ public class LED extends SubsystemBase {
     if (DriverStation.isAutonomous()) {
       return LEDConstants.Period.AUTO;
     }
-    SmartDashboard.putString("Alliance Color", Character.toString(alliance.name().charAt(0)));
+    // SmartDashboard.putString("Alliance Color", Character.toString(alliance.name().charAt(0)));
     if (DriverStation.isTeleop() && gameData.length() > 0) {
       if (matchTime <= LEDConstants.transitionPeriodStart
           && matchTime > LEDConstants.firstShiftStart) {
         return LEDConstants.Period.TRANSITION;
       }
-      if ((matchTime <= LEDConstants.firstShiftStart && matchTime > LEDConstants.secondShiftStart)
+      if ((matchTime <= LEDConstants.firstShiftStart && matchTime >
+LEDConstants.secondShiftStart)
           || (matchTime <= LEDConstants.thirdShiftStart
               && matchTime > LEDConstants.fourthShiftStart)) {
         return ((gameData.charAt(0) == alliance.name().charAt(0)))
             ? LEDConstants.Period.INACTIVE
             : LEDConstants.Period.ACTIVE;
       }
-      if ((matchTime <= LEDConstants.secondShiftStart && matchTime > LEDConstants.thirdShiftStart)
+      if ((matchTime <= LEDConstants.secondShiftStart && matchTime >
+LEDConstants.thirdShiftStart)
           || (matchTime <= LEDConstants.fourthShiftStart
               && matchTime > LEDConstants.endPeriodStart)) {
         return ((gameData.charAt(0) == alliance.name().charAt(0)))
@@ -239,7 +240,8 @@ public class LED extends SubsystemBase {
    * <h3>Autonomous:</h3>
    *
    * <ul>
-   *   <li>distinct pattern for each auto (currently a single LED lit up at a corresponding index on
+   *   <li>distinct pattern for each auto (currently a single LED lit up at a corresponding index
+on
    *       the LED strip, red or blue according to alliance)
    * </ul>
    *
@@ -297,11 +299,12 @@ public class LED extends SubsystemBase {
   @Override
   public void periodic() {
     /**
-     * gameData is what alliance is inactive first. This is the alliance that scored the most points
+     * gameData is what alliance is inactive first. This is the alliance that scored the most
+points
      * in Autonomous.
      */
     gameData = DriverStation.getGameSpecificMessage();
-    alliance = DriverStation.getAlliance().get();
+    // alliance = DriverStation.getAlliance().get();
 
     if (DriverStation.isEStopped()) {
       LED.LEDMode = LEDConstants.Mode.ASTOP;
@@ -311,11 +314,12 @@ public class LED extends SubsystemBase {
     /**
      * Match Times In Seconds: Auto: 20 - 00
      *
-     * <p>Teleop: - Transition Shift: 140 - 130 - Shift 1: 130 - 105 - Shift 2: 105 - 80 - Shift 3:
+     * <p>Teleop: - Transition Shift: 140 - 130 - Shift 1: 130 - 105 - Shift 2: 105 - 80 - Shift
+3:
      * 80 - 55 - Shift 4: 55 - 30 - End Game: 30 - 00
      */
     matchTime = Timer.getMatchTime();
-    state = getPeriod();
+    // state = getPeriod();
     SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:
