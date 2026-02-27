@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ControllerRumble;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
 import frc.robot.commands.Extend;
@@ -118,13 +119,13 @@ public class RobotContainer {
   // Dashboard inputs
   //   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardChooser<Command> autoChooser;
-  
-    public Command DropClimb() {
-        return new InstantCommand(
-                () -> {
-                    Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
-                });
-    }
+
+  public Command DropClimb() {
+    return new InstantCommand(
+        () -> {
+          Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+        });
+  }
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -306,6 +307,8 @@ public class RobotContainer {
     controller
         .rightTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
+
+    led.getScoringTrigger().onTrue(new ControllerRumble(controller));
     // controller
     //     .leftBumper()
     //     .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
