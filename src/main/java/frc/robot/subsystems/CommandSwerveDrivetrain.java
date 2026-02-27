@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.LimelightHelpers;
+import frc.robot.Constants;
 import frc.robot.commands.CommandFactory;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import java.util.Optional;
@@ -266,6 +267,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                         : kBlueAlliancePerspectiveRotation);
                 m_hasAppliedOperatorPerspective = true;
               });
+    }
+
+    if (CommandFactory.distanceFromHub(getPose()) > 5) {
+      Constants.FuelConstants.IntakeLaunchSpeedRPM = -4000;
+    } else if (CommandFactory.distanceFromHub(getPose()) > 3) {
+      Constants.FuelConstants.IntakeLaunchSpeedRPM = -3500;
+    } else {
+      Constants.FuelConstants.IntakeLaunchSpeedRPM = -3000;
     }
 
     SmartDashboard.putNumber("poseX", getPose().getX());
