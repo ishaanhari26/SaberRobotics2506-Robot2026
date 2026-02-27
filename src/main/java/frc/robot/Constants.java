@@ -112,9 +112,9 @@ public final class Constants {
     /** The color of the robot in an active shift. */
     public static final Color activeColor = Color.kGreen;
     /** The color of the robot when approaching an inactive shift. */
-    public static final Color activeWarningColor = Color.kBrown;
+    public static final Color activeWarningColor = Color.kDarkRed;
     /** The color of the robot in an inactive shift. */
-    public static final Color inactiveColor = Color.kBrown;
+    public static final Color inactiveColor = Color.kDarkRed;
     /** The color of the robot when approaching an active shift. */
     public static final Color inactiveWarningColor = Color.kGreen;
 

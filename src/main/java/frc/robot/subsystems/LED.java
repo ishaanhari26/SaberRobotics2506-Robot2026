@@ -58,7 +58,13 @@ public class LED extends SubsystemBase {
   public void setPattern(LEDPattern pattern) {
     off();
     currentPattern = pattern;
-    pattern.applyTo(m_buffer);
+    try {
+      pattern.applyTo(m_buffer);
+    }
+    catch (Exception bad) {
+      off();
+      System.err.println(bad);
+    }
   }
 
   public static void setMode(Mode mode) {
@@ -118,7 +124,7 @@ public class LED extends SubsystemBase {
                 Map.of(
                     0,
                     Color.kBlack,
-                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    (LEDConstants.length - 1) / (double) LEDConstants.length,
                     Color.kWhite))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
@@ -130,7 +136,7 @@ public class LED extends SubsystemBase {
                 Map.of(
                     0,
                     Color.kBlack,
-                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    (LEDConstants.length - 1) / (double) LEDConstants.length,
                     Color.kAquamarine))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
@@ -143,7 +149,7 @@ public class LED extends SubsystemBase {
                     Map.of(
                         0,
                         Color.kBlack,
-                        (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                        (LEDConstants.length - 1) / (double) LEDConstants.length,
                         Color.kWhite))
                 .offsetBy(selected)));
   }
@@ -213,7 +219,7 @@ public class LED extends SubsystemBase {
     return LEDConstants.Period.PREMATCH;
   }
 
-  public boolean warn(double matchTime, int warningTime) {
+  private boolean warn(int warningTime) {
     return (Set.of(
             LEDConstants.firstShiftStart,
             LEDConstants.secondShiftStart,
@@ -225,6 +231,21 @@ public class LED extends SubsystemBase {
         .anyMatch(num -> ((matchTime - num) <= warningTime && (matchTime - num) > 0)));
   }
 
+  /**
+   * A method that returns true if there is {@value LEDConstants#warningTime} seconds before the next period/shift of the match
+   * @return {@code boolean}
+   */
+  public boolean warn() {
+    return (Set.of(
+            LEDConstants.firstShiftStart,
+            LEDConstants.secondShiftStart,
+            LEDConstants.thirdShiftStart,
+            LEDConstants.fourthShiftStart,
+            LEDConstants.endPeriodStart,
+            0)
+        .stream()
+        .anyMatch(num -> ((matchTime - num) <= LEDConstants.warningTime && (matchTime - num) > 0)));
+  }
   /**
    *
    *
@@ -332,10 +353,10 @@ public class LED extends SubsystemBase {
     SmartDashboard.putString("LEDMode:", LED.LEDMode.name());
     switch (LED.LEDMode) {
       case SHOOT:
-        // scrollWhite();
+        scrollWhite();
         break;
       case INTAKE:
-        // scrollAquamarine();
+        scrollAquamarine();
         break;
       case CLIMB:
         gold();
@@ -351,7 +372,6 @@ public class LED extends SubsystemBase {
     }
 
     if (warn(
-        matchTime,
         (matchTime > LEDConstants.endWarningTime)
             ? LEDConstants.warningTime
             : (!DriverStation.isAutonomous())
