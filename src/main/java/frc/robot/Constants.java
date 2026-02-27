@@ -34,8 +34,12 @@ public final class Constants {
     // this is the motor id
     public static final int IntakeMotor = 52;
     public static final int FeederMotor = 54;
+
     public static final int LaunchMotor = 41;
     public static final int LaunchMotor2 = 42;
+
+    public static final int LaunchMotor3 = 43;
+    public static final int LaunchMotor4 = 44;
 
     // speeds for intake and feeder motors when intaking
     public static final double IntakeIntakeSpeed = -1; // 0.84
@@ -49,8 +53,9 @@ public final class Constants {
     // speeds for intake and feeder motors when launching
     public static final double LaunchSpeed = -.6;
     public static final double PassingSpeed = -3000;
-    public static final double IntakeLaunchSpeedRPM =
-        -3500; // 3000,3500,4000; 4800 is the max possible
+    public static final double IntakeLaunchSpeedRPM = -3500; 
+    // 3000,3500,4000; 4800 is the max possible
+
     // public static final double LaunchSpeed = -0.6;
     public static final double FeederLaunchSpeed = 1;
     // public static final double FeederLaunchSpeed = -0.75;

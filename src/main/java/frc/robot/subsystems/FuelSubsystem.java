@@ -19,16 +19,19 @@ import frc.robot.Constants.*;
 public class FuelSubsystem extends SubsystemBase {
   /** Creates a new FuelSubsystem. */
   private final TalonFX intakeMotor;
+  private final TalonFX feederMotor;
 
   private final TalonFX LaunchMotor;
-  private final TalonFX feederMotor;
   private final TalonFX LaunchMotor2;
+  private final TalonFX LaunchMotor3;
+  private final TalonFX LaunchMotor4;
 
   private double currentSpeed;
   private double errorPlusMotor;
   private double calShooter;
   private double feedForwardCalc;
   private double feedForwardset;
+
   private final PIDController ShooterPid =
       new PIDController(FuelConstants.LaunchkP, FuelConstants.LaunchkI, FuelConstants.LaunchkD);
   // Creates a PIDController with gains kP, kI, and kD
@@ -38,11 +41,14 @@ public class FuelSubsystem extends SubsystemBase {
   // Create a new SimpleMotorFeedforward with gains kS, kV, and kA
 
   public FuelSubsystem(
-      TalonFX intakeMotor, TalonFX feederMotor, TalonFX LaunchMotor, TalonFX LaunchMotor2) {
+      TalonFX intakeMotor, TalonFX feederMotor, TalonFX LaunchMotor, TalonFX LaunchMotor2, TalonFX LaunchMotor3, TalonFX LaunchMotor4) {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
+
     this.LaunchMotor = LaunchMotor;
     this.LaunchMotor2 = LaunchMotor2;
+    this.LaunchMotor3 = LaunchMotor3;
+    this.LaunchMotor4 = LaunchMotor4;
 
     ConfigureMotors();
 
@@ -64,6 +70,9 @@ public class FuelSubsystem extends SubsystemBase {
 
   public void runLaunch(double speed) {
     LaunchMotor2.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Aligned));
+    LaunchMotor3.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+    LaunchMotor4.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+
     LaunchMotor.set(speed);
   }
 
@@ -71,9 +80,13 @@ public class FuelSubsystem extends SubsystemBase {
     // Calculates the output of the PID algorithm based on the sensor reading
     // and sends it to a motor
     LaunchMotor2.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Aligned));
+    LaunchMotor3.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+    LaunchMotor4.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+
     calShooter = ShooterPid.calculate(LaunchMotor.getVelocity().getValueAsDouble() * 60, speed);
     currentSpeed = LaunchMotor.getVelocity().getValueAsDouble() * 60;
     errorPlusMotor = (calShooter + currentSpeed);
+
     feedForwardCalc = feedforward.calculate(speed) + calShooter;
     feedForwardset = feedForwardCalc + currentSpeed;
     LaunchMotor.set(feedForwardset / 6380);
@@ -82,14 +95,26 @@ public class FuelSubsystem extends SubsystemBase {
   public void stopMotors() {
     intakeMotor.set(0);
     feederMotor.set(0);
+    ShooterPid.setSetpoint(0);
+    
     LaunchMotor.set(0);
     LaunchMotor2.set(0);
-    ShooterPid.setSetpoint(0);
+    LaunchMotor3.set(0);
+    LaunchMotor4.set(0);
+    
   }
 
   public void ConfigureMotors() {
+    LaunchMotor.setNeutralMode(NeutralModeValue.Coast);
+
     LaunchMotor2.setNeutralMode(NeutralModeValue.Coast);
     LaunchMotor2.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Aligned));
+
+    LaunchMotor2.setNeutralMode(NeutralModeValue.Coast);
+    LaunchMotor3.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+
+    LaunchMotor2.setNeutralMode(NeutralModeValue.Coast);
+    LaunchMotor4.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
   }
 
   @Override
@@ -103,6 +128,10 @@ public class FuelSubsystem extends SubsystemBase {
         "Launch motor speed", LaunchMotor.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber(
         "Launch motor2 speed", LaunchMotor2.getVelocity().getValueAsDouble() * 60);
+    SmartDashboard.putNumber(
+        "Launch motor2 speed", LaunchMotor3.getVelocity().getValueAsDouble() * 60);
+    SmartDashboard.putNumber(
+        "Launch motor2 speed", LaunchMotor4.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
     SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
     SmartDashboard.putData("shooter PID controller", ShooterPid);

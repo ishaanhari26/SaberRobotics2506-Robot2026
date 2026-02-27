@@ -70,9 +70,11 @@ public class RobotContainer {
   public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
   public final TalonFX launchMotor = new TalonFX(Constants.FuelConstants.LaunchMotor);
   public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
+  public final TalonFX launchMotor3 = new TalonFX(Constants.FuelConstants.LaunchMotor3);
+  public final TalonFX launchMotor4 = new TalonFX(Constants.FuelConstants.LaunchMotor4);
 
   private final FuelSubsystem m_fuelSubsystem =
-      new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2);
+      new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2, launchMotor3, launchMotor4);
 
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
