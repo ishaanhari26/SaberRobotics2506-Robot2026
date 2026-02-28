@@ -273,6 +273,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     Constants.FuelConstants.IntakeLaunchSpeedRPM =
         -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 2032.94);
 
+    SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
+
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());
   }
