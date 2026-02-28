@@ -359,7 +359,7 @@ public class RobotContainer {
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
   }
 
-  public Command driveUntilBool(boolean condition, DriveDirection direction, double speedMetersPerSecond) {
+  public Command driveUntilBool(boolean condition, DriveDirection direction) {
     switch (direction) {
       case FORWARD:
         return Commands.run(
