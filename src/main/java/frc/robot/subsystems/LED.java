@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.LEDConstants.Mode;
 import java.util.Map;
@@ -187,38 +188,43 @@ public class LED extends SubsystemBase {
    *
    * @return {@link LEDConstants.Period}
    */
-  public LEDConstants.Period getPeriod() {
+  public static LEDConstants.Period getPeriod() {
     if (DriverStation.isAutonomous()) {
       return LEDConstants.Period.AUTO;
     }
-    // SmartDashboard.putString("Alliance Color", Character.toString(alliance.name().charAt(0)));
-    if (DriverStation.isTeleop() && gameData.length() > 0) {
-      if (matchTime <= LEDConstants.transitionPeriodStart
-          && matchTime > LEDConstants.firstShiftStart) {
+    SmartDashboard.putString(
+        "Alliance Color", Character.toString(DriverStation.getAlliance().get().name().charAt(0)));
+    if (DriverStation.isTeleop() && DriverStation.getGameSpecificMessage().length() > 0) {
+      if (Timer.getMatchTime() <= LEDConstants.transitionPeriodStart
+          && Timer.getMatchTime() > LEDConstants.firstShiftStart) {
         return LEDConstants.Period.TRANSITION;
       }
-      if ((matchTime <= LEDConstants.firstShiftStart && matchTime > LEDConstants.secondShiftStart)
-          || (matchTime <= LEDConstants.thirdShiftStart
-              && matchTime > LEDConstants.fourthShiftStart)) {
-        return ((gameData.charAt(0) == alliance.name().charAt(0)))
+      if ((Timer.getMatchTime() <= LEDConstants.firstShiftStart
+              && Timer.getMatchTime() > LEDConstants.secondShiftStart)
+          || (Timer.getMatchTime() <= LEDConstants.thirdShiftStart
+              && Timer.getMatchTime() > LEDConstants.fourthShiftStart)) {
+        return ((DriverStation.getGameSpecificMessage().charAt(0)
+                == DriverStation.getAlliance().get().name().charAt(0)))
             ? LEDConstants.Period.INACTIVE
             : LEDConstants.Period.ACTIVE;
       }
-      if ((matchTime <= LEDConstants.secondShiftStart && matchTime > LEDConstants.thirdShiftStart)
-          || (matchTime <= LEDConstants.fourthShiftStart
-              && matchTime > LEDConstants.endPeriodStart)) {
-        return ((gameData.charAt(0) == alliance.name().charAt(0)))
+      if ((Timer.getMatchTime() <= LEDConstants.secondShiftStart
+              && Timer.getMatchTime() > LEDConstants.thirdShiftStart)
+          || (Timer.getMatchTime() <= LEDConstants.fourthShiftStart
+              && Timer.getMatchTime() > LEDConstants.endPeriodStart)) {
+        return ((DriverStation.getGameSpecificMessage().charAt(0)
+                == DriverStation.getAlliance().get().name().charAt(0)))
             ? LEDConstants.Period.ACTIVE
             : LEDConstants.Period.INACTIVE;
       }
-      if (matchTime <= LEDConstants.endPeriodStart && matchTime > 0) {
+      if (Timer.getMatchTime() <= LEDConstants.endPeriodStart && Timer.getMatchTime() > 0) {
         return LEDConstants.Period.ENDGAME;
       }
     }
     return LEDConstants.Period.PREMATCH;
   }
 
-  public boolean warn(double matchTime, int warningTime) {
+  private boolean warn(int warningTime) {
     return (Set.of(
             LEDConstants.firstShiftStart,
             LEDConstants.secondShiftStart,
@@ -230,6 +236,26 @@ public class LED extends SubsystemBase {
         .anyMatch(num -> ((matchTime - num) <= warningTime && (matchTime - num) > 0)));
   }
 
+  /**
+   * A method that returns true if there is {@value LEDConstants#warningTime} seconds before the
+   * next period/shift of the match
+   *
+   * @return {@code boolean}
+   */
+  public static boolean warn() {
+    return (Set.of(
+            LEDConstants.firstShiftStart,
+            LEDConstants.secondShiftStart,
+            LEDConstants.thirdShiftStart,
+            LEDConstants.fourthShiftStart,
+            LEDConstants.endPeriodStart,
+            0)
+        .stream()
+        .anyMatch(
+            num ->
+                ((Timer.getMatchTime() - num) <= LEDConstants.warningTime
+                    && (Timer.getMatchTime() - num) > 0)));
+  }
   /**
    *
    *
@@ -303,7 +329,7 @@ public class LED extends SubsystemBase {
     // alliance = DriverStation.getAlliance().get();
 
     if (DriverStation.isEStopped()) {
-      LED.LEDMode = LEDConstants.Mode.ASTOP;
+      LED.LEDMode = LEDConstants.Mode.ESTOP;
     } else if (!DriverStation.isEnabled()) {
       idles();
     }
@@ -356,7 +382,6 @@ public class LED extends SubsystemBase {
     }
 
     if (warn(
-        matchTime,
         (matchTime > LEDConstants.endWarningTime)
             ? LEDConstants.warningTime
             : (!DriverStation.isAutonomous())

@@ -31,6 +31,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveDirection;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ControllerRumble;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
 import frc.robot.commands.Extend;
@@ -119,6 +121,13 @@ public class RobotContainer {
   //   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardChooser<Command> autoChooser;
 
+  public Command DropClimb() {
+    return new InstantCommand(
+        () -> {
+          Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+        });
+  }
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // switch (Constants.currentMode) {
@@ -201,6 +210,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
     NamedCommands.registerCommand("Climb", AutoClimb());
+    NamedCommands.registerCommand("Unclimb", DropClimb());
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -272,24 +282,9 @@ public class RobotContainer {
                             CommandSwerveDrivetrain.validTargetTags()
                                 ? lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
+    
 
-    opController
-        .x()
-        .whileTrue(
-            new LaunchPID(
-                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
-    opController
-        .y()
-        .whileTrue(
-            new LaunchPID(
-                m_fuelSubsystem,
-                Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium,
-                false));
-    opController
-        .leftBumper()
-        .whileTrue(
-            new LaunchPID(
-                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
+    getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
     controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
     controller.povRight().whileTrue(new Extend(m_climbSubsystem));
@@ -311,24 +306,6 @@ public class RobotContainer {
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
-    // opController
-    //     .rightTrigger()
-    //     .whileTrue(
-    //         drivetrain.applyRequest(
-    //             () ->
-    //                 robotDrive
-    //                     .withVelocityX(
-    //                         robotxLimiter.calculate(controller.getLeftY())
-    //                             * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-    //                     .withVelocityY(
-    //                         robotyLimiter.calculate(controller.getLeftX())
-    //                             * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-    //                     .withRotationalRate(
-    //                         -controller.getRightX()
-    //                             * (slowMode
-    //                                 ? Constants.slowModeMaxAngularRate
-    //                                 : Constants.MaxAngularRate))));
-
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
@@ -345,7 +322,16 @@ public class RobotContainer {
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
   }
 
-  public Command driveUntilBool(boolean condition, DriveDirection direction) {
+  public Trigger getScoringTrigger() {
+    Trigger trigger =
+        new Trigger(
+            () -> {
+              return LED.warn();
+            });
+    return trigger;
+  }
+
+  public Command driveUntilBool(boolean condition, String direction, double speedMetersPerSecond) {
     switch (direction) {
       case FORWARD:
         return Commands.run(
