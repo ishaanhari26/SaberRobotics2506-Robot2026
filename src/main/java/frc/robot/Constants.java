@@ -42,6 +42,11 @@ public final class Constants {
     REPLAY
   }
 
+  public static enum DriveDirection {
+    FORWARD,
+    BACKWARD
+  }
+
   public static class FuelConstants {
     // this is the motor id
     public static final int IntakeMotor = 52;

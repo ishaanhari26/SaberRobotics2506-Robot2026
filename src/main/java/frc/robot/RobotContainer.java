@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.DriveDirection;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
 import frc.robot.commands.Extend;
@@ -358,22 +359,21 @@ public class RobotContainer {
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
   }
 
-  public Command driveUntilBool(boolean condition, String direction, double speedMetersPerSecond) {
+  public Command driveUntilBool(boolean condition, DriveDirection direction, double speedMetersPerSecond) {
     switch (direction) {
-      case "FORWARD":
+      case FORWARD:
         return Commands.run(
                 () -> {
-                  drivetrain.applyRequest(
-                      () ->
-                          drive
-                              .withVelocityX(0.3 * Constants.MaxSpeed)
-                              .withVelocityY(0)
-                              .withRotationalRate(0));
+                  drivetrain.setControl(
+                      drive
+                        .withVelocityX(0.3 * Constants.MaxSpeed)
+                        .withVelocityY(0)
+                        .withRotationalRate(0));
                 })
             .until(() -> condition)
             .andThen(
-                drivetrain.applyRequest(
-                    () -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+                Commands.run(() -> drivetrain.setControl(
+                    drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0))));
       default:
         return new InstantCommand();
     }
