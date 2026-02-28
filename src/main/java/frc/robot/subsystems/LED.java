@@ -67,10 +67,12 @@ public class LED extends SubsystemBase {
     }
   }
 
-  public Trigger getScoringTrigger(){
-    Trigger trigger = new Trigger(() -> {
-      return warn();
-    });
+  public Trigger getScoringTrigger() {
+    Trigger trigger =
+        new Trigger(
+            () -> {
+              return warn();
+            });
     return trigger;
   }
 
@@ -336,7 +338,7 @@ public class LED extends SubsystemBase {
     alliance = DriverStation.getAlliance().get();
 
     if (DriverStation.isEStopped()) {
-      LED.LEDMode = LEDConstants.Mode.ASTOP;
+      LED.LEDMode = LEDConstants.Mode.ESTOP;
     } else if (!DriverStation.isEnabled()) {
       idles();
     }

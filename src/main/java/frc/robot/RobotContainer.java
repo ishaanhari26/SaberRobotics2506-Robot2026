@@ -308,7 +308,7 @@ public class RobotContainer {
         .rightTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
 
-    led.getScoringTrigger().onTrue(new ControllerRumble(controller));
+    led.getScoringTrigger().whileTrue(new ControllerRumble(controller));
     // controller
     //     .leftBumper()
     //     .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));

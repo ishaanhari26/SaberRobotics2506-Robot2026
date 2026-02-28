@@ -13,7 +13,7 @@ public class ControllerRumble extends Command {
   private CommandXboxController controller;
   /** Creates a new ControllerRumble. */
   public ControllerRumble(CommandXboxController controller) {
-    this.controller=controller;
+    this.controller = controller;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -26,9 +26,7 @@ public class ControllerRumble extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
