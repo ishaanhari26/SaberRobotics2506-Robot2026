@@ -273,18 +273,36 @@ public class RobotContainer {
                                 ? lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
+    opController
+        .x()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
+    opController
+        .y()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem,
+                Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium,
+                false));
+    opController
+        .leftBumper()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
+
     controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
     controller.povRight().whileTrue(new Extend(m_climbSubsystem));
 
-    controller
-        .povUp()
+    opController
+        .a()
         .whileTrue(
             new InstantCommand(
                 () -> {
                   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
                 }));
-    controller
-        .povDown()
+    opController
+        .b()
         .whileTrue(
             new InstantCommand(
                 () -> {
@@ -293,23 +311,23 @@ public class RobotContainer {
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
-    opController
-        .rightTrigger()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () ->
-                    robotDrive
-                        .withVelocityX(
-                            robotxLimiter.calculate(controller.getLeftY())
-                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-                        .withVelocityY(
-                            robotyLimiter.calculate(controller.getLeftX())
-                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-                        .withRotationalRate(
-                            -controller.getRightX()
-                                * (slowMode
-                                    ? Constants.slowModeMaxAngularRate
-                                    : Constants.MaxAngularRate))));
+    // opController
+    //     .rightTrigger()
+    //     .whileTrue(
+    //         drivetrain.applyRequest(
+    //             () ->
+    //                 robotDrive
+    //                     .withVelocityX(
+    //                         robotxLimiter.calculate(controller.getLeftY())
+    //                             * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+    //                     .withVelocityY(
+    //                         robotyLimiter.calculate(controller.getLeftX())
+    //                             * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+    //                     .withRotationalRate(
+    //                         -controller.getRightX()
+    //                             * (slowMode
+    //                                 ? Constants.slowModeMaxAngularRate
+    //                                 : Constants.MaxAngularRate))));
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
