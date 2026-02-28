@@ -19,6 +19,7 @@ import frc.robot.Constants.*;
 public class FuelSubsystem extends SubsystemBase {
   /** Creates a new FuelSubsystem. */
   private final TalonFX intakeMotor;
+
   private final TalonFX feederMotor;
 
   private final TalonFX LaunchMotor;
@@ -41,7 +42,12 @@ public class FuelSubsystem extends SubsystemBase {
   // Create a new SimpleMotorFeedforward with gains kS, kV, and kA
 
   public FuelSubsystem(
-      TalonFX intakeMotor, TalonFX feederMotor, TalonFX LaunchMotor, TalonFX LaunchMotor2, TalonFX LaunchMotor3, TalonFX LaunchMotor4) {
+      TalonFX intakeMotor,
+      TalonFX feederMotor,
+      TalonFX LaunchMotor,
+      TalonFX LaunchMotor2,
+      TalonFX LaunchMotor3,
+      TalonFX LaunchMotor4) {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
 
@@ -53,7 +59,7 @@ public class FuelSubsystem extends SubsystemBase {
     ConfigureMotors();
 
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
-    ShooterPid.setTolerance(49.899997);
+    ShooterPid.setTolerance(100);
   }
 
   public void runIntake(double speed) {
@@ -69,9 +75,7 @@ public class FuelSubsystem extends SubsystemBase {
   }
 
   public void runLaunch(double speed) {
-    LaunchMotor2.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Aligned));
-    LaunchMotor3.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
-    LaunchMotor4.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+    ConfigureMotors();
 
     LaunchMotor.set(speed);
   }
@@ -79,9 +83,8 @@ public class FuelSubsystem extends SubsystemBase {
   public void runLaunchPID(double speed) {
     // Calculates the output of the PID algorithm based on the sensor reading
     // and sends it to a motor
-    LaunchMotor2.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Aligned));
-    LaunchMotor3.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
-    LaunchMotor4.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+
+    ConfigureMotors();
 
     calShooter = ShooterPid.calculate(LaunchMotor.getVelocity().getValueAsDouble() * 60, speed);
     currentSpeed = LaunchMotor.getVelocity().getValueAsDouble() * 60;
@@ -96,12 +99,11 @@ public class FuelSubsystem extends SubsystemBase {
     intakeMotor.set(0);
     feederMotor.set(0);
     ShooterPid.setSetpoint(0);
-    
+
     LaunchMotor.set(0);
-    LaunchMotor2.set(0);
-    LaunchMotor3.set(0);
-    LaunchMotor4.set(0);
-    
+    // LaunchMotor2.set(0);
+    // LaunchMotor3.set(0);
+    // LaunchMotor4.set(0);
   }
 
   public void ConfigureMotors() {
@@ -110,10 +112,10 @@ public class FuelSubsystem extends SubsystemBase {
     LaunchMotor2.setNeutralMode(NeutralModeValue.Coast);
     LaunchMotor2.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Aligned));
 
-    LaunchMotor2.setNeutralMode(NeutralModeValue.Coast);
+    LaunchMotor3.setNeutralMode(NeutralModeValue.Coast);
     LaunchMotor3.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
 
-    LaunchMotor2.setNeutralMode(NeutralModeValue.Coast);
+    LaunchMotor4.setNeutralMode(NeutralModeValue.Coast);
     LaunchMotor4.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
   }
 

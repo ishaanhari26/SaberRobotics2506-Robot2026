@@ -34,6 +34,7 @@ import frc.robot.commands.Eject;
 import frc.robot.commands.Extend;
 import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
+import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
@@ -74,10 +75,11 @@ public class RobotContainer {
   public final TalonFX launchMotor4 = new TalonFX(Constants.FuelConstants.LaunchMotor4);
 
   private final FuelSubsystem m_fuelSubsystem =
-      new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2, launchMotor3, launchMotor4);
+      new FuelSubsystem(
+          intakeMotor, feederMotor, launchMotor, launchMotor2, launchMotor3, launchMotor4);
 
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(5);
 
   private final SlewRateLimiter robotxLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter robotyLimiter = new SlewRateLimiter(3);
@@ -247,8 +249,6 @@ public class RobotContainer {
                             * MaxAngularRate) // Drive counterclockwise with negative X (left)
             ));
 
-
-
     controller
         .a()
         .whileTrue(
@@ -266,15 +266,14 @@ public class RobotContainer {
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
-    // controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
-    
+    controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
+
     controller
         .rightTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
-    
+
     controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
     controller.povRight().whileTrue(new Extend(m_climbSubsystem));
-    
 
     controller
         .povUp()
@@ -291,8 +290,7 @@ public class RobotContainer {
                   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
                 }));
 
-    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false)); 
-
+    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
     opController
         .rightTrigger()
@@ -303,8 +301,7 @@ public class RobotContainer {
                         .withVelocityX(robotxLimiter.calculate(controller.getLeftY()) * MaxSpeed)
                         .withVelocityY(robotyLimiter.calculate(controller.getLeftX()) * MaxSpeed)
                         .withRotationalRate(-controller.getRightX() * MaxAngularRate)));
-    
-    
+
     // controller
     //     .b()
     //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87),
@@ -342,7 +339,7 @@ public class RobotContainer {
     //                         new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
     //                 drive)
     //             .ignoringDisable(true));
-    
+
   }
 
   public Command driveUntilBool(boolean condition, String direction, double speedMetersPerSecond) {
