@@ -34,6 +34,7 @@ public class Vision extends SubsystemBase {
 
   public static double tx;
   public static double ty;
+  public static double ta;
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
     this.consumer = consumer;
@@ -181,9 +182,12 @@ public class Vision extends SubsystemBase {
 
     tx = getTargetX(0).getRadians();
     ty = getTargetY(0).getRadians();
+    ta = LimelightHelpers.getTA("limelight");
 
     SmartDashboard.putNumber("limelightPoseX", LimelightHelpers.getBotPose2d(camera1Name).getX());
     SmartDashboard.putNumber("limelightPoseY", LimelightHelpers.getBotPose2d(camera1Name).getY());
+
+    SmartDashboard.putNumber("ta", ta);
 
     // Log summary data
     Logger.recordOutput("Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[0]));

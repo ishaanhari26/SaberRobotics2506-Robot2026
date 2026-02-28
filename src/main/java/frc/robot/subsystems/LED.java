@@ -58,7 +58,12 @@ public class LED extends SubsystemBase {
   public void setPattern(LEDPattern pattern) {
     off();
     currentPattern = pattern;
-    pattern.applyTo(m_buffer);
+    try {
+      pattern.applyTo(m_buffer);
+    } catch (Exception bad) {
+      off();
+      System.err.println(bad);
+    }
   }
 
   public static void setMode(Mode mode) {
@@ -118,7 +123,7 @@ public class LED extends SubsystemBase {
                 Map.of(
                     0,
                     Color.kBlack,
-                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    (LEDConstants.length - 1) / (double) LEDConstants.length,
                     Color.kWhite))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
@@ -130,7 +135,7 @@ public class LED extends SubsystemBase {
                 Map.of(
                     0,
                     Color.kBlack,
-                    (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                    (LEDConstants.length - 1) / (double) LEDConstants.length,
                     Color.kAquamarine))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
@@ -143,7 +148,7 @@ public class LED extends SubsystemBase {
                     Map.of(
                         0,
                         Color.kBlack,
-                        (m_buffer.getLength() - 1) / m_buffer.getLength(),
+                        (LEDConstants.length - 1) / (double) LEDConstants.length,
                         Color.kWhite))
                 .offsetBy(selected)));
   }
@@ -186,7 +191,7 @@ public class LED extends SubsystemBase {
     if (DriverStation.isAutonomous()) {
       return LEDConstants.Period.AUTO;
     }
-    SmartDashboard.putString("Alliance Color", Character.toString(alliance.name().charAt(0)));
+    // SmartDashboard.putString("Alliance Color", Character.toString(alliance.name().charAt(0)));
     if (DriverStation.isTeleop() && gameData.length() > 0) {
       if (matchTime <= LEDConstants.transitionPeriodStart
           && matchTime > LEDConstants.firstShiftStart) {
@@ -297,7 +302,7 @@ public class LED extends SubsystemBase {
      * in Autonomous.
      */
     gameData = DriverStation.getGameSpecificMessage();
-    alliance = DriverStation.getAlliance().get();
+    // alliance = DriverStation.getAlliance().get();
 
     if (DriverStation.isEStopped()) {
       LED.LEDMode = LEDConstants.Mode.ASTOP;
@@ -311,7 +316,7 @@ public class LED extends SubsystemBase {
      * 80 - 55 - Shift 4: 55 - 30 - End Game: 30 - 00
      */
     matchTime = Timer.getMatchTime();
-    state = getPeriod();
+    // state = getPeriod();
     SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:
@@ -334,10 +339,10 @@ public class LED extends SubsystemBase {
     SmartDashboard.putString("LEDMode:", LED.LEDMode.name());
     switch (LED.LEDMode) {
       case SHOOT:
-        // scrollWhite();
+        scrollWhite();
         break;
       case INTAKE:
-        // scrollAquamarine();
+        scrollAquamarine();
         break;
       case CLIMB:
         gold();
@@ -365,5 +370,7 @@ public class LED extends SubsystemBase {
     m_led.setData(m_buffer);
     SmartDashboard.putString("DriverStation Game Data", gameData);
     SmartDashboard.putString("Led Color", m_buffer.getLED(0).toString());
+    SmartDashboard.putString("Able to shoot?", state.name());
+    SmartDashboard.putNumber("Match Time", matchTime);
   }
 }

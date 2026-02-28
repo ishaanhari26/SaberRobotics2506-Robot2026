@@ -7,8 +7,11 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.generated.TunerConstants;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -19,6 +22,15 @@ public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
+  public static double MaxSpeed =
+      1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+  public static double MaxAngularRate =
+      RotationsPerSecond.of(0.75)
+          .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+
+  public static double slowModeMaxSpeed = MaxSpeed * 0.3;
+  public static double slowModeMaxAngularRate = MaxAngularRate * 0.3;
+
   public static enum Mode {
     /** Running on a real robot. */
     REAL,
@@ -28,6 +40,11 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+
+  public static enum DriveDirection {
+    FORWARD,
+    BACKWARD
   }
 
   public static class FuelConstants {
@@ -53,9 +70,9 @@ public final class Constants {
     // speeds for intake and feeder motors when launching
     public static final double LaunchSpeed = -.8;
     public static final double PassingSpeed = -3000;
-    public static final double IntakeLaunchSpeedRPM = -3500; // Set to 3500
+    public static double IntakeLaunchSpeedRPM = -3500;
+    public static final double ConstantIntakeLaunchSpeedRPM = -3500; 
     // 3000,3500,4000; 4800 is the max possible
-
     // public static final double LaunchSpeed = -0.6;
     public static final double FeederLaunchSpeed = 1;
     // public static final double FeederLaunchSpeed = -0.75;
