@@ -230,8 +230,6 @@ public class LED extends SubsystemBase {
         .anyMatch(num -> ((matchTime - num) <= warningTime && (matchTime - num) > 0)));
   }
 
- 
-
   /**
    *
    *
@@ -316,7 +314,7 @@ public class LED extends SubsystemBase {
      * 80 - 55 - Shift 4: 55 - 30 - End Game: 30 - 00
      */
     matchTime = Timer.getMatchTime();
-    // state = getPeriod();
+    state = getPeriod();
     SmartDashboard.putString("LEDState:", state.name());
     switch (state) {
       case AUTO:

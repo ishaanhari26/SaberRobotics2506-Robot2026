@@ -32,7 +32,6 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 
 /**
@@ -271,7 +270,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               });
     }
 
-    Constants.FuelConstants.IntakeLaunchSpeedRPM = -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 2032.94);
+    Constants.FuelConstants.IntakeLaunchSpeedRPM =
+        -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 2032.94);
 
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());

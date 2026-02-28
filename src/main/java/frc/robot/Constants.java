@@ -71,7 +71,10 @@ public final class Constants {
     public static final double LaunchSpeed = -.8;
     public static final double PassingSpeed = -3000;
     public static double IntakeLaunchSpeedRPM = -3500;
-    public static final double ConstantIntakeLaunchSpeedRPM = -3500; 
+    public static final double ConstantIntakeLaunchSpeedRPM = -3500;
+    public static final double ConstantIntakeLaunchSpeedRPMLow = -3000;
+    public static final double ConstantIntakeLaunchSpeedRPMMedium = -3500;
+    public static final double ConstantIntakeLaunchSpeedRPMHigh = -4000;
     // 3000,3500,4000; 4800 is the max possible
     // public static final double LaunchSpeed = -0.6;
     public static final double FeederLaunchSpeed = 1;
