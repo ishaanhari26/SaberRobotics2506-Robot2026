@@ -33,6 +33,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily
  * be used in command-based projects.
@@ -298,10 +300,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     m_simNotifier.startPeriodic(kSimLoopPeriod);
   }
 
+  @AutoLogOutput(key = "Pose")
   public Pose2d getPose() {
     return getState().Pose;
   }
 
+  @AutoLogOutput(key = "Rotation")
   public Rotation2d getRotation() {
     return getState().Pose.getRotation();
   }
@@ -314,6 +318,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     return false;
   }
 
+  @AutoLogOutput(key = "ChassisSpeeds")
   public ChassisSpeeds getChassisSpeeds() {
     return getState().Speeds;
   }
