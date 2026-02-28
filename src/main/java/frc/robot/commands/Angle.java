@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -8,8 +9,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import java.util.stream.DoubleStream;
-
-import com.ctre.phoenix6.swerve.SwerveRequest;
 
 public class Angle extends Command {
   public double tx;
@@ -59,11 +58,11 @@ public class Angle extends Command {
   public void execute() {
     if (LimelightHelpers.getTV(limelightName)
         && LimelightHelpers.getFiducialID(limelightName) == tagID) {
-      rotation =
-LimelightHelpers.getBotPose3d_TargetSpace(limelightName).getRotation().getAngle();
+      rotation = LimelightHelpers.getBotPose3d_TargetSpace(limelightName).getRotation().getAngle();
       omegaValue = -turnAnglePID.calculate(rotation);
 
-      drive.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds(0, 0, omegaValue)));
+      drive.setControl(
+          new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds(0, 0, omegaValue)));
     } else {
       drive.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
     }

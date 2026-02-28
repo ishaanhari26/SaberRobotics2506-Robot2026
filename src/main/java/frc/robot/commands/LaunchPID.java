@@ -24,7 +24,7 @@ public class LaunchPID extends Command {
    */
   public LaunchPID(FuelSubsystem subsystem, double speed, boolean vision) {
     m_subsystem = subsystem;
-    m_speed = speed;  
+    m_speed = speed;
     this.vision = vision;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);

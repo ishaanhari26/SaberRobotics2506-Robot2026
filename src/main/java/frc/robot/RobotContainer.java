@@ -36,7 +36,6 @@ import frc.robot.commands.Eject;
 import frc.robot.commands.Extend;
 import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
-import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
@@ -312,52 +311,20 @@ public class RobotContainer {
                                     ? Constants.slowModeMaxAngularRate
                                     : Constants.MaxAngularRate))));
 
-    // controller
-    //     .b()
-    //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87),
-    // drivetrain));
-
-    // Lock to 0° when A button is held
-    // controller
-    //     .a()
-    //     .whileTrue(
-    //         DriveCommands.controllerDriveAtAngle(
-    //             drive,
-    //             () -> -controller.getLeftY(),
-    //             () -> -controller.getLeftX(),
-    //             () -> Rotation2d.kZero));
-
-    // Switch to X pattern when X button is pressed
-    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
 
-    controller.rightBumper().whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, false));
+    controller
+        .rightBumper()
+        .whileTrue(
+            new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, false));
     controller
         .rightTrigger()
-        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
-    // controller
-    //     .leftBumper()
-    //     .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
+        .whileTrue(
+            new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
-
-    // controller
-    //     .a()
-    //     .whileTrue(new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.87), drive));
-
-    // Reset gyro to 0° when B button is pressed
-    // controller
-    //     .b()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //                 () ->
-    //                     drive.setPose(
-    //                         new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-    //                 drive)
-    //             .ignoringDisable(true));
-
   }
 
   public Command driveUntilBool(boolean condition, DriveDirection direction) {
@@ -367,14 +334,16 @@ public class RobotContainer {
                 () -> {
                   drivetrain.setControl(
                       drive
-                        .withVelocityX(0.3 * Constants.MaxSpeed)
-                        .withVelocityY(0)
-                        .withRotationalRate(0));
+                          .withVelocityX(0.3 * Constants.MaxSpeed)
+                          .withVelocityY(0)
+                          .withRotationalRate(0));
                 })
             .until(() -> condition)
             .andThen(
-                Commands.run(() -> drivetrain.setControl(
-                    drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0))));
+                Commands.run(
+                    () ->
+                        drivetrain.setControl(
+                            drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0))));
       default:
         return new InstantCommand();
     }
