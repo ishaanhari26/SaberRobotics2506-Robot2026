@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.AutoAlignCommand;
+import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
 import frc.robot.commands.Extend;
@@ -206,6 +208,7 @@ public class RobotContainer {
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
     NamedCommands.registerCommand("Climb", AutoClimb());
     NamedCommands.registerCommand("Unclimb", DropClimb());
+    NamedCommands.registerCommand("Align", new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0), drivetrain));
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
