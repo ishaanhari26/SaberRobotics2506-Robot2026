@@ -208,7 +208,7 @@ public class RobotContainer {
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
     NamedCommands.registerCommand("Climb", AutoClimb());
     NamedCommands.registerCommand("Unclimb", DropClimb());
-    NamedCommands.registerCommand("Align", new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0), drivetrain));
+    NamedCommands.registerCommand("Align", new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
