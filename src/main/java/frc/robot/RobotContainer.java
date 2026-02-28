@@ -102,8 +102,6 @@ public class RobotContainer {
 
   private final SwerveRequest.RobotCentric robotDrive = new SwerveRequest.RobotCentric();
 
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   private boolean slowMode = false;
@@ -139,7 +137,8 @@ public class RobotContainer {
     aprilTagEstimator =
         new Vision(
             drivetrain::addVisionMeasurement,
-            new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation));
+            new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation),
+            new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation));
     // new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation));
     //         new AprilTagEstimator(drive);
 
@@ -194,7 +193,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand(
         "Launch",
-        new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM)
+        new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
             .withTimeout(Constants.AutoConstants.launchTime));
     NamedCommands.registerCommand(
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
@@ -207,7 +206,7 @@ public class RobotContainer {
     // Set up SysId routines
     autoChooser.addOption(
         "JustShoot",
-        new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM)
+        new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
             .withTimeout(Constants.AutoConstants.launchTime));
     // Configure the button bindings
     configureButtonBindings();
@@ -314,11 +313,12 @@ public class RobotContainer {
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
-    // controller.rightBumper().whileTrue(new Launch(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
+
+    controller.rightBumper().whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, false));
     controller
         .rightTrigger()
-        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
+        .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
     // controller
     //     .leftBumper()
     //     .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));

@@ -128,7 +128,7 @@ public class CommandFactory {
         DriverStation.getAlliance().get() == Alliance.Blue
             ? new Pose2d(4.63, 4.03, new Rotation2d())
             : new Pose2d(11.91, 4.03, new Rotation2d(Math.PI));
-    return hubPose.getTranslation().getDistance(pose.getTranslation());
+    return hubPose.getTranslation().getDistance(pose.getTranslation()) * 39.37; // Convert to inches
   }
 
   // public static Function<Pose2d, Pose2d> getBargeScorePoseFunction() {

@@ -271,13 +271,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               });
     }
 
-    if (CommandFactory.distanceFromHub(getPose()) >= 5) {
-      Constants.FuelConstants.IntakeLaunchSpeedRPM = -4000;
-    } else if (CommandFactory.distanceFromHub(getPose()) >= 3) {
-      Constants.FuelConstants.IntakeLaunchSpeedRPM = -3500;
-    } else {
-      Constants.FuelConstants.IntakeLaunchSpeedRPM = -3000;
-    }
+    Constants.FuelConstants.IntakeLaunchSpeedRPM = -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 2032.94);
 
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());

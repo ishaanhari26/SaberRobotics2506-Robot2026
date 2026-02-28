@@ -15,15 +15,17 @@ public class LaunchPID extends Command {
   private final FuelSubsystem m_subsystem;
 
   private double m_speed;
+  private boolean vision;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public LaunchPID(FuelSubsystem subsystem, double speed) {
+  public LaunchPID(FuelSubsystem subsystem, double speed, boolean vision) {
     m_subsystem = subsystem;
-    m_speed = speed;
+    m_speed = speed;  
+    this.vision = vision;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -37,7 +39,7 @@ public class LaunchPID extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.runLaunchPID(m_speed);
+    m_subsystem.runLaunchPID(vision ? Constants.FuelConstants.IntakeLaunchSpeedRPM : m_speed);
     if (m_subsystem.getAtSetpoint()) {
       m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
     } // else {
