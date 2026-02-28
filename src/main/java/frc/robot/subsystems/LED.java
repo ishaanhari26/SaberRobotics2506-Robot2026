@@ -319,7 +319,7 @@ public class LED extends SubsystemBase {
     alliance = DriverStation.getAlliance().get();
 
     if (DriverStation.isEStopped()) {
-      LED.LEDMode = LEDConstants.Mode.ASTOP;
+      LED.LEDMode = LEDConstants.Mode.ESTOP;
     } else if (!DriverStation.isEnabled()) {
       idles();
     }
