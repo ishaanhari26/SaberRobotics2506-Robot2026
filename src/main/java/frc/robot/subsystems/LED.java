@@ -326,7 +326,7 @@ public class LED extends SubsystemBase {
      * in Autonomous.
      */
     gameData = DriverStation.getGameSpecificMessage();
-    alliance = DriverStation.getAlliance().get();
+    // alliance = DriverStation.getAlliance().get();
 
     if (DriverStation.isEStopped()) {
       LED.LEDMode = LEDConstants.Mode.ESTOP;
@@ -393,5 +393,7 @@ public class LED extends SubsystemBase {
     m_led.setData(m_buffer);
     SmartDashboard.putString("DriverStation Game Data", gameData);
     SmartDashboard.putString("Led Color", m_buffer.getLED(0).toString());
+    SmartDashboard.putString("Able to shoot?", state.name());
+    SmartDashboard.putNumber("Match Time", matchTime);
   }
 }

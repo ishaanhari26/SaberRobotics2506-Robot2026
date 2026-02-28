@@ -196,7 +196,7 @@ public class AutoAlignCommand extends Command {
     ChassisSpeeds speeds = new ChassisSpeeds(m_throttle, m_strafe, m_spin);
     // drivetrain.runVelocity(speeds);
 
-    drivetrain.applyRequest(() -> new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds));
+    drivetrain.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds));
 
     Logger.recordOutput("AutoAlign/TX", m_tx);
     Logger.recordOutput("AutoAlign/TZ", m_ty);
@@ -219,7 +219,6 @@ public class AutoAlignCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     // drivetrain.runVelocity(new ChassisSpeeds());
-    drivetrain.applyRequest(
-        () -> new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
+    drivetrain.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
   }
 }

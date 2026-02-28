@@ -26,11 +26,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.LimelightHelpers;
+import frc.robot.Constants;
 import frc.robot.commands.CommandFactory;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily
@@ -268,6 +270,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               });
     }
 
+    Constants.FuelConstants.IntakeLaunchSpeedRPM =
+        -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 2032.94);
+
+    SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
+
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());
   }
@@ -289,10 +296,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     m_simNotifier.startPeriodic(kSimLoopPeriod);
   }
 
+  @AutoLogOutput(key = "Pose")
   public Pose2d getPose() {
     return getState().Pose;
   }
 
+  @AutoLogOutput(key = "Rotation")
   public Rotation2d getRotation() {
     return getState().Pose.getRotation();
   }
@@ -305,6 +314,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     return false;
   }
 
+  @AutoLogOutput(key = "ChassisSpeeds")
   public ChassisSpeeds getChassisSpeeds() {
     return getState().Speeds;
   }
