@@ -36,6 +36,7 @@ import frc.robot.commands.Eject;
 import frc.robot.commands.Extend;
 import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
+import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
@@ -67,9 +68,12 @@ public class RobotContainer {
   public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
   public final TalonFX launchMotor = new TalonFX(Constants.FuelConstants.LaunchMotor);
   public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
+  public final TalonFX launchMotor3 = new TalonFX(Constants.FuelConstants.LaunchMotor3);
+  public final TalonFX launchMotor4 = new TalonFX(Constants.FuelConstants.LaunchMotor4);
 
   private final FuelSubsystem m_fuelSubsystem =
-      new FuelSubsystem(intakeMotor, feederMotor, launchMotor, launchMotor2);
+      new FuelSubsystem(
+          intakeMotor, feederMotor, launchMotor, launchMotor2, launchMotor3, launchMotor4);
 
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(5);
@@ -270,10 +274,25 @@ public class RobotContainer {
                                 ? lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
+    controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
+    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
+
     controller
-        .rightBumper()
-        .whileTrue(new InstantCommand(() -> slowMode = true))
-        .onFalse(new InstantCommand(() -> slowMode = false));
+        .povUp()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
+                }));
+    controller
+        .povDown()
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+                }));
+
+    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
     opController
         .rightTrigger()
@@ -338,25 +357,7 @@ public class RobotContainer {
     //                         new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
     //                 drive)
     //             .ignoringDisable(true));
-    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
-    controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
 
-    controller
-        .povUp()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
-                }));
-    controller
-        .povDown()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
-                }));
-
-    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
   }
 
   public Command driveUntilBool(boolean condition, DriveDirection direction) {

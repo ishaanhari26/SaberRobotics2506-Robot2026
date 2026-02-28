@@ -51,8 +51,12 @@ public final class Constants {
     // this is the motor id
     public static final int IntakeMotor = 52;
     public static final int FeederMotor = 54;
+
     public static final int LaunchMotor = 41;
     public static final int LaunchMotor2 = 42;
+
+    public static final int LaunchMotor3 = 43;
+    public static final int LaunchMotor4 = 44;
 
     // speeds for intake and feeder motors when intaking
     public static final double IntakeIntakeSpeed = -1; // 0.84
@@ -64,7 +68,7 @@ public final class Constants {
     public static final double FeederEjectSpeed = 1;
 
     // speeds for intake and feeder motors when launching
-    public static final double LaunchSpeed = -.6;
+    public static final double LaunchSpeed = -.8;
     public static final double PassingSpeed = -3000;
     public static double IntakeLaunchSpeedRPM = -3500;
     public static final double ConstantIntakeLaunchSpeedRPM = -3500; 
@@ -80,13 +84,17 @@ public final class Constants {
      * -2500 RPM - invaild.
      */
 
-    public static final double LaunchkS = 0.23;
-    public static final double LaunchkV = 0.1; // 0.1199 , 0.2, 0.1500,.19, 0.3
+    public static final double LaunchkS = 0.29;
+    public static final double LaunchkV = 0.075; // 0.1199 , 0.2, 0.1500,.19, 0.3
     public static final double LaunchkA = 0;
 
-    public static final double LaunchkP = 10; // .1, .6, 1.0, 1.4,5 , 4, 3,2 (8), 11
+    public static final double LaunchkP = 1.2; // .1, .6, 1.0, 1.4,5 , 4, 3,2 (8), 11
     public static final double LaunchkI = 0;
-    public static final double LaunchkD = 0; // 0.01  0.09, 0.03
+    public static final double LaunchkD = 0.002; // 0.01  0.09, 0.03
+
+    // Perfect from 88 inches from middle of robot to center of hub at 3500 RPM
+    // 118 inches 4000 RPM
+    // 58 inches 3000 RPM
   }
   /** Constants for the LED subsytem. */
   public static final class LEDConstants {
