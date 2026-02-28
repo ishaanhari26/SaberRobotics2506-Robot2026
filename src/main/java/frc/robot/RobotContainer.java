@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ControllerRumble;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.Eject;
@@ -308,7 +309,7 @@ public class RobotContainer {
         .rightTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM));
 
-    led.getScoringTrigger().whileTrue(new ControllerRumble(controller));
+    getScoringTrigger().whileTrue(new ControllerRumble(controller));
     // controller
     //     .leftBumper()
     //     .whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.PassingSpeed));
@@ -347,6 +348,15 @@ public class RobotContainer {
                 }));
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
+  }
+
+  public Trigger getScoringTrigger() {
+    Trigger trigger =
+        new Trigger(
+            () -> {
+              return LED.warn();
+            });
+    return trigger;
   }
 
   public Command driveUntilBool(boolean condition, String direction, double speedMetersPerSecond) {

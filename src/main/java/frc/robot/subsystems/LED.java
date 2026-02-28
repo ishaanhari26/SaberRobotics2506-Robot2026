@@ -67,15 +67,6 @@ public class LED extends SubsystemBase {
     }
   }
 
-  public Trigger getScoringTrigger() {
-    Trigger trigger =
-        new Trigger(
-            () -> {
-              return warn();
-            });
-    return trigger;
-  }
-
   public static void setMode(Mode mode) {
     LED.LEDMode = mode;
   }
