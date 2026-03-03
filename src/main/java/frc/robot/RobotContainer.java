@@ -43,6 +43,7 @@ import frc.robot.commands.Intake;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Retract;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FuelSubsystem;
@@ -73,6 +74,8 @@ public class RobotContainer {
   public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
   public final TalonFX launchMotor3 = new TalonFX(Constants.FuelConstants.LaunchMotor3);
   public final TalonFX launchMotor4 = new TalonFX(Constants.FuelConstants.LaunchMotor4);
+
+  private final Camera m_camera = new Camera();
 
   private final FuelSubsystem m_fuelSubsystem =
       new FuelSubsystem(
@@ -217,9 +220,18 @@ public class RobotContainer {
         "Align",
         new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
 
-    NamedCommands.registerCommand("ShooterLow", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
-    NamedCommands.registerCommand("ShooterMedium", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium, false));
-    NamedCommands.registerCommand("ShooterHigh", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
+    NamedCommands.registerCommand(
+        "ShooterLow",
+        new LaunchPID(
+            m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
+    NamedCommands.registerCommand(
+        "ShooterMedium",
+        new LaunchPID(
+            m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium, false));
+    NamedCommands.registerCommand(
+        "ShooterHigh",
+        new LaunchPID(
+            m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -312,9 +324,23 @@ public class RobotContainer {
                   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
                 }));
 
-    opController.y().whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
-    opController.x().whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium, false));
-    opController.leftBumper().whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
+    opController
+        .y()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
+    opController
+        .x()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem,
+                Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium,
+                false));
+    opController
+        .leftBumper()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
