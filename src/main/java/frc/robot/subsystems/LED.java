@@ -333,6 +333,7 @@ public class LED extends SubsystemBase {
     } else if (!DriverStation.isEnabled()) {
       idles();
     }
+    
     /**
      * Match Times In Seconds: Auto: 20 - 00
      *
