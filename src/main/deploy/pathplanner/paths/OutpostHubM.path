@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5,
-        "y": 0.680192771084337
+        "x": 0.4894698795180723,
+        "y": 0.6474096385542167
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.474264764800662,
-        "y": 3.3132395765413163
+        "x": 2.40632279286514,
+        "y": 3.238763757110071
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outpost"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 4.03
       },
       "prevControl": {
-        "x": 0.8342502394143279,
-        "y": 1.118579172296259
+        "x": 0.8790015332366194,
+        "y": 1.1866026837600345
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootM"
     }
   ],
   "rotationTargets": [],

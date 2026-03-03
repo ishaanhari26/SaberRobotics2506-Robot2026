@@ -8,11 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.247111231198668,
-        "y": 7.230270321166385
+        "x": 3.225528043987808,
+        "y": 7.2247799023024175
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "StartL"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 4.953
       },
       "prevControl": {
-        "x": 3.1443356601136894,
-        "y": 5.344564990461751
+        "x": 3.1653349064618697,
+        "y": 5.307208245965897
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootL"
     }
   ],
   "rotationTargets": [],

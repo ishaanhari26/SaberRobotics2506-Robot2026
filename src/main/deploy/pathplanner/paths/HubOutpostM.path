@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.248404859185932,
-        "y": 4.058196204227117
+        "x": 3.246999162610584,
+        "y": 4.0686188253274285
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootM"
     },
     {
       "anchor": {
-        "x": 0.5003975903614455,
-        "y": 0.680192771084337
+        "x": 0.4894698795180723,
+        "y": 0.6474096385542167
       },
       "prevControl": {
-        "x": 0.3228035045827852,
-        "y": 0.5042372633659316
+        "x": 0.2772992232606116,
+        "y": 0.43464515744855237
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outpost"
     }
   ],
   "rotationTargets": [],
