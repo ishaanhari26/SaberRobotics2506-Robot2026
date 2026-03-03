@@ -23,4 +23,4 @@ RobotContainer is where we declare all the subsystems and commands for the robot
 ***
 
 To create links to lines of code, use the following syntax:
-> <p><text>[Link Text](../relative/path/to/file.txt#L{ine number}) </text></p>
+> <p><text>[Link Text](../relative/path/to/file.txt#{Line number}) </text></p>
