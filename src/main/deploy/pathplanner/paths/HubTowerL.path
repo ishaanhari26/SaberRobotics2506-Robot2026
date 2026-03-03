@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2916950340748246,
-        "y": 4.805287058016045
+        "x": 3.3387839836869024,
+        "y": 4.977627818841203
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootL"
     },
     {
       "anchor": {
-        "x": 1.0358554216867468,
-        "y": 4.843650602409639
+        "x": 1.0249277108433734,
+        "y": 4.832722891566265
       },
       "prevControl": {
-        "x": 1.265046664021203,
-        "y": 4.943507372020861
+        "x": 1.2733630562291385,
+        "y": 4.86064920824168
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ClimbL"
     }
   ],
   "rotationTargets": [],

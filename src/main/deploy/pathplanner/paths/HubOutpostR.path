@@ -8,11 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.194758195998409,
-        "y": 2.4431554629763217
+        "x": 2.1635787001149573,
+        "y": 2.4026242037476857
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootR"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 0.6474096385542167
       },
       "prevControl": {
-        "x": 1.6996217717373423,
-        "y": 1.9649080134061216
+        "x": 1.712514660000656,
+        "y": 1.9833601694750753
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outpost"
     }
   ],
   "rotationTargets": [],

@@ -12,20 +12,20 @@
         "y": 2.37741499294079
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outpost"
     },
     {
       "anchor": {
-        "x": 1.166987951807229,
-        "y": 5.81621686746988
+        "x": 0.9375060240963853,
+        "y": 5.838072289156627
       },
       "prevControl": {
-        "x": 2.1614096385542174,
-        "y": 4.384686746987951
+        "x": 2.128626506024096,
+        "y": 4.537674698795181
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [],
