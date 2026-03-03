@@ -6,7 +6,7 @@
 
 `src/main/java/frc/robot/Main.java`
 
-Main.java is used to start the main robot class. It does not need to be modified, nor does it do any configuration.
+Main.java is used to start the main robot class. It does not need to be modified, nor does it have any configuration.
 
 ### [Robot.java](/docs/Robot.md)
 
@@ -18,9 +18,9 @@ Robot.java is the main file that runs as the robot runs. It contains the calls t
 
 `src/main/java/frc/robot/RobotContainer.java`
 
-RobotContainer is where we declare all the subsystems and commands for the robot. This is where button deffinitons live, any commands that will run autonumusly, and where we declare the autonomus that we will be using.
+RobotContainer is where we declare all the subsystems and commands for the robot. This is where button definitons live, any commands that will run autonomously, and where we declare the autonomous that we will be using.
 
 ***
 
 To create links to lines of code, use the following syntax:
-> <p><text>[Link Text](../relative/path/to/file.txt#L{ine number}) </text></p>
+> <p><text>[Link Text](../relative/path/to/file.txt#{Line number}) </text></p>
