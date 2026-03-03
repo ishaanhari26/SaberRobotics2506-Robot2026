@@ -331,27 +331,27 @@ public class RobotContainer {
     return trigger;
   }
 
-  public Command driveUntilBool(boolean condition, String direction, double speedMetersPerSecond) {
-    switch (direction) {
-      case FORWARD:
-        return Commands.run(
-                () -> {
-                  drivetrain.setControl(
-                      drive
-                          .withVelocityX(0.3 * Constants.MaxSpeed)
-                          .withVelocityY(0)
-                          .withRotationalRate(0));
-                })
-            .until(() -> condition)
-            .andThen(
-                Commands.run(
-                    () ->
-                        drivetrain.setControl(
-                            drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0))));
-      default:
-        return new InstantCommand();
-    }
-  }
+//   public Command driveUntilBool(boolean condition, String direction, double speedMetersPerSecond) {
+//     switch (direction) {
+//       case FORWARD:
+//         return Commands.run(
+//                 () -> {
+//                   drivetrain.setControl(
+//                       drive
+//                           .withVelocityX(0.3 * Constants.MaxSpeed)
+//                           .withVelocityY(0)
+//                           .withRotationalRate(0));
+//                 })
+//             .until(() -> condition)
+//             .andThen(
+//                 Commands.run(
+//                     () ->
+//                         drivetrain.setControl(
+//                             drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0))));
+//       default:
+//         return new InstantCommand();
+//     }
+//   }
 
   public Command AutoClimb() {
     return new SequentialCommandGroup(
