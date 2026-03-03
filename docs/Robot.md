@@ -12,7 +12,7 @@ This is code to run when it is running on a real robot. Right now, it is logging
 
 ### Sim
 
-This code runs when it was launched inside Robot Simulation. It only logs to the dashboard, no USB logging.
+This code runs when it is launched inside Robot Simulation. It only logs to the dashboard, no USB logging.
 
 ### Replay
 
@@ -26,11 +26,11 @@ This line initates `RobotContainer.java` which has all the button mapping and au
 
 ### robotPeriodic()
 
-Runs one line of code, which runs everthing in the scheduler. This is basicly telling the code to execute every 0.02 secconds (50 Hz).
+Runs one line of code, which runs everything in the scheduler. This is basically telling the code to execute every 0.02 seconds (50 Hz).
 
 ### disabledInit()
 
-Any code that would need to run when the robot is dissabled goes here. Usefull for reseting sensors and safely stoping motors.
+Any code that would need to run when the robot is dissabled goes here. Useful for resetting sensors and safely stopping motors.
 
 ### disabledPeriodic()
 
@@ -42,7 +42,7 @@ This function runs the autonomous selected in `RobotContainer.java` if there is 
 
 ### autonomousPeriodic()
 
-This function runs periodicly durring autonomous.
+This function runs periodically during autonomous.
 
 ### teleopInit()
 
@@ -54,7 +54,7 @@ This function is called periodically during operator control.
 
 ### testInit()
 
-This function is called once when test mode is enabled. It cancles all scheduled commands.
+This function is called once when test mode is enabled. It cancels all scheduled commands.
 
 ### testPeriodic()
 
