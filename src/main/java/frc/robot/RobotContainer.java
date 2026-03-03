@@ -41,6 +41,7 @@ import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Retract;
+import frc.robot.commands.Target;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -215,6 +216,8 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Align",
         new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
+    NamedCommands.registerCommand(
+        "Targeting", new Target(drivetrain));
 
     NamedCommands.registerCommand("ShooterLow", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
     NamedCommands.registerCommand("ShooterMedium", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium, false));
@@ -223,6 +226,8 @@ public class RobotContainer {
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    lockedTargetPID.setSetpoint(0);
 
     // Set up SysId routines
     autoChooser.addOption(
