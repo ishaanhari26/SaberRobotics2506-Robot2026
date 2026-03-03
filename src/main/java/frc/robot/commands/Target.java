@@ -4,11 +4,9 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.LimelightHelpers;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
-import java.util.stream.DoubleStream;
 
 public class Target extends Command {
   private CommandSwerveDrivetrain drive;
@@ -35,7 +33,14 @@ public class Target extends Command {
   @Override
   public void execute() {
     drive.setControl(
-        new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds(0, 0, CommandSwerveDrivetrain.validTargetTags() ? turnAnglePID.calculate(Vision.tx) : 0)));
+        new SwerveRequest.ApplyFieldSpeeds()
+            .withSpeeds(
+                new ChassisSpeeds(
+                    0,
+                    0,
+                    CommandSwerveDrivetrain.validTargetTags()
+                        ? turnAnglePID.calculate(Vision.tx)
+                        : 0)));
   }
 
   @Override

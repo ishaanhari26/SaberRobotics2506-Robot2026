@@ -275,7 +275,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
 
-    SmartDashboard.putBoolean("In Shooting Range", CommandFactory.distanceFromHub(getPose()) >= 58 && CommandFactory.distanceFromHub(getPose()) <= 118);
+    SmartDashboard.putBoolean(
+        "In Shooting Range",
+        CommandFactory.distanceFromHub(getPose()) >= 58
+            && CommandFactory.distanceFromHub(getPose()) <= 118);
 
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());

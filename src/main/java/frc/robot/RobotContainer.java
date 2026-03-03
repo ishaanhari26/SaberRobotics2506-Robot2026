@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.DriveDirection;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
@@ -219,8 +218,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Align",
         new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
-    NamedCommands.registerCommand(
-        "Targeting", new Target(drivetrain));
+    NamedCommands.registerCommand("Targeting", new Target(drivetrain));
 
     NamedCommands.registerCommand(
         "ShooterLow",
@@ -310,8 +308,8 @@ public class RobotContainer {
 
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
-    controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
-    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
+    controller.povDown().whileTrue(new Retract(m_climbSubsystem));
+    controller.povUp().whileTrue(new Extend(m_climbSubsystem));
 
     opController
         .a()
@@ -354,8 +352,14 @@ public class RobotContainer {
 
     controller
         .rightBumper()
-        .whileTrue(
-            new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, false));
+        .whileTrue(new InstantCommand(() -> slowMode = !slowMode))
+        .onFalse(new InstantCommand(() -> slowMode = !slowMode));
+
+    // controller
+    //     .rightBumper()
+    //     .whileTrue(
+    //         new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPM,
+    // false));
     controller
         .rightTrigger()
         .whileTrue(
