@@ -123,6 +123,14 @@ public class CommandFactory {
     };
   }
 
+  public static double distanceFromHub(Pose2d pose) {
+    Pose2d hubPose =
+        DriverStation.getAlliance().get() == Alliance.Blue
+            ? new Pose2d(4.63, 4.03, new Rotation2d())
+            : new Pose2d(11.91, 4.03, new Rotation2d(Math.PI));
+    return hubPose.getTranslation().getDistance(pose.getTranslation()) * 39.37; // Convert to inches
+  }
+
   // public static Function<Pose2d, Pose2d> getBargeScorePoseFunction() {
   //     if (Drive.onRed()) {
   //         return (Pose2d pose) -> {
