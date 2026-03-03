@@ -217,6 +217,10 @@ public class RobotContainer {
         "Align",
         new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
 
+    NamedCommands.registerCommand("ShooterLow", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
+    NamedCommands.registerCommand("ShooterMedium", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium, false));
+    NamedCommands.registerCommand("ShooterHigh", new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
+
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -307,6 +311,10 @@ public class RobotContainer {
                 () -> {
                   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
                 }));
+
+    opController.y().whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
+    opController.x().whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium, false));
+    opController.leftBumper().whileTrue(new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
 
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
