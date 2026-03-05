@@ -131,17 +131,11 @@ public class CommandFactory {
     return hubPose.getTranslation().getDistance(pose.getTranslation()) * 39.37; // Convert to inches
   }
 
-  // public static Function<Pose2d, Pose2d> getBargeScorePoseFunction() {
-  //     if (Drive.onRed()) {
-  //         return (Pose2d pose) -> {
-  //             return new Pose2d(9.8, 1.9, new Rotation2d());
-  //         };
-  //     } else {
-  //         return (Pose2d pose) -> {
-  //             return new Pose2d(7.7, 5.9, new Rotation2d(Math.PI));
-  //         };
-  //     }
-  // }
+  public static Function<Pose2d, Pose2d> driveToPoseFunction(double x, double y, Rotation2d rotation) {
+    return (Pose2d pose) -> {
+      return new Pose2d(x, y, rotation);
+    };
+  }
 
   public static Function<Pose2d, Pose2d> getAutoClimbPose() { // TODO: find the actual position
     return (Pose2d pose) -> {

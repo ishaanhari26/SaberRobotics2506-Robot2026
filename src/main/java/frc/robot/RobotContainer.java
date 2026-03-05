@@ -19,8 +19,11 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -329,6 +332,11 @@ public class RobotContainer {
             new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
 
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
+
+    // reset heading
+    opController
+        .rightBumper()
+        .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
   }
 
   public Trigger getScoringTrigger() {
@@ -414,6 +422,10 @@ public class RobotContainer {
             }));
   }
 
+  public boolean onBlue() {
+    return DriverStation.getAlliance().get() == Alliance.Blue;
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -421,5 +433,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  public Command getAutoAlignCommand() {
+    return new AutoAlignCommand(CommandFactory.driveToPoseFunction(onBlue() ? 3 : 13, 4, onBlue() ? new Rotation2d() : new Rotation2d(Math.PI)), drivetrain);
   }
 }
