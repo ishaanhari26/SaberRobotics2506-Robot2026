@@ -28,13 +28,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.DriveDirection;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
@@ -47,6 +45,7 @@ import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Retract;
 import frc.robot.commands.Target;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FuelSubsystem;
@@ -70,6 +69,7 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController opController = new CommandXboxController(1);
+  private final CommandXboxController opController2 = new CommandXboxController(2);
 
   public final TalonFX intakeMotor = new TalonFX(Constants.FuelConstants.IntakeMotor);
   public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
@@ -77,6 +77,8 @@ public class RobotContainer {
   public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
   public final TalonFX launchMotor3 = new TalonFX(Constants.FuelConstants.LaunchMotor3);
   public final TalonFX launchMotor4 = new TalonFX(Constants.FuelConstants.LaunchMotor4);
+
+  private final Camera m_camera = new Camera();
 
   private final FuelSubsystem m_fuelSubsystem =
       new FuelSubsystem(
@@ -225,6 +227,19 @@ public class RobotContainer {
         new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
     NamedCommands.registerCommand("Targeting", new Target(drivetrain));
 
+    NamedCommands.registerCommand(
+        "ShooterLow",
+        new LaunchPID(
+            m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
+    NamedCommands.registerCommand(
+        "ShooterMedium",
+        new LaunchPID(
+            m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium, false));
+    NamedCommands.registerCommand(
+        "ShooterHigh",
+        new LaunchPID(
+            m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
+
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -263,12 +278,12 @@ public class RobotContainer {
             () ->
                 drive
                     .withVelocityX(
-                        newxLimiter.calculate(controller.getLeftY())
+                        newxLimiter.calculate(-controller.getLeftY())
                             * (slowMode
                                 ? Constants.slowModeMaxSpeed
                                 : Constants.MaxSpeed)) // Drive forward with negative Y (forward)
                     .withVelocityY(
-                        newyLimiter.calculate(controller.getLeftX())
+                        newyLimiter.calculate(-controller.getLeftX())
                             * (slowMode
                                 ? Constants.slowModeMaxSpeed
                                 : Constants.MaxSpeed)) // Drive left with negative X (left)
@@ -288,20 +303,20 @@ public class RobotContainer {
                 () ->
                     drive
                         .withVelocityX(
-                            newxLimiter.calculate(controller.getLeftY())
+                            newxLimiter.calculate(-controller.getLeftY())
                                 * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withVelocityY(
-                            newyLimiter.calculate(controller.getLeftX())
+                            newyLimiter.calculate(-controller.getLeftX())
                                 * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withRotationalRate(
                             CommandSwerveDrivetrain.validTargetTags()
-                                ? lockedTargetPID.calculate(Vision.tx)
+                                ? -lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
-    controller.povLeft().whileTrue(new Retract(m_climbSubsystem));
-    controller.povRight().whileTrue(new Extend(m_climbSubsystem));
+    controller.povDown().whileTrue(new Retract(m_climbSubsystem));
+    controller.povUp().whileTrue(new Extend(m_climbSubsystem));
 
     opController
         .a()
@@ -318,16 +333,40 @@ public class RobotContainer {
                   Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
                 }));
 
+    opController
+        .y()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow, false));
+    opController
+        .x()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem,
+                Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium,
+                false));
+    opController
+        .leftBumper()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
+
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
 
-    controller
-        .rightBumper()
-        .whileTrue(
-            new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, false));
+    opController2
+        .a()
+        .whileTrue(new InstantCommand(() -> slowMode = !slowMode))
+        .onFalse(new InstantCommand(() -> slowMode = !slowMode));
+
+    // controller
+    //     .rightBumper()
+    //     .whileTrue(
+    //         new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPM,
+    // false));
     controller
         .rightTrigger()
         .whileTrue(
@@ -348,28 +387,28 @@ public class RobotContainer {
     return trigger;
   }
 
-  public Command driveUntilBool(
-      boolean condition, DriveDirection direction, double speedMetersPerSecond) {
-    switch (direction) {
-      case FORWARD:
-        return Commands.run(
-                () -> {
-                  drivetrain.setControl(
-                      drive
-                          .withVelocityX(0.3 * Constants.MaxSpeed)
-                          .withVelocityY(0)
-                          .withRotationalRate(0));
-                })
-            .until(() -> condition)
-            .andThen(
-                Commands.run(
-                    () ->
-                        drivetrain.setControl(
-                            drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0))));
-      default:
-        return new InstantCommand();
-    }
-  }
+  //   public Command driveUntilBool(boolean condition, String direction, double
+  // speedMetersPerSecond) {
+  //     switch (direction) {
+  //       case FORWARD:
+  //         return Commands.run(
+  //                 () -> {
+  //                   drivetrain.setControl(
+  //                       drive
+  //                           .withVelocityX(0.3 * Constants.MaxSpeed)
+  //                           .withVelocityY(0)
+  //                           .withRotationalRate(0));
+  //                 })
+  //             .until(() -> condition)
+  //             .andThen(
+  //                 Commands.run(
+  //                     () ->
+  //                         drivetrain.setControl(
+  //                             drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0))));
+  //       default:
+  //         return new InstantCommand();
+  //     }
+  //   }
 
   public Command AutoClimb() {
     return new SequentialCommandGroup(

@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9875884571316942,
-        "y": 5.491002751450821
+        "x": 2.259757168298924,
+        "y": 5.385293639393365
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootL"
     },
     {
       "anchor": {
-        "x": 1.1666761768901568,
-        "y": 5.788188302425108
+        "x": 0.9375060240963853,
+        "y": 5.838072289156627
       },
       "prevControl": {
-        "x": 2.175022388054474,
-        "y": 5.336310993682394
+        "x": 2.013541540610852,
+        "y": 5.444210962954332
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [],

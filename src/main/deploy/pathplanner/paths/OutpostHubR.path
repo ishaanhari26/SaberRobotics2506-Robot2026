@@ -12,7 +12,7 @@
         "y": 2.37741499294079
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outpost"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootR"
     }
   ],
   "rotationTargets": [],

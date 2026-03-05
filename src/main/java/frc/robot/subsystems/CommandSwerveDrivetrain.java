@@ -267,11 +267,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                         ? kRedAlliancePerspectiveRotation
                         : kBlueAlliancePerspectiveRotation);
                 m_hasAppliedOperatorPerspective = true;
+                SmartDashboard.putBoolean("allianceColor", allianceColor == Alliance.Blue);
               });
     }
 
     Constants.FuelConstants.IntakeLaunchSpeedRPM =
-        -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 2032.94);
+        -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 1632.94);
 
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
 
