@@ -82,8 +82,11 @@ public class RobotContainer {
       new FuelSubsystem(
           intakeMotor, feederMotor, launchMotor, launchMotor2, launchMotor3, launchMotor4);
 
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(5);
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(5);
+  //   private final SlewRateLimiter xLimiter = new SlewRateLimiter(5);
+  //   private final SlewRateLimiter yLimiter = new SlewRateLimiter(5);
+
+  private final SlewRateLimiter newxLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter newyLimiter = new SlewRateLimiter(5);
 
   private final SlewRateLimiter robotxLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter robotyLimiter = new SlewRateLimiter(3);
@@ -220,8 +223,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Align",
         new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
-    NamedCommands.registerCommand(
-        "Targeting", new Target(drivetrain));
+    NamedCommands.registerCommand("Targeting", new Target(drivetrain));
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -261,12 +263,12 @@ public class RobotContainer {
             () ->
                 drive
                     .withVelocityX(
-                        xLimiter.calculate(-controller.getLeftY())
+                        newxLimiter.calculate(controller.getLeftY())
                             * (slowMode
                                 ? Constants.slowModeMaxSpeed
                                 : Constants.MaxSpeed)) // Drive forward with negative Y (forward)
                     .withVelocityY(
-                        yLimiter.calculate(-controller.getLeftX())
+                        newyLimiter.calculate(controller.getLeftX())
                             * (slowMode
                                 ? Constants.slowModeMaxSpeed
                                 : Constants.MaxSpeed)) // Drive left with negative X (left)
@@ -286,10 +288,10 @@ public class RobotContainer {
                 () ->
                     drive
                         .withVelocityX(
-                            xLimiter.calculate(-controller.getLeftY())
+                            newxLimiter.calculate(controller.getLeftY())
                                 * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withVelocityY(
-                            yLimiter.calculate(-controller.getLeftX())
+                            newyLimiter.calculate(controller.getLeftX())
                                 * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withRotationalRate(
                             CommandSwerveDrivetrain.validTargetTags()
@@ -334,9 +336,7 @@ public class RobotContainer {
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
     // reset heading
-    opController
-        .rightBumper()
-        .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    controller.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
   }
 
   public Trigger getScoringTrigger() {
@@ -436,6 +436,9 @@ public class RobotContainer {
   }
 
   public Command getAutoAlignCommand() {
-    return new AutoAlignCommand(CommandFactory.driveToPoseFunction(onBlue() ? 3 : 13, 4, onBlue() ? new Rotation2d() : new Rotation2d(Math.PI)), drivetrain);
+    return new AutoAlignCommand(
+        CommandFactory.driveToPoseFunction(
+            onBlue() ? 3 : 13, 4, onBlue() ? new Rotation2d() : new Rotation2d(Math.PI)),
+        drivetrain);
   }
 }
