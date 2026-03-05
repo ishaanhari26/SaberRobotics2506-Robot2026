@@ -43,7 +43,7 @@ import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.Retract;
-import frc.robot.commands.Target;
+import frc.robot.commands.TargetCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -225,7 +225,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Align",
         new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
-    NamedCommands.registerCommand("Targeting", new Target(drivetrain));
+    NamedCommands.registerCommand("Targeting", new TargetCommand(drivetrain));
 
     NamedCommands.registerCommand(
         "ShooterLow",
@@ -245,6 +245,7 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     lockedTargetPID.setSetpoint(0);
+    lockedTargetPID.setTolerance(Math.toRadians(2));
     slowMode = false;
 
     // Set up SysId routines
@@ -310,9 +311,8 @@ public class RobotContainer {
                             newyLimiter.calculate(-controller.getLeftX())
                                 * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withRotationalRate(
-                            CommandSwerveDrivetrain.validTargetTags()
-                                ? -lockedTargetPID.calculate(Vision.tx)
-                                : 0)));
+                            lockedTargetPID.calculate(
+                                CommandFactory.getHubAngleOffsetRadians(drivetrain.getPose())))));
 
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 

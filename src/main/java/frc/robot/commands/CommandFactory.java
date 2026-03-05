@@ -2,11 +2,11 @@ package frc.robot.commands;
 
 import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.function.Function;
@@ -130,13 +130,12 @@ public class CommandFactory {
         : new Pose2d(11.91, 4.03, new Rotation2d(Math.PI));
   }
 
-  public static boolean onRed() {
-    return DriverStation.getAlliance().get() == Alliance.Red;
-  }
-
   public static Pose2d translateToBlue(Pose2d pose) {
-    if (onRed()) {
-      return new Pose2d(16.54 - pose.getX(), 8.02 - pose.getY(), pose.getRotation().unaryMinus());
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      return new Pose2d(
+          16.54 - pose.getX(),
+          8.02 - pose.getY(),
+          pose.getRotation().rotateBy(new Rotation2d(Math.PI)));
     } else {
       return pose;
     }
@@ -147,10 +146,23 @@ public class CommandFactory {
     return hubPose.getTranslation().getDistance(pose.getTranslation()) * 39.37; // Convert to inches
   }
 
+  // public static double getHubAngleOffsetRadians(Pose2d pose) {
+  //   Pose2d blueHubPose = getHubPose(Alliance.Blue);
+  //   Pose2d transPose = translateToBlue(pose);
+  //   double angleToHub = Math.atan2(blueHubPose.getY() - transPose.getY(), blueHubPose.getX() -
+  // transPose.getX());
+  //   return MathUtil.angleModulus(angleToHub - transPose.getRotation().getRadians());
+  // }
+
   public static double getHubAngleOffsetRadians(Pose2d pose) {
-    Pose2d blueHubPose = getHubPose(Alliance.Blue);
-    Pose2d transPose = translateToBlue(pose);
-    return Math.atan2(blueHubPose.getX() - transPose.getX(), blueHubPose.getY() - transPose.getY());
+    Pose2d translatedPose = translateToBlue(pose);
+    Rotation2d angleToHub =
+        getHubPose(Alliance.Blue)
+            .getTranslation()
+            .minus(translatedPose.getTranslation())
+            .getAngle();
+
+    return MathUtil.angleModulus(angleToHub.minus(translatedPose.getRotation()).getRadians());
   }
 
   public static Function<Pose2d, Pose2d> driveToPoseFunction(

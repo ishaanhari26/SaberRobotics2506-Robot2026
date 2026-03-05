@@ -5,18 +5,17 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 
-public class Target extends Command {
+public class TargetCommand extends Command {
   private CommandSwerveDrivetrain drive;
 
-  public PIDController turnAnglePID;
+  public PIDController targetPID;
 
-  public Target(CommandSwerveDrivetrain drive) {
+  public TargetCommand(CommandSwerveDrivetrain drive) {
     this.drive = drive;
 
-    turnAnglePID =
+    targetPID =
         new PIDController(
             VisionConstants.TURN_ANGLE_KP,
             VisionConstants.TURN_ANGLE_KI,
@@ -26,8 +25,8 @@ public class Target extends Command {
 
   @Override
   public void initialize() {
-    turnAnglePID.setSetpoint(0);
-    turnAnglePID.setTolerance(1);
+    targetPID.setSetpoint(0);
+    targetPID.setTolerance(Math.toRadians(2));
   }
 
   @Override
@@ -38,9 +37,8 @@ public class Target extends Command {
                 new ChassisSpeeds(
                     0,
                     0,
-                    CommandSwerveDrivetrain.validTargetTags()
-                        ? turnAnglePID.calculate(Vision.tx)
-                        : 0)));
+                    -targetPID.calculate(
+                        CommandFactory.getHubAngleOffsetRadians(drive.getPose())))));
   }
 
   @Override
@@ -50,6 +48,6 @@ public class Target extends Command {
 
   @Override
   public boolean isFinished() {
-    return turnAnglePID.atSetpoint();
+    return targetPID.atSetpoint();
   }
 }
