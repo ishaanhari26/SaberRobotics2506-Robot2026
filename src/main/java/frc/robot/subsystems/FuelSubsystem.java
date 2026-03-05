@@ -59,7 +59,7 @@ public class FuelSubsystem extends SubsystemBase {
     ConfigureMotors();
 
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
-    ShooterPid.setTolerance(100);
+    ShooterPid.setTolerance(50);
   }
 
   public void runIntake(double speed) {

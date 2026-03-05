@@ -120,7 +120,7 @@ public class RobotContainer {
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  private boolean slowMode = false;
+  private boolean slowMode;
 
   private static PIDController lockedTargetPID =
       new PIDController(
@@ -245,6 +245,7 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     lockedTargetPID.setSetpoint(0);
+    slowMode = false;
 
     // Set up SysId routines
     autoChooser.addOption(
