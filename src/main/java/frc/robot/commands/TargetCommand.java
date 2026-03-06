@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 
 public class TargetCommand extends Command {
@@ -26,7 +27,7 @@ public class TargetCommand extends Command {
   @Override
   public void initialize() {
     targetPID.setSetpoint(0);
-    targetPID.setTolerance(Math.toRadians(2));
+    targetPID.setTolerance(0.3);
   }
 
   @Override
@@ -37,8 +38,9 @@ public class TargetCommand extends Command {
                 new ChassisSpeeds(
                     0,
                     0,
-                    -targetPID.calculate(
-                        CommandFactory.getHubAngleOffsetRadians(drive.getPose())))));
+                    CommandSwerveDrivetrain.validTargetTags()
+                        ? targetPID.calculate(Vision.tx)
+                        : 0)));
   }
 
   @Override

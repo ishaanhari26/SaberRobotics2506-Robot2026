@@ -245,7 +245,7 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     lockedTargetPID.setSetpoint(0);
-    lockedTargetPID.setTolerance(Math.toRadians(2));
+    lockedTargetPID.setTolerance(1);
     slowMode = false;
 
     // Set up SysId routines
@@ -298,21 +298,24 @@ public class RobotContainer {
             // (left)
             ));
 
-    controller
-        .a()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () ->
-                    drive
-                        .withVelocityX(
-                            newxLimiter.calculate(-controller.getLeftY())
-                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-                        .withVelocityY(
-                            newyLimiter.calculate(-controller.getLeftX())
-                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-                        .withRotationalRate(
-                            lockedTargetPID.calculate(
-                                CommandFactory.getHubAngleOffsetRadians(drivetrain.getPose())))));
+    // controller
+    //     .a()
+    //     .whileTrue(
+    //         drivetrain.applyRequest(
+    //             () ->
+    //                 drive
+    //                     .withVelocityX(
+    //                         newxLimiter.calculate(-controller.getLeftY())
+    //                             * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+    //                     .withVelocityY(
+    //                         newyLimiter.calculate(-controller.getLeftX())
+    //                             * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+    //                     .withRotationalRate(
+    //                         CommandSwerveDrivetrain.validTargetTags()
+    //                             ? lockedTargetPID.calculate(Vision.tx)
+    //                             : 0)));
+
+    controller.a().whileTrue(new TargetCommand(drivetrain));
 
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
@@ -363,11 +366,11 @@ public class RobotContainer {
         .whileTrue(new InstantCommand(() -> slowMode = !slowMode))
         .onFalse(new InstantCommand(() -> slowMode = !slowMode));
 
-    // controller
-    //     .rightBumper()
-    //     .whileTrue(
-    //         new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPM,
-    // false));
+    controller
+        .rightBumper()
+        .whileTrue(
+            new LaunchPID(
+                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPM, false));
     controller
         .rightTrigger()
         .whileTrue(

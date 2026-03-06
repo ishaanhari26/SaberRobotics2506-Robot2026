@@ -33,6 +33,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily
@@ -283,6 +284,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());
+
+    SmartDashboard.putNumber("angleOffset", CommandFactory.getHubAngleOffsetRadians(getPose()));
+
+    for (int i = 0; i < 4; i++) {
+      Logger.recordOutput(
+          "Drive/Module" + Integer.toString(i) + "/Positions", getState().ModulePositions[i]);
+      Logger.recordOutput(
+          "Drive/Module" + Integer.toString(i) + "/States", getState().ModuleStates[i]);
+    }
   }
 
   private void startSimThread() {
