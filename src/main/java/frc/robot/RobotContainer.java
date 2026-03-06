@@ -245,7 +245,7 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     lockedTargetPID.setSetpoint(0);
-    lockedTargetPID.setTolerance(1);
+    lockedTargetPID.setTolerance(0.3);
     slowMode = false;
 
     // Set up SysId routines
@@ -298,24 +298,24 @@ public class RobotContainer {
             // (left)
             ));
 
-    // controller
-    //     .a()
-    //     .whileTrue(
-    //         drivetrain.applyRequest(
-    //             () ->
-    //                 drive
-    //                     .withVelocityX(
-    //                         newxLimiter.calculate(-controller.getLeftY())
-    //                             * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-    //                     .withVelocityY(
-    //                         newyLimiter.calculate(-controller.getLeftX())
-    //                             * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-    //                     .withRotationalRate(
-    //                         CommandSwerveDrivetrain.validTargetTags()
-    //                             ? lockedTargetPID.calculate(Vision.tx)
-    //                             : 0)));
+    controller
+        .a()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () ->
+                    drive
+                        .withVelocityX(
+                            newxLimiter.calculate(-controller.getLeftY())
+                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+                        .withVelocityY(
+                            newyLimiter.calculate(-controller.getLeftX())
+                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+                        .withRotationalRate(
+                            CommandSwerveDrivetrain.validTargetTags()
+                                ? lockedTargetPID.calculate(Vision.tx)
+                                : 0)));
 
-    controller.a().whileTrue(new TargetCommand(drivetrain));
+    // controller.a().whileTrue(new TargetCommand(drivetrain));
 
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
