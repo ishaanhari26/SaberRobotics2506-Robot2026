@@ -38,11 +38,9 @@ import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.ControllerRumble;
 import frc.robot.commands.Eject;
-import frc.robot.commands.Extend;
 import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.LaunchPID;
-import frc.robot.commands.Retract;
 import frc.robot.commands.TargetCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Camera;
@@ -312,15 +310,15 @@ public class RobotContainer {
                                 * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withRotationalRate(
                             CommandSwerveDrivetrain.validTargetTags()
-                                ? lockedTargetPID.calculate(Vision.tx)
+                                ? -lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
     // controller.a().whileTrue(new TargetCommand(drivetrain));
 
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
-    controller.povDown().whileTrue(new Retract(m_climbSubsystem));
-    controller.povUp().whileTrue(new Extend(m_climbSubsystem));
+    // controller.povDown().whileTrue(new Retract(m_climbSubsystem));
+    // controller.povUp().whileTrue(new Extend(m_climbSubsystem));
 
     opController
         .a()
@@ -363,8 +361,8 @@ public class RobotContainer {
 
     opController2
         .a()
-        .whileTrue(new InstantCommand(() -> slowMode = !slowMode))
-        .onFalse(new InstantCommand(() -> slowMode = !slowMode));
+        .whileTrue(new InstantCommand(() -> slowMode = true))
+        .onFalse(new InstantCommand(() -> slowMode = false));
 
     controller
         .rightBumper()
