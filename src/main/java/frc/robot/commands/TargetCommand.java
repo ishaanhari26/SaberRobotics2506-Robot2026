@@ -26,8 +26,8 @@ public class TargetCommand extends Command {
 
   @Override
   public void initialize() {
-    targetPID.setSetpoint(0);
-    targetPID.setTolerance(0.3);
+    // targetPID.setSetpoint(0);
+    // targetPID.setTolerance(0.3);
   }
 
   @Override

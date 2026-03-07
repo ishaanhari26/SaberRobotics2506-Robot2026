@@ -7,6 +7,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -15,6 +16,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -333,6 +335,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   @AutoLogOutput(key = "ChassisSpeeds")
   public ChassisSpeeds getChassisSpeeds() {
     return getState().Speeds;
+  }
+
+  public void alignModules() {
+    for (int i = 0; i < 4; i++) {
+      getModules()[i].apply(new ModuleRequest().withState(new SwerveModuleState(0, new Rotation2d())));
+    }
   }
 
   /**

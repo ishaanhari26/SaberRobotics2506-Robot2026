@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -239,13 +240,14 @@ public class RobotContainer {
         "ShooterHigh",
         new LaunchPID(
             m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
+    NamedCommands.registerCommand("AlignModules", Commands.run(() -> drivetrain.alignModules(), drivetrain));
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    lockedTargetPID.setSetpoint(0);
-    lockedTargetPID.setTolerance(0.3);
+    // lockedTargetPID.setSetpoint(0);
+    // lockedTargetPID.setTolerance(0.3);
     slowMode = false;
 
     // Set up SysId routines
