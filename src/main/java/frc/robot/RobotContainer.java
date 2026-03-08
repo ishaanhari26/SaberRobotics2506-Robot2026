@@ -72,6 +72,7 @@ public class RobotContainer {
 
   public final TalonFX intakeMotor = new TalonFX(Constants.FuelConstants.IntakeMotor);
   public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
+  public final TalonFX agitatorMotor = new TalonFX(Constants.FuelConstants.AgitatorMotor);
   public final TalonFX launchMotor = new TalonFX(Constants.FuelConstants.LaunchMotor);
   public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
   public final TalonFX launchMotor3 = new TalonFX(Constants.FuelConstants.LaunchMotor3);
@@ -81,7 +82,13 @@ public class RobotContainer {
 
   private final FuelSubsystem m_fuelSubsystem =
       new FuelSubsystem(
-          intakeMotor, feederMotor, launchMotor, launchMotor2, launchMotor3, launchMotor4);
+          intakeMotor,
+          feederMotor,
+          agitatorMotor,
+          launchMotor,
+          launchMotor2,
+          launchMotor3,
+          launchMotor4);
 
   //   private final SlewRateLimiter xLimiter = new SlewRateLimiter(5);
   //   private final SlewRateLimiter yLimiter = new SlewRateLimiter(5);
@@ -219,6 +226,9 @@ public class RobotContainer {
             .withTimeout(Constants.AutoConstants.launchTime));
     NamedCommands.registerCommand(
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
+    NamedCommands.registerCommand(
+        "IntakeAuto",
+        new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTimeAuto));
     NamedCommands.registerCommand("Climb", AutoClimb());
     NamedCommands.registerCommand("Unclimb", DropClimb());
     NamedCommands.registerCommand(
@@ -238,7 +248,8 @@ public class RobotContainer {
         "ShooterHigh",
         new LaunchPID(
             m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
-    NamedCommands.registerCommand("AlignModules", Commands.run(() -> drivetrain.alignModules(), drivetrain));
+    NamedCommands.registerCommand(
+        "AlignModules", Commands.run(() -> drivetrain.alignModules(), drivetrain));
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -312,7 +323,7 @@ public class RobotContainer {
                                 * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
                         .withRotationalRate(
                             CommandSwerveDrivetrain.validTargetTags()
-                                ? -lockedTargetPID.calculate(Vision.tx)
+                                ? lockedTargetPID.calculate(Vision.tx)
                                 : 0)));
 
     // controller.a().whileTrue(new TargetCommand(drivetrain));
@@ -360,6 +371,8 @@ public class RobotContainer {
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
+
+    // controller.x().whileTrue(Commands.run(() -> drivetrain.alignModules(), drivetrain));
 
     opController2
         .a()

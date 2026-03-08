@@ -5,9 +5,9 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -275,7 +275,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     Constants.FuelConstants.IntakeLaunchSpeedRPM =
-        -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 1832.94);
+        -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 1632.94);
 
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
 
@@ -339,7 +339,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
   public void alignModules() {
     for (int i = 0; i < 4; i++) {
-      getModules()[i].apply(new ModuleRequest().withState(new SwerveModuleState(0, new Rotation2d())));
+      getModules()[i].apply(
+          new ModuleRequest().withState(new SwerveModuleState(0, new Rotation2d())));
     }
   }
 

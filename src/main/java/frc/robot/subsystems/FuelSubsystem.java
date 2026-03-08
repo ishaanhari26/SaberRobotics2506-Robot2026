@@ -27,6 +27,8 @@ public class FuelSubsystem extends SubsystemBase {
   private final TalonFX LaunchMotor3;
   private final TalonFX LaunchMotor4;
 
+  private final TalonFX agitator;
+
   private double currentSpeed;
   private double errorPlusMotor;
   private double calShooter;
@@ -44,12 +46,14 @@ public class FuelSubsystem extends SubsystemBase {
   public FuelSubsystem(
       TalonFX intakeMotor,
       TalonFX feederMotor,
+      TalonFX agitator,
       TalonFX LaunchMotor,
       TalonFX LaunchMotor2,
       TalonFX LaunchMotor3,
       TalonFX LaunchMotor4) {
     this.intakeMotor = intakeMotor;
     this.feederMotor = feederMotor;
+    this.agitator = agitator;
 
     this.LaunchMotor = LaunchMotor;
     this.LaunchMotor2 = LaunchMotor2;
@@ -78,6 +82,10 @@ public class FuelSubsystem extends SubsystemBase {
     ConfigureMotors();
 
     LaunchMotor.set(speed);
+  }
+
+  public void runAgitator(double speed) {
+    agitator.set(speed);
   }
 
   public void runLaunchPID(double speed) {
