@@ -40,7 +40,7 @@ public class LaunchPID extends Command {
   @Override
   public void execute() {
     m_subsystem.runLaunchPID(vision ? Constants.FuelConstants.IntakeLaunchSpeedRPM : m_speed);
-    m_subsystem.runIntake(Constants.FuelConstants.IntakeIntakeSpeed);
+    m_subsystem.runIntake(Constants.FuelConstants.HigherIntakeIntakeSpeed);
     if (m_subsystem.getAtSetpoint()) {
       m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
     } // else {

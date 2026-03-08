@@ -225,6 +225,9 @@ public class RobotContainer {
         new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
             .withTimeout(Constants.AutoConstants.launchTime));
     NamedCommands.registerCommand(
+        "LaunchWithoutTimeout",
+        new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+    NamedCommands.registerCommand(
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
     NamedCommands.registerCommand(
         "IntakeAuto",
@@ -371,6 +374,14 @@ public class RobotContainer {
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
+
+    opController
+        .back()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    Constants.FuelConstants.IntakeIntakeSpeed =
+                        Constants.FuelConstants.IntakeIntakeSpeed == -0.6 ? -0.75 : -0.6));
 
     // controller.x().whileTrue(Commands.run(() -> drivetrain.alignModules(), drivetrain));
 

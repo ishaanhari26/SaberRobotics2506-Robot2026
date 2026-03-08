@@ -60,7 +60,8 @@ public final class Constants {
     public static final int LaunchMotor4 = 44;
 
     // speeds for intake and feeder motors when intaking
-    public static final double IntakeIntakeSpeed = -0.75; // 0.84
+    public static double IntakeIntakeSpeed = -0.6; // 0.84
+    public static final double HigherIntakeIntakeSpeed = -0.75; // 0.84
     // public static final double IntakeIntakeSpeed = -0.6;
     public static final double FeederIntakeSpeed = -1;
 
