@@ -14,7 +14,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.*;
 
 public class FuelSubsystem extends SubsystemBase {
@@ -146,8 +145,6 @@ public class FuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
     SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
     SmartDashboard.putData("shooter PID controller", ShooterPid);
-
-    SmartDashboard.putNumber("IntakeSpeed", Constants.FuelConstants.IntakeIntakeSpeed);
   }
 
   @Override
