@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AutoAim;
+// import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
@@ -318,21 +318,29 @@ public class RobotContainer {
     //                 drive
     //                     .withVelocityX(
     //                         newxLimiter.calculate(-controller.getLeftY())
-    //                             * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+    //                             * (Constants.slowMode ? Constants.slowModeMaxSpeed :
+    // Constants.MaxSpeed))
     //                     .withVelocityY(
     //                         newyLimiter.calculate(-controller.getLeftX())
-    //                             * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+    //                             * (Constants.slowMode ? Constants.slowModeMaxSpeed :
+    // Constants.MaxSpeed))
     //                     .withRotationalRate(
     //                         CommandSwerveDrivetrain.validTargetTags()
     //                             ? lockedTargetPID.calculate(Vision.tx)
     //                             : 0)));
 
-    controller.a().whileTrue(new TargetCommand(drivetrain, targetxLimiter.calculate(-controller.getLeftY()), targetyLimiter.calculate(-controller.getLeftX())));
+    controller
+        .a()
+        .whileTrue(
+            new TargetCommand(
+                drivetrain,
+                targetxLimiter.calculate(-controller.getLeftY()),
+                targetyLimiter.calculate(-controller.getLeftX())));
 
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
     // controller.povDown().whileTrue(new Retract(m_climbSubsystem));
-    controller.povUp().whileTrue(new AutoAim(drivetrain, "BLUE"));
+    // controller.povUp().whileTrue(new AutoAim(drivetrain, "BLUE"));
 
     opController
         .a()

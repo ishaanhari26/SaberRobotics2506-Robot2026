@@ -149,7 +149,8 @@ public class CommandFactory {
   public static double getHubAngleOffsetRadians(Pose2d pose) {
     Pose2d blueHubPose = getHubPose(Alliance.Blue);
     Pose2d transPose = translateToBlue(pose);
-    double angleToHub = Math.atan2(blueHubPose.getY() - transPose.getY(), blueHubPose.getX() - transPose.getX());
+    double angleToHub =
+        Math.atan2(blueHubPose.getY() - transPose.getY(), blueHubPose.getX() - transPose.getX());
     return MathUtil.angleModulus(angleToHub - transPose.getRotation().getRadians());
   }
 

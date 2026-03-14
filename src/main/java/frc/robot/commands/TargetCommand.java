@@ -41,8 +41,10 @@ public class TargetCommand extends Command {
         new SwerveRequest.ApplyFieldSpeeds()
             .withSpeeds(
                 new ChassisSpeeds(
-                    xSupplier * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed),
-                    ySupplier * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed),
+                    xSupplier
+                        * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed),
+                    ySupplier
+                        * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed),
                     // CommandFactory.getHubAngleOffsetRadians(drive.getPose())
                     CommandSwerveDrivetrain.validTargetTags()
                         ? targetPID.calculate(Vision.tx)
