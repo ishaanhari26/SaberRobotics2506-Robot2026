@@ -355,11 +355,8 @@ public class RobotContainer {
 
     opController
         .a()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
-                }));
+        .whileTrue(new InstantCommand(() -> m_fuelSubsystem.manualFeeder = true))
+        .onFalse(new InstantCommand(() -> m_fuelSubsystem.manualFeeder = false));
     opController
         .b()
         .whileTrue(
@@ -385,9 +382,7 @@ public class RobotContainer {
         .whileTrue(
             new LaunchPID(
                 m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
-    // opController.a().whileTrue(
-    //     new Feeder(m_fuelSubsystem)
-    // );
+
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
     // fuelSubsystem buttons Intake, Launch, Eject

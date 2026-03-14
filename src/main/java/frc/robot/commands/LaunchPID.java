@@ -16,7 +16,6 @@ public class LaunchPID extends Command {
 
   private double m_speed;
   private boolean vision;
-
   /**
    * Creates a new ExampleCommand.
    *
@@ -41,9 +40,10 @@ public class LaunchPID extends Command {
   public void execute() {
     m_subsystem.runLaunchPID(vision ? Constants.FuelConstants.IntakeLaunchSpeedRPM : m_speed);
     m_subsystem.runIntake(Constants.FuelConstants.IntakeIntakeSpeed);
-    if (m_subsystem.getAtSetpoint()) {
+    if (m_subsystem.getAtSetpoint() || m_subsystem.manualFeeder) {
       m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
-    } // else {
+    }
+    // else {
     //   m_subsystem.runFeeder(0);
     // }
   }
