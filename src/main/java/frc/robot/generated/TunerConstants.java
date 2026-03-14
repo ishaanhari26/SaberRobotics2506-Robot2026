@@ -77,7 +77,7 @@ public class TunerConstants {
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
 
   private static final MountPoseConfigs pigeonMountPose =
-      new MountPoseConfigs().withMountPoseYaw(180);
+      new MountPoseConfigs().withMountPoseYaw(0);
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
   private static final Pigeon2Configuration pigeonConfigs = null;
 

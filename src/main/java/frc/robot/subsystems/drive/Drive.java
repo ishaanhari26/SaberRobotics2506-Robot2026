@@ -80,9 +80,9 @@ public class Drive extends SubsystemBase {
               Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
 
   // PathPlanner config constants
-  private static final double ROBOT_MASS_KG = 57.062;
-  private static final double ROBOT_MOI = 4.161;
-  private static final double WHEEL_COF = 1.15;
+  private static final double ROBOT_MASS_KG = 49.890;
+  private static final double ROBOT_MOI = 6.883;
+  private static final double WHEEL_COF = 1.2;
   private static final RobotConfig PP_CONFIG =
       new RobotConfig(
           ROBOT_MASS_KG,
@@ -145,8 +145,8 @@ public class Drive extends SubsystemBase {
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
-        this::getAutoPose,
-        this::setAutoPose,
+        this::getPose,
+        this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
@@ -265,7 +265,8 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("SwerveAngle" + i, modules[i].getAngle().getDegrees());
     }
 
-    Constants.FuelConstants.IntakeLaunchSpeedRPM = -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 1632.94);
+    Constants.FuelConstants.IntakeLaunchSpeedRPM =
+        -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 1632.94);
 
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
 
@@ -452,11 +453,11 @@ public class Drive extends SubsystemBase {
     return pose;
   }
 
-  public Pose2d getAutoPose() {
-    Pose2d autoPose = autoPoseEstimator.getEstimatedPosition();
-    field.setRobotPose(autoPose);
-    return autoPose;
-  }
+  // public Pose2d getAutoPose() {
+  //   Pose2d autoPose = autoPoseEstimator.getEstimatedPosition();
+  //   field.setRobotPose(autoPose);
+  //   return autoPose;
+  // }
 
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
@@ -480,9 +481,9 @@ public class Drive extends SubsystemBase {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
 
-  public void setAutoPose(Pose2d pose) {
-    autoPoseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
-  }
+  // public void setAutoPose(Pose2d pose) {
+  //   autoPoseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+  // }
 
   /** Adds a new timestamped vision measurement. */
   public void addVisionMeasurement(

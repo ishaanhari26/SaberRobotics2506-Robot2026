@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "AlignModules"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "HubM"

@@ -239,7 +239,8 @@ public class RobotContainer {
     // NamedCommands.registerCommand(
     //     "Align",
     //     new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
-    NamedCommands.registerCommand("Targeting", DriveCommands.lockedTargetJoystickDrive(drivetrain, () -> 0.0, () -> 0.0));
+    NamedCommands.registerCommand(
+        "Targeting", DriveCommands.lockedTargetJoystickDrive(drivetrain, () -> 0.0, () -> 0.0));
     NamedCommands.registerCommand(
         "ShooterLow",
         new LaunchPID(
@@ -253,7 +254,7 @@ public class RobotContainer {
         new LaunchPID(
             m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
     NamedCommands.registerCommand(
-        "AlignModules", Commands.run(() -> drivetrain.alignModules(), drivetrain));
+        "AlignModules", Commands.run(() -> drivetrain.alignModules(), drivetrain).withTimeout(1.5));
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -288,9 +289,13 @@ public class RobotContainer {
 
     // controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
-    controller.a().whileTrue(
-      DriveCommands.lockedTargetJoystickDrive(drivetrain, () -> targetxLimiter.calculate(-controller.getLeftY()), () -> targetyLimiter.calculate(-controller.getLeftX()))
-    );
+    controller
+        .a()
+        .whileTrue(
+            DriveCommands.lockedTargetJoystickDrive(
+                drivetrain,
+                () -> targetxLimiter.calculate(-controller.getLeftY()),
+                () -> targetyLimiter.calculate(-controller.getLeftX())));
 
     // drivetrain.setDefaultCommand(
     //     // Drivetrain will execute this command periodically

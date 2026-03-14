@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.09,
-        "y": 4.953
+        "x": 2.706376604850214,
+        "y": 4.067346647646221
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.259757168298924,
-        "y": 5.385293639393365
+        "x": 1.8761337731491383,
+        "y": 4.499640287039585
       },
       "isLocked": false,
       "linkedName": "ShootL"
@@ -48,7 +48,7 @@
   "folder": "L",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -40.365
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
