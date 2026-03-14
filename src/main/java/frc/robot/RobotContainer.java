@@ -285,7 +285,7 @@ public class RobotContainer {
             drivetrain,
             () -> newxLimiter.calculate(-controller.getLeftY()),
             () -> newyLimiter.calculate(-controller.getLeftX()),
-            () -> controller.getRightX()));
+            () -> -controller.getRightX()));
 
     // controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
