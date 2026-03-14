@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
@@ -226,9 +227,6 @@ public class RobotContainer {
         new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
             .withTimeout(Constants.AutoConstants.launchTime));
     NamedCommands.registerCommand(
-        "LaunchWithoutTimeout",
-        new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
-    NamedCommands.registerCommand(
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
     NamedCommands.registerCommand(
         "IntakeAuto",
@@ -334,7 +332,7 @@ public class RobotContainer {
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
     // controller.povDown().whileTrue(new Retract(m_climbSubsystem));
-    // controller.povUp().whileTrue(new Extend(m_climbSubsystem));
+    controller.povUp().whileTrue(new AutoAim(drivetrain, "BLUE"));
 
     opController
         .a()
@@ -374,14 +372,6 @@ public class RobotContainer {
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
-
-    opController
-        .back()
-        .onTrue(
-            new InstantCommand(
-                () ->
-                    Constants.FuelConstants.IntakeIntakeSpeed =
-                        Constants.FuelConstants.IntakeIntakeSpeed == -0.6 ? -0.75 : -0.6));
 
     // controller.x().whileTrue(Commands.run(() -> drivetrain.alignModules(), drivetrain));
 

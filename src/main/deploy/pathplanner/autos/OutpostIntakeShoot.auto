@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -38,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "LaunchWithoutTimeout"
+            "name": "Launch"
           }
         }
       ]
