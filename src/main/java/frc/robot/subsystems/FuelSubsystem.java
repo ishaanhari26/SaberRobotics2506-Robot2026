@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -63,7 +64,7 @@ public class FuelSubsystem extends SubsystemBase {
     ConfigureMotors();
 
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
-    ShooterPid.setTolerance(50);
+    ShooterPid.setTolerance(250);
   }
 
   public void runIntake(double speed) {
@@ -125,6 +126,20 @@ public class FuelSubsystem extends SubsystemBase {
 
     LaunchMotor4.setNeutralMode(NeutralModeValue.Coast);
     LaunchMotor4.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+
+    var launch1Configurator = LaunchMotor.getConfigurator();
+    var launch2Configurator = LaunchMotor2.getConfigurator();
+    var launch3Configurator = LaunchMotor3.getConfigurator();
+    var launch4Configurator = LaunchMotor4.getConfigurator();
+    var launchLimitsConfigs = new CurrentLimitsConfigs();
+
+    launchLimitsConfigs.StatorCurrentLimit = 25;
+    launchLimitsConfigs.StatorCurrentLimitEnable = true;
+
+    launch1Configurator.apply(launchLimitsConfigs);
+    launch2Configurator.apply(launchLimitsConfigs);
+    launch3Configurator.apply(launchLimitsConfigs);
+    launch4Configurator.apply(launchLimitsConfigs);
   }
 
   @Override
@@ -139,12 +154,37 @@ public class FuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber(
         "Launch motor2 speed", LaunchMotor2.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber(
-        "Launch motor2 speed", LaunchMotor3.getVelocity().getValueAsDouble() * 60);
+        "Launch motor3 speed", LaunchMotor3.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber(
-        "Launch motor2 speed", LaunchMotor4.getVelocity().getValueAsDouble() * 60);
+        "Launch motor4 speed", LaunchMotor4.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
     SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
     SmartDashboard.putData("shooter PID controller", ShooterPid);
+    SmartDashboard.putNumber("Feeder Current", feederMotor.getStatorCurrent().getValueAsDouble());
+    SmartDashboard.putNumber("Intake Current", intakeMotor.getStatorCurrent().getValueAsDouble());
+    SmartDashboard.putNumber("Launch 1 Current", LaunchMotor.getStatorCurrent().getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Launch 2 Current", LaunchMotor2.getStatorCurrent().getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Launch 3 Current", LaunchMotor3.getStatorCurrent().getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Launch 4 Current", LaunchMotor4.getStatorCurrent().getValueAsDouble());
+
+    SmartDashboard.putNumber(
+        "Launch Motor Average Speed",
+        ((LaunchMotor.getVelocity().getValueAsDouble() * 60)
+                + (LaunchMotor2.getVelocity().getValueAsDouble() * 60)
+                + (LaunchMotor3.getVelocity().getValueAsDouble() * 60)
+                + (LaunchMotor4.getVelocity().getValueAsDouble() * 60))
+            / 4);
+
+    SmartDashboard.putNumber(
+        "Launch Motor Average Current",
+        ((LaunchMotor.getStatorCurrent().getValueAsDouble())
+                + (LaunchMotor2.getStatorCurrent().getValueAsDouble())
+                + (LaunchMotor3.getStatorCurrent().getValueAsDouble())
+                + (LaunchMotor4.getStatorCurrent().getValueAsDouble()))
+            / 4);
   }
 
   @Override
