@@ -13,14 +13,12 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -39,6 +37,7 @@ import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.ControllerRumble;
+import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Eject;
 import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
@@ -47,9 +46,12 @@ import frc.robot.commands.TargetCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+// import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.LED;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.GyroIOPigeon2;
+import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -63,6 +65,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
+  private final Drive drivetrain;
   public final Vision aprilTagEstimator;
   private final LED led = new LED();
 
@@ -119,16 +122,16 @@ public class RobotContainer {
 
   //   private final IntakeV3Subsystem m_intakeV3Subsystem = new IntakeV3Subsystem(intakeV3Motor);
 
-  private final SwerveRequest.FieldCentric drive =
-      new SwerveRequest.FieldCentric()
-          .withDeadband(Constants.MaxSpeed * 0.1)
-          .withRotationalDeadband(Constants.MaxAngularRate * 0.1) // Add a 10% deadband
-          .withDriveRequestType(
-              DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+  //   private final SwerveRequest.FieldCentric drive =
+  //       new SwerveRequest.FieldCentric()
+  //           .withDeadband(Constants.MaxSpeed * 0.1)
+  //           .withRotationalDeadband(Constants.MaxAngularRate * 0.1) // Add a 10% deadband
+  //           .withDriveRequestType(
+  //               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
   private final SwerveRequest.RobotCentric robotDrive = new SwerveRequest.RobotCentric();
 
-  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  //   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   private static PIDController lockedTargetPID =
       new PIDController(
@@ -149,78 +152,78 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // switch (Constants.currentMode) {
-    //   default:
-    //   case REAL:
-    //     // Real robot, instantiate hardware IO implementations
-    //     // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
-    //     // a CANcoder
-    //     drive =
-    //         new Drive(
-    //             new GyroIOPigeon2(),
-    //             new ModuleIOTalonFX(TunerConstants.FrontLeft),
-    //             new ModuleIOTalonFX(TunerConstants.FrontRight),
-    //             new ModuleIOTalonFX(TunerConstants.BackLeft),
-    //             new ModuleIOTalonFX(TunerConstants.BackRight));
+    switch (Constants.currentMode) {
+      default:
+      case REAL:
+        // Real robot, instantiate hardware IO implementations
+        // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
+        // a CANcoder
+        drivetrain =
+            new Drive(
+                new GyroIOPigeon2(),
+                new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                new ModuleIOTalonFX(TunerConstants.FrontRight),
+                new ModuleIOTalonFX(TunerConstants.BackLeft),
+                new ModuleIOTalonFX(TunerConstants.BackRight));
 
-    NetworkTableInstance.getDefault().setServer("localhost");
+        // NetworkTableInstance.getDefault().setServer("localhost");
 
-    aprilTagEstimator =
-        new Vision(
-            drivetrain::addVisionMeasurement,
-            new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation),
-            new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation));
-    // new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation));
-    //         new AprilTagEstimator(drive);
+        aprilTagEstimator =
+            new Vision(
+                drivetrain::addVisionMeasurement,
+                new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation),
+                new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation));
+        // new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation));
+        //         new AprilTagEstimator(drive);
 
-    //     // The ModuleIOTalonFXS implementation provides an example implementation for
-    //     // TalonFXS controller connected to a CANdi with a PWM encoder. The
-    //     // implementations
-    //     // of ModuleIOTalonFX, ModuleIOTalonFXS, and ModuleIOSpark (from the Spark
-    //     // swerve
-    //     // template) can be freely intermixed to support alternative hardware
-    //     // arrangements.
-    //     // Please see the AdvantageKit template documentation for more information:
-    //     //
-    // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
-    //     //
-    //     // drive =
-    //     // new Drive(
-    //     // new GyroIOPigeon2(),
-    //     // new ModuleIOTalonFXS(TunerConstants.FrontLeft),
-    //     // new ModuleIOTalonFXS(TunerConstants.FrontRight),
-    //     // new ModuleIOTalonFXS(TunerConstants.BackLeft),
-    //     // new ModuleIOTalonFXS(TunerConstants.BackRight));
-    //     break;
+        //     // The ModuleIOTalonFXS implementation provides an example implementation for
+        //     // TalonFXS controller connected to a CANdi with a PWM encoder. The
+        //     // implementations
+        //     // of ModuleIOTalonFX, ModuleIOTalonFXS, and ModuleIOSpark (from the Spark
+        //     // swerve
+        //     // template) can be freely intermixed to support alternative hardware
+        //     // arrangements.
+        //     // Please see the AdvantageKit template documentation for more information:
+        //     //
+        // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
+        //     //
+        //     // drive =
+        //     // new Drive(
+        //     // new GyroIOPigeon2(),
+        //     // new ModuleIOTalonFXS(TunerConstants.FrontLeft),
+        //     // new ModuleIOTalonFXS(TunerConstants.FrontRight),
+        //     // new ModuleIOTalonFXS(TunerConstants.BackLeft),
+        //     // new ModuleIOTalonFXS(TunerConstants.BackRight));
+        //     break;
 
-    //   case SIM:
-    //     // Sim robot, instantiate physics sim IO implementations
-    //     drive =
-    //         new Drive(
-    //             new GyroIO() {},
-    //             new ModuleIOSim(TunerConstants.FrontLeft),
-    //             new ModuleIOSim(TunerConstants.FrontRight),
-    //             new ModuleIOSim(TunerConstants.BackLeft),
-    //             new ModuleIOSim(TunerConstants.BackRight));
+        //   case SIM:
+        //     // Sim robot, instantiate physics sim IO implementations
+        //     drivetrain =
+        //         new Drive(
+        //             new GyroIO() {},
+        //             new ModuleIOSim(TunerConstants.FrontLeft),
+        //             new ModuleIOSim(TunerConstants.FrontRight),
+        //             new ModuleIOSim(TunerConstants.BackLeft),
+        //             new ModuleIOSim(TunerConstants.BackRight));
 
-    //     aprilTagEstimator = new AprilTagEstimator(drive);
+        //     aprilTagEstimator = new AprilTagEstimator(drive);
 
-    //     break;
+        // break;
 
-    //   case REPLAY:
-    //     // Replayed robot, disable IO implementations
-    //     drive =
-    //         new Drive(
-    //             new GyroIO() {},
-    //             new ModuleIO() {},
-    //             new ModuleIO() {},
-    //             new ModuleIO() {},
-    //             new ModuleIO() {});
+        //   case REPLAY:
+        //     // Replayed robot, disable IO implementations
+        //     drivetrain =
+        //         new Drive(
+        //             new GyroIO() {},
+        //             new ModuleIO() {},
+        //             new ModuleIO() {},
+        //             new ModuleIO() {},
+        //             new ModuleIO() {});
 
-    //     aprilTagEstimator = new AprilTagEstimator(drive);
+        //     aprilTagEstimator = new AprilTagEstimator(drive);
 
-    //     break;
-    // }
+        // break;
+    }
 
     NamedCommands.registerCommand(
         "Launch",
@@ -233,11 +236,10 @@ public class RobotContainer {
         new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTimeAuto));
     NamedCommands.registerCommand("Climb", AutoClimb());
     NamedCommands.registerCommand("Unclimb", DropClimb());
-    NamedCommands.registerCommand(
-        "Align",
-        new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
-    NamedCommands.registerCommand("Targeting", new TargetCommand(drivetrain, 0, 0));
-
+    // NamedCommands.registerCommand(
+    //     "Align",
+    //     new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
+    NamedCommands.registerCommand("Targeting", DriveCommands.lockedTargetJoystickDrive(drivetrain, () -> 0.0, () -> 0.0));
     NamedCommands.registerCommand(
         "ShooterLow",
         new LaunchPID(
@@ -277,38 +279,42 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    // drive.setDefaultCommand(
-    //     DriveCommands.controllerDrive(
-    //         drive,
-    //         () -> xLimiter.calculate(-controller.getLeftY()),
-    //         () -> yLimiter.calculate(-controller.getLeftX()),
-    //         () -> controller.getRightX()));
+    drivetrain.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            drivetrain,
+            () -> newxLimiter.calculate(-controller.getLeftY()),
+            () -> newyLimiter.calculate(-controller.getLeftX()),
+            () -> controller.getRightX()));
 
     // controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
-    drivetrain.setDefaultCommand(
-        // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(
-            () ->
-                drive
-                    .withVelocityX(
-                        newxLimiter.calculate(-controller.getLeftY())
-                            * (Constants.slowMode
-                                ? Constants.slowModeMaxSpeed
-                                : Constants.MaxSpeed)) // Drive forward with negative Y (forward)
-                    .withVelocityY(
-                        newyLimiter.calculate(-controller.getLeftX())
-                            * (Constants.slowMode
-                                ? Constants.slowModeMaxSpeed
-                                : Constants.MaxSpeed)) // Drive left with negative X (left)
-                    .withRotationalRate(
-                        -controller.getRightX()
-                            * (Constants.slowMode
-                                ? Constants.slowModeMaxAngularRate
-                                : Constants
-                                    .MaxAngularRate)) // Drive counterclockwise with negative X
-            // (left)
-            ));
+    controller.a().whileTrue(
+      DriveCommands.lockedTargetJoystickDrive(drivetrain, () -> targetxLimiter.calculate(-controller.getLeftY()), () -> targetyLimiter.calculate(-controller.getLeftX()))
+    );
+
+    // drivetrain.setDefaultCommand(
+    //     // Drivetrain will execute this command periodically
+    //     drivetrain.applyRequest(
+    //         () ->
+    //             drive
+    //                 .withVelocityX(
+    //                     newxLimiter.calculate(-controller.getLeftY())
+    //                         * (Constants.slowMode
+    //                             ? Constants.slowModeMaxSpeed
+    //                             : Constants.MaxSpeed)) // Drive forward with negative Y (forward)
+    //                 .withVelocityY(
+    //                     newyLimiter.calculate(-controller.getLeftX())
+    //                         * (Constants.slowMode
+    //                             ? Constants.slowModeMaxSpeed
+    //                             : Constants.MaxSpeed)) // Drive left with negative X (left)
+    //                 .withRotationalRate(
+    //                     -controller.getRightX()
+    //                         * (Constants.slowMode
+    //                             ? Constants.slowModeMaxAngularRate
+    //                             : Constants
+    //                                 .MaxAngularRate)) // Drive counterclockwise with negative X
+    //         // (left)
+    //         ));
 
     // controller
     //     .a()
@@ -381,7 +387,7 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
 
-    // controller.x().whileTrue(Commands.run(() -> drivetrain.alignModules(), drivetrain));
+    controller.x().whileTrue(Commands.run(() -> drivetrain.alignModules(), drivetrain));
 
     opController2
         .a()
@@ -401,7 +407,7 @@ public class RobotContainer {
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
     // reset heading
-    controller.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    // controller.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
   }
 
   public Trigger getScoringTrigger() {

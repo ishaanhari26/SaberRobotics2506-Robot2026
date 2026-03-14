@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -13,7 +12,8 @@ import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+// import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LoggedTunableGainsBuilder;
 import frc.robot.util.LoggedTunableNumber;
 import java.util.function.Function;
@@ -21,7 +21,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class AutoAlignCommand extends Command {
 
-  private CommandSwerveDrivetrain drivetrain;
+  private Drive drivetrain;
 
   private Pose2d targetPose;
 
@@ -92,9 +92,7 @@ public class AutoAlignCommand extends Command {
    * @param name The LoggedTunableNumber's (should be) exclusive name
    */
   public AutoAlignCommand(
-      Function<Pose2d, Pose2d> getTargetPoseFunction,
-      CommandSwerveDrivetrain drivetrain,
-      String name) {
+      Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain, String name) {
     this.getTargetPoseFn = getTargetPoseFunction;
     this.drivetrain = drivetrain;
   }
@@ -107,8 +105,7 @@ public class AutoAlignCommand extends Command {
    *     target position.
    * @param drivetrain The Drive class to get the current pose from.
    */
-  public AutoAlignCommand(
-      Function<Pose2d, Pose2d> getTargetPoseFunction, CommandSwerveDrivetrain drivetrain) {
+  public AutoAlignCommand(Function<Pose2d, Pose2d> getTargetPoseFunction, Drive drivetrain) {
     this(getTargetPoseFunction, drivetrain, "AutoAlign");
   }
 
@@ -196,7 +193,7 @@ public class AutoAlignCommand extends Command {
     ChassisSpeeds speeds = new ChassisSpeeds(m_throttle, m_strafe, m_spin);
     // drivetrain.runVelocity(speeds);
 
-    drivetrain.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds));
+    // drivetrain.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds));
 
     Logger.recordOutput("AutoAlign/TX", m_tx);
     Logger.recordOutput("AutoAlign/TZ", m_ty);
@@ -219,6 +216,6 @@ public class AutoAlignCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     // drivetrain.runVelocity(new ChassisSpeeds());
-    drivetrain.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
+    // drivetrain.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(new ChassisSpeeds()));
   }
 }

@@ -265,13 +265,25 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("SwerveAngle" + i, modules[i].getAngle().getDegrees());
     }
 
+    Constants.FuelConstants.IntakeLaunchSpeedRPM = -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 1632.94);
+
+    SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
+
+    SmartDashboard.putBoolean(
+        "In Shooting Range",
+        CommandFactory.distanceFromHub(getPose()) >= 58
+            && CommandFactory.distanceFromHub(getPose()) <= 118);
+
+    SmartDashboard.putNumber("poseX", getPose().getX());
+    SmartDashboard.putNumber("poseY", getPose().getY());
+
+    SmartDashboard.putNumber("angleOffset", CommandFactory.getHubAngleOffsetRadians(getPose()));
+
     SmartDashboard.putNumber("Average Module Speed", getAverageVelocity());
     SmartDashboard.putNumber("Match Time", Timer.getMatchTime());
 
     SmartDashboard.putNumber("Closest Tag", CommandFactory.findClosestTagAfterRefresh(getPose()));
 
-    SmartDashboard.putNumber("PoseX", getPose().getX());
-    SmartDashboard.putNumber("PoseY", getPose().getY());
     SmartDashboard.putNumber("Rotation", getRotation().getDegrees());
 
     SmartDashboard.putNumber("Pigeon Pitch", getPitch());
