@@ -31,6 +31,8 @@ public final class Constants {
   public static double slowModeMaxSpeed = MaxSpeed * 0.3;
   public static double slowModeMaxAngularRate = MaxAngularRate * 0.3;
 
+  public static boolean slowMode;
+
   public static enum Mode {
     /** Running on a real robot. */
     REAL,

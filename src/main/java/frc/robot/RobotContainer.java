@@ -96,6 +96,9 @@ public class RobotContainer {
   private final SlewRateLimiter newxLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter newyLimiter = new SlewRateLimiter(5);
 
+  private final SlewRateLimiter targetxLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter targetyLimiter = new SlewRateLimiter(5);
+
   private final SlewRateLimiter robotxLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter robotyLimiter = new SlewRateLimiter(3);
 
@@ -125,8 +128,6 @@ public class RobotContainer {
   private final SwerveRequest.RobotCentric robotDrive = new SwerveRequest.RobotCentric();
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
-  private boolean slowMode;
 
   private static PIDController lockedTargetPID =
       new PIDController(
@@ -237,7 +238,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Align",
         new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
-    NamedCommands.registerCommand("Targeting", new TargetCommand(drivetrain));
+    NamedCommands.registerCommand("Targeting", new TargetCommand(drivetrain, 0, 0));
 
     NamedCommands.registerCommand(
         "ShooterLow",
@@ -260,7 +261,6 @@ public class RobotContainer {
 
     // lockedTargetPID.setSetpoint(0);
     // lockedTargetPID.setTolerance(0.3);
-    slowMode = false;
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -295,41 +295,41 @@ public class RobotContainer {
                 drive
                     .withVelocityX(
                         newxLimiter.calculate(-controller.getLeftY())
-                            * (slowMode
+                            * (Constants.slowMode
                                 ? Constants.slowModeMaxSpeed
                                 : Constants.MaxSpeed)) // Drive forward with negative Y (forward)
                     .withVelocityY(
                         newyLimiter.calculate(-controller.getLeftX())
-                            * (slowMode
+                            * (Constants.slowMode
                                 ? Constants.slowModeMaxSpeed
                                 : Constants.MaxSpeed)) // Drive left with negative X (left)
                     .withRotationalRate(
                         -controller.getRightX()
-                            * (slowMode
+                            * (Constants.slowMode
                                 ? Constants.slowModeMaxAngularRate
                                 : Constants
                                     .MaxAngularRate)) // Drive counterclockwise with negative X
             // (left)
             ));
 
-    controller
-        .a()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () ->
-                    drive
-                        .withVelocityX(
-                            newxLimiter.calculate(-controller.getLeftY())
-                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-                        .withVelocityY(
-                            newyLimiter.calculate(-controller.getLeftX())
-                                * (slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
-                        .withRotationalRate(
-                            CommandSwerveDrivetrain.validTargetTags()
-                                ? lockedTargetPID.calculate(Vision.tx)
-                                : 0)));
+    // controller
+    //     .a()
+    //     .whileTrue(
+    //         drivetrain.applyRequest(
+    //             () ->
+    //                 drive
+    //                     .withVelocityX(
+    //                         newxLimiter.calculate(-controller.getLeftY())
+    //                             * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+    //                     .withVelocityY(
+    //                         newyLimiter.calculate(-controller.getLeftX())
+    //                             * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed))
+    //                     .withRotationalRate(
+    //                         CommandSwerveDrivetrain.validTargetTags()
+    //                             ? lockedTargetPID.calculate(Vision.tx)
+    //                             : 0)));
 
-    // controller.a().whileTrue(new TargetCommand(drivetrain));
+    controller.a().whileTrue(new TargetCommand(drivetrain, targetxLimiter.calculate(-controller.getLeftY()), targetyLimiter.calculate(-controller.getLeftX())));
 
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
@@ -387,8 +387,8 @@ public class RobotContainer {
 
     opController2
         .a()
-        .whileTrue(new InstantCommand(() -> slowMode = true))
-        .onFalse(new InstantCommand(() -> slowMode = false));
+        .whileTrue(new InstantCommand(() -> Constants.slowMode = true))
+        .onFalse(new InstantCommand(() -> Constants.slowMode = false));
 
     controller
         .rightBumper()

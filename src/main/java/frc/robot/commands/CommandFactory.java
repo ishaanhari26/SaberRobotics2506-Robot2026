@@ -146,24 +146,23 @@ public class CommandFactory {
     return hubPose.getTranslation().getDistance(pose.getTranslation()) * 39.37; // Convert to inches
   }
 
-  // public static double getHubAngleOffsetRadians(Pose2d pose) {
-  //   Pose2d blueHubPose = getHubPose(Alliance.Blue);
-  //   Pose2d transPose = translateToBlue(pose);
-  //   double angleToHub = Math.atan2(blueHubPose.getY() - transPose.getY(), blueHubPose.getX() -
-  // transPose.getX());
-  //   return MathUtil.angleModulus(angleToHub - transPose.getRotation().getRadians());
-  // }
-
   public static double getHubAngleOffsetRadians(Pose2d pose) {
-    Pose2d translatedPose = translateToBlue(pose);
-    Rotation2d angleToHub =
-        getHubPose(Alliance.Blue)
-            .getTranslation()
-            .minus(translatedPose.getTranslation())
-            .getAngle();
-
-    return MathUtil.angleModulus(angleToHub.minus(translatedPose.getRotation()).getRadians());
+    Pose2d blueHubPose = getHubPose(Alliance.Blue);
+    Pose2d transPose = translateToBlue(pose);
+    double angleToHub = Math.atan2(blueHubPose.getY() - transPose.getY(), blueHubPose.getX() - transPose.getX());
+    return MathUtil.angleModulus(angleToHub - transPose.getRotation().getRadians());
   }
+
+  // public static double getHubAngleOffsetRadians(Pose2d pose) {
+  //   Pose2d translatedPose = translateToBlue(pose);
+  //   Rotation2d angleToHub =
+  //       getHubPose(Alliance.Blue)
+  //           .getTranslation()
+  //           .minus(translatedPose.getTranslation())
+  //           .getAngle();
+
+  //   return MathUtil.angleModulus(angleToHub.minus(translatedPose.getRotation()).getRadians());
+  // }
 
   public static Function<Pose2d, Pose2d> driveToPoseFunction(
       double x, double y, Rotation2d rotation) {

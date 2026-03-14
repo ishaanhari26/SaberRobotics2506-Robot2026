@@ -4,6 +4,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
@@ -12,9 +13,13 @@ public class TargetCommand extends Command {
   private CommandSwerveDrivetrain drive;
 
   public PIDController targetPID;
+  private double xSupplier;
+  private double ySupplier;
 
-  public TargetCommand(CommandSwerveDrivetrain drive) {
+  public TargetCommand(CommandSwerveDrivetrain drive, double xSupplier, double ySupplier) {
     this.drive = drive;
+    this.xSupplier = xSupplier;
+    this.ySupplier = ySupplier;
 
     targetPID =
         new PIDController(
@@ -36,8 +41,9 @@ public class TargetCommand extends Command {
         new SwerveRequest.ApplyFieldSpeeds()
             .withSpeeds(
                 new ChassisSpeeds(
-                    0,
-                    0,
+                    xSupplier * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed),
+                    ySupplier * (Constants.slowMode ? Constants.slowModeMaxSpeed : Constants.MaxSpeed),
+                    // CommandFactory.getHubAngleOffsetRadians(drive.getPose())
                     CommandSwerveDrivetrain.validTargetTags()
                         ? targetPID.calculate(Vision.tx)
                         : 0)));
@@ -50,6 +56,6 @@ public class TargetCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return targetPID.atSetpoint();
+    return false;
   }
 }
