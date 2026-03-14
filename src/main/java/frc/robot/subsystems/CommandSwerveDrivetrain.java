@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -322,6 +323,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   @AutoLogOutput(key = "Rotation")
   public Rotation2d getRotation() {
     return getState().Pose.getRotation();
+  }
+
+  public double averageVelocitySteerMotors() {
+    double sum = 0;
+    for (int i = 0; i < 4; i++) {
+      sum += getModules()[i].getSteerMotor().getVelocity().getValueAsDouble();
+    }
+    return sum / 4;
+  }
+
+  public double averageVoltageSteerMotors() {
+    double sum = 0;
+    for (int i = 0; i < 4; i++) {
+      sum += getModules()[i].getSteerMotor().getMotorVoltage().getValueAsDouble();
+    }
+    return sum / 4;
+  }
+
+  public void driveSteerMotors() {
+    for (int i = 0; i < 4; i++) {
+      getModules()[i].getSteerMotor().setControl(new DutyCycleOut(1));
+    }
   }
 
   public static boolean validTargetTags() {

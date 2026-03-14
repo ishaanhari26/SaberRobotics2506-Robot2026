@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AutoAim;
+// import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
@@ -332,7 +332,7 @@ public class RobotContainer {
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
     // controller.povDown().whileTrue(new Retract(m_climbSubsystem));
-    controller.povUp().whileTrue(new AutoAim(drivetrain, "BLUE"));
+    // controller.povUp().whileTrue(new AutoAim(drivetrain, "BLUE"));
 
     opController
         .a()
