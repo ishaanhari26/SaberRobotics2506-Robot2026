@@ -10,21 +10,20 @@ import frc.robot.Constants.*;
 import frc.robot.subsystems.FuelSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class LaunchPID extends Command {
+public class Feeder extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
   private final FuelSubsystem m_subsystem;
 
   private double m_speed;
   private boolean vision;
+
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public LaunchPID(FuelSubsystem subsystem, double speed, boolean vision) {
+  public Feeder(FuelSubsystem subsystem) {
     m_subsystem = subsystem;
-    m_speed = speed;
-    this.vision = vision;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -38,21 +37,14 @@ public class LaunchPID extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.runLaunchPID(vision ? Constants.FuelConstants.IntakeLaunchSpeedRPM : m_speed);
-    m_subsystem.runIntake(Constants.FuelConstants.IntakeIntakeSpeed);
-    if (m_subsystem.getAtSetpoint() || m_subsystem.manualFeeder) {
-      m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
-    }
-    // else {
-    //   m_subsystem.runFeeder(0);
-    // }
+    m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     // LED.setMode(Constants.LEDConstants.Mode.NONE);
-    m_subsystem.stopMotors();
+    m_subsystem.runFeeder(0);
   }
 
   // Returns true when the command should end.
