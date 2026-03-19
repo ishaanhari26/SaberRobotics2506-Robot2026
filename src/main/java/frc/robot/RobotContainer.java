@@ -42,7 +42,6 @@ import frc.robot.commands.Eject;
 import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.LaunchPID;
-import frc.robot.commands.TargetCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -240,7 +239,8 @@ public class RobotContainer {
     //     "Align",
     //     new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
     NamedCommands.registerCommand(
-        "Targeting", DriveCommands.lockedTargetJoystickDrive(drivetrain, () -> 0.0, () -> 0.0));
+        "Targeting",
+        DriveCommands.lockedTargetJoystickDrive(drivetrain, () -> 0.0, () -> 0.0).withTimeout(2));
     NamedCommands.registerCommand(
         "ShooterLow",
         new LaunchPID(
@@ -283,8 +283,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         DriveCommands.joystickDrive(
             drivetrain,
-            () -> newxLimiter.calculate(-controller.getLeftY()),
-            () -> newyLimiter.calculate(-controller.getLeftX()),
+            () -> -controller.getLeftY(),
+            () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
     // controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -293,9 +293,7 @@ public class RobotContainer {
         .a()
         .whileTrue(
             DriveCommands.lockedTargetJoystickDrive(
-                drivetrain,
-                () -> targetxLimiter.calculate(-controller.getLeftY()),
-                () -> targetyLimiter.calculate(-controller.getLeftX())));
+                drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX()));
 
     // drivetrain.setDefaultCommand(
     //     // Drivetrain will execute this command periodically
@@ -340,13 +338,13 @@ public class RobotContainer {
     //                             ? lockedTargetPID.calculate(Vision.tx)
     //                             : 0)));
 
-    controller
-        .a()
-        .whileTrue(
-            new TargetCommand(
-                drivetrain,
-                targetxLimiter.calculate(-controller.getLeftY()),
-                targetyLimiter.calculate(-controller.getLeftX())));
+    // controller
+    //     .a()
+    //     .whileTrue(
+    //         new TargetCommand(
+    //             drivetrain,
+    //             targetxLimiter.calculate(-controller.getLeftY()),
+    //             targetyLimiter.calculate(-controller.getLeftX())));
 
     getScoringTrigger().whileTrue(new ControllerRumble(controller));
 
@@ -355,11 +353,8 @@ public class RobotContainer {
 
     opController
         .a()
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoExtendPos;
-                }));
+        .whileTrue(new InstantCommand(() -> m_fuelSubsystem.manualFeeder = true))
+        .onFalse(new InstantCommand(() -> m_fuelSubsystem.manualFeeder = false));
     opController
         .b()
         .whileTrue(
@@ -385,9 +380,7 @@ public class RobotContainer {
         .whileTrue(
             new LaunchPID(
                 m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
-    // opController.a().whileTrue(
-    //     new Feeder(m_fuelSubsystem)
-    // );
+
     m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
     // fuelSubsystem buttons Intake, Launch, Eject

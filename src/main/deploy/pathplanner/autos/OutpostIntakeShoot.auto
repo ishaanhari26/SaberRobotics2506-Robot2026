@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "AlignModules"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -27,6 +33,12 @@
           "type": "path",
           "data": {
             "pathName": "IntakeShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Targeting"
           }
         },
         {

@@ -36,6 +36,8 @@ public class FuelSubsystem extends SubsystemBase {
   private double feedForwardCalc;
   private double feedForwardset;
 
+  public boolean manualFeeder = false;
+
   private final PIDController ShooterPid =
       new PIDController(FuelConstants.LaunchkP, FuelConstants.LaunchkI, FuelConstants.LaunchkD);
   // Creates a PIDController with gains kP, kI, and kD
