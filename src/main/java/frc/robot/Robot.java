@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.LimelightHelpers;
-import frc.robot.subsystems.vision.VisionConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -129,7 +128,14 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
 
-    LimelightHelpers.SetIMUMode(VisionConstants.camera0Name, 3);
+    LimelightHelpers.SetRobotOrientation(
+        "limelight",
+        LimelightHelpers.getBotPose("limelight")[6],
+        0,
+        LimelightHelpers.getBotPose("limelight")[5],
+        0,
+        LimelightHelpers.getBotPose("limelight")[4],
+        0);
   }
 
   /** This function is called periodically during operator control. */

@@ -72,4 +72,8 @@ public class GyroIOPigeon2 implements GyroIO {
   public double getYaw() {
     return yaw.getValueAsDouble();
   }
+
+  public void seedGyro() {
+    pigeon.getConfigurator().setYaw(0.0);
+  }
 }

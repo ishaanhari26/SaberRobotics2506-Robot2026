@@ -33,4 +33,6 @@ public interface GyroIO {
   public default double getYaw() {
     return 0;
   }
+
+  public default void seedGyro() {}
 }

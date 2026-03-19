@@ -394,7 +394,7 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
 
-    controller.x().whileTrue(Commands.run(() -> drivetrain.alignModules(), drivetrain));
+    controller.x().whileTrue(Commands.run(() -> drivetrain.stopWithX(), drivetrain));
 
     opController2
         .a()
@@ -414,7 +414,7 @@ public class RobotContainer {
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
     // reset heading
-    // controller.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    controller.b().onTrue(new InstantCommand(() -> drivetrain.seedGyro()));
   }
 
   public Trigger getScoringTrigger() {
