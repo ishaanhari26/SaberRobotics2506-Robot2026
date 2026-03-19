@@ -28,7 +28,6 @@ public class Extend extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    LED.setMode(Constants.LEDConstants.Mode.CLIMB);
     m_subsystem.runClimb(Constants.ClimbConstants.climbExtendSpeed);
   }
 
