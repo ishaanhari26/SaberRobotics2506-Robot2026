@@ -56,7 +56,7 @@ public class LED extends SubsystemBase {
   }
 
   public void setPattern(LEDPattern pattern) {
-    off();
+    LEDPattern.solid(Color.kBlack).applyTo(m_buffer);
     currentPattern = pattern;
     try {
       pattern.applyTo(m_buffer);
@@ -129,14 +129,14 @@ public class LED extends SubsystemBase {
             .overlayOn(currentPattern));
   }
 
-  public void scrollAquamarine() {
+  public void scrollPink() {
     setPattern(
         LEDPattern.steps(
                 Map.of(
                     0,
                     Color.kBlack,
                     (LEDConstants.length - 1) / (double) LEDConstants.length,
-                    Color.kAquamarine))
+                    Color.kPink))
             .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
             .overlayOn(currentPattern));
   }
@@ -191,9 +191,8 @@ public class LED extends SubsystemBase {
     if (DriverStation.isAutonomous()) {
       return LEDConstants.Period.AUTO;
     }
-    // SmartDashboard.putString(
-    //     "Alliance Color",
-    // Character.toString(DriverStation.getAlliance().get().name().charAt(0)));
+    SmartDashboard.putString(
+        "Alliance Color", Character.toString(DriverStation.getAlliance().get().name().charAt(0)));
     if (DriverStation.isTeleop() && DriverStation.getGameSpecificMessage().length() > 0) {
       if (Timer.getMatchTime() <= LEDConstants.transitionPeriodStart
           && Timer.getMatchTime() > LEDConstants.firstShiftStart) {
@@ -298,7 +297,7 @@ public class LED extends SubsystemBase {
    * <h3>Intaking:</h3>
    *
    * <ul>
-   *   <li>scrolling aquamarine LED
+   *   <li>scrolling pink LED
    * </ul>
    *
    * <h3>Climbing:</h3>
@@ -367,16 +366,32 @@ public class LED extends SubsystemBase {
         scrollWhite();
         break;
       case INTAKE:
-        scrollAquamarine();
-        break;
-      case CLIMB:
-        gold();
+        scrollPink();
         break;
       case ESTOP:
         rainbow();
         break;
       case ASTOP:
         blink();
+        break;
+      case NONE:
+        switch (state) {
+          case AUTO:
+            // auto(1);
+            break;
+          case TRANSITION:
+          case ACTIVE:
+            active();
+            break;
+          case INACTIVE:
+            inactive();
+            break;
+          case ENDGAME:
+            purple();
+            break;
+          default:
+            break;
+        }
         break;
       default:
         break;
