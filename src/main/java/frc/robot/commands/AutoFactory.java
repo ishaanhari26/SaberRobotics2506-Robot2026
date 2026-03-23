@@ -36,7 +36,7 @@ public class AutoFactory {
     }
 
     public Command testAuto() {
-        Path testPath = new Path("testPath");
+        Path testPath = new Path("test");
 
         return Commands.sequence(
             Commands.run(() -> drive.alignModules()),
