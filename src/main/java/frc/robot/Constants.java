@@ -52,8 +52,9 @@ public final class Constants {
   public static class FuelConstants {
     // this is the motor id
     public static final int IntakeMotor = 52;
-    public static final int FeederMotor = 54;
-    public static final int IndexerMotor = 31;
+    public static final int FeederMotor = 54; // 54
+
+    public static final int IndexerMotor = 31; // 31
 
     public static final int LaunchMotor = 41;
     public static final int LaunchMotor2 = 42;
@@ -71,17 +72,23 @@ public final class Constants {
     public static final double FeederEjectSpeed = 1;
 
     // speed for agitator motor
-    public static final double IndexerSpeed = -0.1;
+    public static final double IndexerSpeed = -0.25;
     public static final double IndexerReverseSpeed = 0.1;
 
     // speeds for intake and feeder motors when launching
     public static final double LaunchSpeed = -.8;
     public static final double PassingSpeed = -3000;
     public static double IntakeLaunchSpeedRPM = -3500;
+
     public static final double ConstantIntakeLaunchSpeedRPM = -3500;
-    public static final double ConstantIntakeLaunchSpeedRPMLow = -3000;
-    public static final double ConstantIntakeLaunchSpeedRPMMedium = -3500;
-    public static final double ConstantIntakeLaunchSpeedRPMHigh = -4000;
+    public static final double ConstantIntakeLaunchSpeedRPMLow = -2800;
+    public static final double ConstantIntakeLaunchSpeedRPMMedium = -3325;
+    public static final double ConstantIntakeLaunchSpeedRPMHigh = -3850;
+
+    // Perfect from 88 inches from middle of robot to center of hub at 3500 RPM
+    // 118 inches 4000 RPM
+    // 58 inches 3000 RPM
+
     // 3000,3500,4000; 4800 is the max possible
     // public static final double LaunchSpeed = -0.6;
     public static final double FeederLaunchSpeed = 0.5;
@@ -94,17 +101,13 @@ public final class Constants {
      * -2500 RPM - invaild.
      */
 
-    public static final double LaunchkS = 0.29;
-    public static final double LaunchkV = 0.075; // 0.1199 , 0.2, 0.1500,.19, 0.3
-    public static final double LaunchkA = 0;
+    public static final double LaunchkS = 0.22; // 0.29
+    public static final double LaunchkV = 0.13; // 0.075
+    public static final double LaunchkA = 0; // 0
 
-    public static final double LaunchkP = 1.2; // .1, .6, 1.0, 1.4,5 , 4, 3,2 (8), 11
+    public static final double LaunchkP = 2.75; // 1.2
     public static final double LaunchkI = 0;
-    public static final double LaunchkD = 0.002; // 0.01  0.09, 0.03
-
-    // Perfect from 88 inches from middle of robot to center of hub at 3500 RPM
-    // 118 inches 4000 RPM
-    // 58 inches 3000 RPM
+    public static final double LaunchkD = 0.001; // 0.002
   }
   /** Constants for the LED subsytem. */
   public static final class LEDConstants {
@@ -213,7 +216,7 @@ public final class Constants {
     public static AutoClimbState currentAutoClimbMode = ClimbConstants.AutoClimbState.IDLE;
 
     // component ids
-    public static final int climbMotorID = 31;
+    // public static final int climbMotorID = 31;
     public static final int climbEncoderID = 32;
     public static final int climbLimitSwitchID = 0;
     public static final int climbMetalDetectorID = 2;
