@@ -367,6 +367,12 @@ public class Drive extends SubsystemBase {
     }
   }
 
+  public void setModulePositions(Rotation2d rotation) {
+    for (int i = 0; i < 4; i++) {
+      modules[i].setModulePosition(rotation);
+    }
+  }
+
   public static boolean onRed() {
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {

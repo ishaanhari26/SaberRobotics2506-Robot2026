@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 // import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAlignCommand;
+import frc.robot.commands.AutoFactory;
 import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.ControllerRumble;
@@ -116,22 +117,6 @@ public class RobotContainer {
   private final ClimbSubsystem m_climbSubsystem =
       new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder, climbMetalDetector);
 
-  // InV3take
-  //   public final TalonFX intakeV3Motor = new TalonFX(Constants.IntakeV3Constants.motorId);
-
-  //   private final IntakeV3Subsystem m_intakeV3Subsystem = new IntakeV3Subsystem(intakeV3Motor);
-
-  //   private final SwerveRequest.FieldCentric drive =
-  //       new SwerveRequest.FieldCentric()
-  //           .withDeadband(Constants.MaxSpeed * 0.1)
-  //           .withRotationalDeadband(Constants.MaxAngularRate * 0.1) // Add a 10% deadband
-  //           .withDriveRequestType(
-  //               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-
-  private final SwerveRequest.RobotCentric robotDrive = new SwerveRequest.RobotCentric();
-
-  //   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
   private static PIDController lockedTargetPID =
       new PIDController(
           VisionConstants.TURN_ANGLE_KP,
@@ -141,6 +126,9 @@ public class RobotContainer {
   // Dashboard inputs
   //   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  private final AutoFactory AutoFactory;
+
 
   public Command DropClimb() {
     return new InstantCommand(
@@ -224,6 +212,8 @@ public class RobotContainer {
         // break;
     }
 
+    AutoFactory = new AutoFactory(drivetrain, m_fuelSubsystem);
+
     NamedCommands.registerCommand(
         "Launch",
         new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
@@ -259,6 +249,12 @@ public class RobotContainer {
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    
+    autoChooser.addOption("neutralAuto", AutoFactory.neutralAuto());
+    autoChooser.addOption("intakeOutpostAuto", AutoFactory.intakeAuto());
+    autoChooser.addOption("pickupOutpostAuto", AutoFactory.pickupAuto());
+    autoChooser.addOption("justShootMiddle", AutoFactory.justShootMiddle());
+    autoChooser.addOption("driveBackAndShootMiddle", AutoFactory.driveBackShootMiddle());
 
     // lockedTargetPID.setSetpoint(0);
     // lockedTargetPID.setTolerance(0.3);

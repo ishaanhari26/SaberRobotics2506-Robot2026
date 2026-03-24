@@ -1,6 +1,9 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -15,9 +18,9 @@ public class AutoFactory {
     private Drive drive;
     private FuelSubsystem fuelSubsystem;
 
-    private PIDController translation = new PIDController(1, 0, 0);
-    private PIDController rotation = new PIDController(0.25, 0, 0);
-    private PIDController crossTrack = new PIDController(0.025, 0, 0);
+    private PIDController translation = new PIDController(5, 0, 0);
+    private PIDController rotation = new PIDController(3, 0, 0);
+    private PIDController crossTrack = new PIDController(3, 0, 0);
 
     private FollowPath.Builder pathBuilder;
 
@@ -37,9 +40,10 @@ public class AutoFactory {
 
     public Command testAuto() {
         Path testPath = new Path("test");
+        Rotation2d initialDirection = testPath.getInitialModuleDirection();
+        drive.setModulePositions(initialDirection);
 
         return Commands.sequence(
-            Commands.run(() -> drive.alignModules()),
             pathBuilder.build(testPath)
         );
     }
@@ -51,9 +55,12 @@ public class AutoFactory {
     }
 
     public Command driveBackShootMiddle() {
+        Path shootMiddlePath = new Path("justShootMiddle");
+        Rotation2d initialDirection = shootMiddlePath.getInitialModuleDirection();
+        drive.setModulePositions(initialDirection);
+
         return Commands.sequence(
-            Commands.run(() -> drive.alignModules()),
-            pathBuilder.build(new Path("justShootMiddle")),
+            pathBuilder.build(shootMiddlePath),
             new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
         );
     }
@@ -61,9 +68,10 @@ public class AutoFactory {
     public Command neutralAuto() {
         Path driveNeutralPath = new Path("driveToNeutral");
         Path driveShootPath = new Path("driveToShootBump");
+        Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
+        drive.setModulePositions(initialDirection);
 
         return Commands.sequence(
-            Commands.run(() -> drive.alignModules()),
             new ParallelCommandGroup(
                 pathBuilder.build(driveNeutralPath),
                 new Intake(fuelSubsystem)),
@@ -76,9 +84,10 @@ public class AutoFactory {
     public Command intakeAuto() {
         Path driveIntakePath = new Path("driveToIntake");
         Path intakeShootPath = new Path("intakeShoot");
+        Rotation2d initialDirection = driveIntakePath.getInitialModuleDirection();
+        drive.setModulePositions(initialDirection);
 
         return Commands.sequence(
-            Commands.run(() -> drive.alignModules()),
             new ParallelCommandGroup(
                 pathBuilder.build(driveIntakePath),
                 new Intake(fuelSubsystem)),
@@ -91,9 +100,10 @@ public class AutoFactory {
     public Command pickupAuto() {
         Path outpostPath = new Path("driveToOupost");
         Path outpostShootPath = new Path("outpostShoot");
+        Rotation2d initialDirection = outpostPath.getInitialModuleDirection();
+        drive.setModulePositions(initialDirection);
 
         return Commands.sequence(
-            Commands.run(() -> drive.alignModules()),
             pathBuilder.build(outpostPath),
             new WaitCommand(3),
             pathBuilder.build(outpostShootPath),
