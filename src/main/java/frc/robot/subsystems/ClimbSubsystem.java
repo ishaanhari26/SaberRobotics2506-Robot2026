@@ -1,121 +1,121 @@
-package frc.robot.subsystems;
+// package frc.robot.subsystems;
 
-// import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.ClimbConstants.AutoClimbState;
-import frc.robot.Constants.ClimbConstants.ClimbState;
-import frc.robot.commands.HoldPosition;
+// // import com.ctre.phoenix6.configs.CANcoderConfiguration;
+// import com.ctre.phoenix6.hardware.CANcoder;
+// import com.ctre.phoenix6.hardware.TalonFX;
+// import com.ctre.phoenix6.signals.NeutralModeValue;
+// import edu.wpi.first.wpilibj.DigitalInput;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj2.command.SubsystemBase;
+// import frc.robot.Constants;
+// import frc.robot.Constants.ClimbConstants.AutoClimbState;
+// import frc.robot.Constants.ClimbConstants.ClimbState;
+// import frc.robot.commands.HoldPosition;
 
-public class ClimbSubsystem extends SubsystemBase {
+// public class ClimbSubsystem extends SubsystemBase {
 
-  public static ClimbState currentState;
-  public static AutoClimbState autoCurrentState;
+//   public static ClimbState currentState;
+//   public static AutoClimbState autoCurrentState;
 
-  private TalonFX climbMotor;
-  private DigitalInput limitSwitch;
-  private CANcoder encoder;
-  private DigitalInput metalDetector;
+//   private TalonFX climbMotor;
+//   private DigitalInput limitSwitch;
+//   private CANcoder encoder;
+//   private DigitalInput metalDetector;
 
-  public ClimbSubsystem(
-      TalonFX climbMotor, DigitalInput limitSwitch, CANcoder encoder, DigitalInput metalDetector) {
-    this.climbMotor = climbMotor;
-    this.limitSwitch = limitSwitch;
-    this.encoder = encoder;
-    this.metalDetector = metalDetector;
-    climbMotor.setNeutralMode(NeutralModeValue.Brake);
-    // resetEncoder();
-  }
+//   public ClimbSubsystem(
+//       TalonFX climbMotor, DigitalInput limitSwitch, CANcoder encoder, DigitalInput metalDetector) {
+//     this.climbMotor = climbMotor;
+//     this.limitSwitch = limitSwitch;
+//     this.encoder = encoder;
+//     this.metalDetector = metalDetector;
+//     climbMotor.setNeutralMode(NeutralModeValue.Brake);
+//     // resetEncoder();
+//   }
 
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    setDefaultCommand(new HoldPosition(this, true));
-  }
+//   public void initDefaultCommand() {
+//     // Set the default command for a subsystem here.
+//     setDefaultCommand(new HoldPosition(this, true));
+//   }
 
-  public double getEncoder() {
-    return -encoder.getPosition().getValueAsDouble();
-  }
+//   public double getEncoder() {
+//     return -encoder.getPosition().getValueAsDouble();
+//   }
 
-  public void setEncoder(double pos) {
-    encoder.setPosition(pos);
-  }
+//   public void setEncoder(double pos) {
+//     encoder.setPosition(pos);
+//   }
 
-  public void runClimb(double speed) {
-    climbMotor.set(speed);
-  }
+//   public void runClimb(double speed) {
+//     climbMotor.set(speed);
+//   }
 
-  public void stopMotor() {
-    climbMotor.set(0);
-  }
+//   public void stopMotor() {
+//     climbMotor.set(0);
+//   }
 
-  public double getMotorSpeed() {
-    return climbMotor.get();
-  }
+//   public double getMotorSpeed() {
+//     return climbMotor.get();
+//   }
 
-  public boolean getLimitSwitch() {
-    return !limitSwitch.get();
-  }
+//   public boolean getLimitSwitch() {
+//     return !limitSwitch.get();
+//   }
 
-  public boolean getMetalSensor() {
-    return metalDetector.get();
-  }
+//   public boolean getMetalSensor() {
+//     return metalDetector.get();
+//   }
 
-  public void resetEncoder() {
-    encoder.setPosition(0.0);
-  }
+//   public void resetEncoder() {
+//     encoder.setPosition(0.0);
+//   }
 
-  public ClimbState getClimbState() {
-    if (Constants.equals(climbMotor.get(), Constants.ClimbConstants.climbRetractSpeed, 0.05)) {
-      currentState = ClimbState.RETRACTING;
-    } else if (Constants.equals(
-        climbMotor.get(), Constants.ClimbConstants.climbExtendSpeed, 0.05)) {
-      currentState = ClimbState.EXTENDING;
-    } else if (Constants.equals(getEncoder(), Constants.ClimbConstants.encoderClicksToTop, 0.1)) {
-      currentState = ClimbState.EXTENDED;
-    } else if (getLimitSwitch()) {
-      currentState = ClimbState.RETRACTED;
-    } else if (Constants.equals(
-        Constants.ClimbConstants.climbTarget,
-        getEncoder(),
-        Constants.ClimbConstants.holdTolerance)) {
-      currentState = ClimbState.ATSETPOINT;
-    } else {
-      currentState = ClimbState.WhatHaveYouDone;
-    }
-    return currentState;
-  }
+//   public ClimbState getClimbState() {
+//     if (Constants.equals(climbMotor.get(), Constants.ClimbConstants.climbRetractSpeed, 0.05)) {
+//       currentState = ClimbState.RETRACTING;
+//     } else if (Constants.equals(
+//         climbMotor.get(), Constants.ClimbConstants.climbExtendSpeed, 0.05)) {
+//       currentState = ClimbState.EXTENDING;
+//     } else if (Constants.equals(getEncoder(), Constants.ClimbConstants.encoderClicksToTop, 0.1)) {
+//       currentState = ClimbState.EXTENDED;
+//     } else if (getLimitSwitch()) {
+//       currentState = ClimbState.RETRACTED;
+//     } else if (Constants.equals(
+//         Constants.ClimbConstants.climbTarget,
+//         getEncoder(),
+//         Constants.ClimbConstants.holdTolerance)) {
+//       currentState = ClimbState.ATSETPOINT;
+//     } else {
+//       currentState = ClimbState.WhatHaveYouDone;
+//     }
+//     return currentState;
+//   }
 
-  public AutoClimbState getAutoClimbState() {
-    return Constants.ClimbConstants.currentAutoClimbMode;
-  }
+//   public AutoClimbState getAutoClimbState() {
+//     return Constants.ClimbConstants.currentAutoClimbMode;
+//   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Cancoder", getEncoder());
-    SmartDashboard.putString("State", getClimbState().name());
-    SmartDashboard.putString("Auto State", getAutoClimbState().name());
-    SmartDashboard.putNumber("Motor Speed", getMotorSpeed());
-    SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
-    SmartDashboard.putBoolean("Metal Detector", getMetalSensor());
-    // SmartDashboard.putBoolean("Controller", RobotContainer.controller.povDown().getAsBoolean());
+//   @Override
+//   public void periodic() {
+//     // This method will be called once per scheduler run
+//     SmartDashboard.putNumber("Cancoder", getEncoder());
+//     SmartDashboard.putString("State", getClimbState().name());
+//     SmartDashboard.putString("Auto State", getAutoClimbState().name());
+//     SmartDashboard.putNumber("Motor Speed", getMotorSpeed());
+//     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
+//     SmartDashboard.putBoolean("Metal Detector", getMetalSensor());
+//     // SmartDashboard.putBoolean("Controller", RobotContainer.controller.povDown().getAsBoolean());
 
-    SmartDashboard.putBoolean(
-        "Target Matches Encoder",
-        Constants.equals(
-            Constants.ClimbConstants.climbTarget,
-            getEncoder(),
-            Constants.ClimbConstants.holdTolerance));
-    SmartDashboard.putNumber("Target", Constants.ClimbConstants.climbTarget);
-  }
+//     SmartDashboard.putBoolean(
+//         "Target Matches Encoder",
+//         Constants.equals(
+//             Constants.ClimbConstants.climbTarget,
+//             getEncoder(),
+//             Constants.ClimbConstants.holdTolerance));
+//     SmartDashboard.putNumber("Target", Constants.ClimbConstants.climbTarget);
+//   }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
-}
+//   @Override
+//   public void simulationPeriodic() {
+//     // This method will be called once per scheduler run during simulation
+//   }
+// }
