@@ -92,6 +92,10 @@ public class Module {
     io.setTurnPosition(new Rotation2d());
   }
 
+  public void setModulePosition(Rotation2d rotation) {
+    io.setTurnPosition(rotation);
+  }
+
   /** Disables all outputs to motors. */
   public void stop() {
     io.setDriveOpenLoop(0.0);
