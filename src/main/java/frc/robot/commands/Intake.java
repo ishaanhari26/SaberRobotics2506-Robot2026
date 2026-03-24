@@ -32,6 +32,7 @@ public class Intake extends Command {
     LED.setMode(Constants.LEDConstants.Mode.INTAKE);
     m_subsystem.runIntake(Constants.FuelConstants.IntakeIntakeSpeed);
     m_subsystem.runFeeder(Constants.FuelConstants.FeederIntakeSpeed);
+    m_subsystem.runIndexer(Constants.FuelConstants.IndexerReverseSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

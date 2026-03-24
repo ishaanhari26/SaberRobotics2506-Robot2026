@@ -53,7 +53,7 @@ public final class Constants {
     // this is the motor id
     public static final int IntakeMotor = 52;
     public static final int FeederMotor = 54;
-    public static final int AgitatorMotor = 0;
+    public static final int IndexerMotor = 31;
 
     public static final int LaunchMotor = 41;
     public static final int LaunchMotor2 = 42;
@@ -71,7 +71,8 @@ public final class Constants {
     public static final double FeederEjectSpeed = 1;
 
     // speed for agitator motor
-    public static final double AgitatorSpeed = 0.5;
+    public static final double IndexerSpeed = -0.1;
+    public static final double IndexerReverseSpeed = 0.1;
 
     // speeds for intake and feeder motors when launching
     public static final double LaunchSpeed = -.8;

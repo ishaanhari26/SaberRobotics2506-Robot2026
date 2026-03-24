@@ -75,7 +75,7 @@ public class RobotContainer {
 
   public final TalonFX intakeMotor = new TalonFX(Constants.FuelConstants.IntakeMotor);
   public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
-  public final TalonFX agitatorMotor = new TalonFX(Constants.FuelConstants.AgitatorMotor);
+  public final TalonFX indexerMotor = new TalonFX(Constants.FuelConstants.IndexerMotor);
   public final TalonFX launchMotor = new TalonFX(Constants.FuelConstants.LaunchMotor);
   public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
   public final TalonFX launchMotor3 = new TalonFX(Constants.FuelConstants.LaunchMotor3);
@@ -87,7 +87,7 @@ public class RobotContainer {
       new FuelSubsystem(
           intakeMotor,
           feederMotor,
-          agitatorMotor,
+          indexerMotor,
           launchMotor,
           launchMotor2,
           launchMotor3,

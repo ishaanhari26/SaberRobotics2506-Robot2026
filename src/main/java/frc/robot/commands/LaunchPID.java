@@ -42,6 +42,7 @@ public class LaunchPID extends Command {
     m_subsystem.runIntake(Constants.FuelConstants.IntakeIntakeSpeed);
     if (m_subsystem.getAtSetpoint() || m_subsystem.manualFeeder) {
       m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
+      m_subsystem.runIndexer(Constants.FuelConstants.IndexerSpeed);
     }
     // else {
     //   m_subsystem.runFeeder(0);
