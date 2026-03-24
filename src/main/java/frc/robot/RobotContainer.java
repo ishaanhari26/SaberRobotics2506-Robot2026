@@ -12,8 +12,6 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -22,6 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -52,7 +51,6 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -106,15 +104,15 @@ public class RobotContainer {
   private final SlewRateLimiter robotyLimiter = new SlewRateLimiter(3);
 
   // climb
-//   public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
-//   public final DigitalInput climbLimitSwitch =
-//       new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
-//   public final CANcoder climbEncoder = new CANcoder(Constants.ClimbConstants.climbEncoderID);
-//   public final DigitalInput climbMetalDetector =
-//       new DigitalInput(Constants.ClimbConstants.climbMetalDetectorID);
+  //   public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
+  //   public final DigitalInput climbLimitSwitch =
+  //       new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
+  //   public final CANcoder climbEncoder = new CANcoder(Constants.ClimbConstants.climbEncoderID);
+  //   public final DigitalInput climbMetalDetector =
+  //       new DigitalInput(Constants.ClimbConstants.climbMetalDetectorID);
 
-//   private final ClimbSubsystem m_climbSubsystem =
-//       new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder, climbMetalDetector);
+  //   private final ClimbSubsystem m_climbSubsystem =
+  //       new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder, climbMetalDetector);
 
   private static PIDController lockedTargetPID =
       new PIDController(
@@ -124,10 +122,10 @@ public class RobotContainer {
 
   // Dashboard inputs
   //   private final LoggedDashboardChooser<Command> autoChooser;
-  private final LoggedDashboardChooser<Command> autoChooser;
+  //   private final LoggedDashboardChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
 
   private final AutoFactory AutoFactory;
-
 
   public Command DropClimb() {
     return new InstantCommand(
@@ -247,8 +245,10 @@ public class RobotContainer {
 
     // Set up auto routines
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    
+    // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    autoChooser = new SendableChooser<>();
+
+    autoChooser.addOption("testAuto", AutoFactory.testAuto());
     autoChooser.addOption("neutralAuto", AutoFactory.neutralAuto());
     autoChooser.addOption("intakeOutpostAuto", AutoFactory.intakeAuto());
     autoChooser.addOption("pickupOutpostAuto", AutoFactory.pickupAuto());
@@ -346,6 +346,8 @@ public class RobotContainer {
     // controller.povDown().whileTrue(new Retract(m_climbSubsystem));
     // controller.povUp().whileTrue(new AutoAim(drivetrain, "BLUE"));
 
+    controller.b().whileTrue(AutoFactory.testAuto());
+
     opController
         .a()
         .whileTrue(new InstantCommand(() -> m_fuelSubsystem.manualFeeder = true))
@@ -402,7 +404,7 @@ public class RobotContainer {
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
     // reset heading
-    controller.b().onTrue(new InstantCommand(() -> drivetrain.seedGyro()));
+    // controller.b().onTrue(new InstantCommand(() -> drivetrain.seedGyro()));
   }
 
   public Trigger getScoringTrigger() {
@@ -451,41 +453,41 @@ public class RobotContainer {
             () -> {
               SmartDashboard.putString("aC", "B");
             }));
-        // new InstantCommand(
-        //     () -> {
-        //       drivetrain.applyRequest(
-        //           () -> drive.withVelocityX(0.3 *
-        // MaxSpeed).withVelocityY(0).withRotationalRate(0));
-        //     }),
-        // new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
-        // new AutoAlignCommand(CommandFactory.getAutoClimbPose(), drive),
-        // driveUntilBool(false /* detect side impact */, DriveDirection.RIGHT, 0.1),
-        // Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -0.1, 0)), drive)
-        //     .withTimeout(3)
-        //     .andThen(new InstantCommand(() -> drive.stop(), drive)),
-        // new InstantCommand(
-        //     () -> {
-        //       drivetrain.applyRequest(
-        //           () -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
-        //     }),
-        // driveUntilBool(
-        //     controller.povDown().getAsBoolean() /*m_climbSubsystem.getMetalSensor()*/,
-        //     "FORWARD",
-        //     0.1),
-        // replace this with metal sensor
-        // new WaitUntilCommand(() -> m_climbSubsystem.getEncoder() > 2.3),
-        // new InstantCommand(
-        //     () -> {
-        //       SmartDashboard.putString("aC", "C");
-        //     }),
-        // new InstantCommand(
-        //     () -> {
-        //       Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
-        //     }),
-        // new InstantCommand(
-        //     () -> {
-        //       SmartDashboard.putString("aC", "D");
-        //     }));
+    // new InstantCommand(
+    //     () -> {
+    //       drivetrain.applyRequest(
+    //           () -> drive.withVelocityX(0.3 *
+    // MaxSpeed).withVelocityY(0).withRotationalRate(0));
+    //     }),
+    // new WaitUntilCommand(() -> controller.povDown().getAsBoolean()),
+    // new AutoAlignCommand(CommandFactory.getAutoClimbPose(), drive),
+    // driveUntilBool(false /* detect side impact */, DriveDirection.RIGHT, 0.1),
+    // Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, -0.1, 0)), drive)
+    //     .withTimeout(3)
+    //     .andThen(new InstantCommand(() -> drive.stop(), drive)),
+    // new InstantCommand(
+    //     () -> {
+    //       drivetrain.applyRequest(
+    //           () -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
+    //     }),
+    // driveUntilBool(
+    //     controller.povDown().getAsBoolean() /*m_climbSubsystem.getMetalSensor()*/,
+    //     "FORWARD",
+    //     0.1),
+    // replace this with metal sensor
+    // new WaitUntilCommand(() -> m_climbSubsystem.getEncoder() > 2.3),
+    // new InstantCommand(
+    //     () -> {
+    //       SmartDashboard.putString("aC", "C");
+    //     }),
+    // new InstantCommand(
+    //     () -> {
+    //       Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+    //     }),
+    // new InstantCommand(
+    //     () -> {
+    //       SmartDashboard.putString("aC", "D");
+    //     }));
   }
 
   public boolean onBlue() {
@@ -498,7 +500,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return autoChooser.getSelected();
   }
 
   public Command getAutoAlignCommand() {

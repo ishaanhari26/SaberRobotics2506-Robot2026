@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Rotation;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,9 +16,9 @@ public class AutoFactory {
   private Drive drive;
   private FuelSubsystem fuelSubsystem;
 
-    private PIDController translation = new PIDController(5, 0, 0);
-    private PIDController rotation = new PIDController(3, 0, 0);
-    private PIDController crossTrack = new PIDController(3, 0, 0);
+  private PIDController translation = new PIDController(5, 0, 0);
+  private PIDController rotation = new PIDController(3, 0, 0);
+  private PIDController crossTrack = new PIDController(3, 0, 0);
 
   private FollowPath.Builder pathBuilder;
 
@@ -40,77 +38,66 @@ public class AutoFactory {
             .withDefaultShouldFlip();
   }
 
-    public Command testAuto() {
-        Path testPath = new Path("test");
-        Rotation2d initialDirection = testPath.getInitialModuleDirection();
-        drive.setModulePositions(initialDirection);
+  public Command testAuto() {
+    Path testPath = new Path("test");
+    Rotation2d initialDirection = testPath.getInitialModuleDirection();
+    drive.setModulePositions(initialDirection);
 
-        return Commands.sequence(
-            pathBuilder.build(testPath)
-        );
-    }
+    return Commands.sequence(pathBuilder.build(testPath));
+  }
 
   public Command justShootMiddle() {
     return Commands.sequence(
         new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
   }
 
-    public Command driveBackShootMiddle() {
-        Path shootMiddlePath = new Path("justShootMiddle");
-        Rotation2d initialDirection = shootMiddlePath.getInitialModuleDirection();
-        drive.setModulePositions(initialDirection);
+  public Command driveBackShootMiddle() {
+    Path shootMiddlePath = new Path("justShootMiddle");
+    Rotation2d initialDirection = shootMiddlePath.getInitialModuleDirection();
+    drive.setModulePositions(initialDirection);
 
-        return Commands.sequence(
-            pathBuilder.build(shootMiddlePath),
-            new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
-        );
-    }
+    return Commands.sequence(
+        pathBuilder.build(shootMiddlePath),
+        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+  }
 
-    public Command neutralAuto() {
-        Path driveNeutralPath = new Path("driveToNeutral");
-        Path driveShootPath = new Path("driveToShootBump");
-        Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
-        drive.setModulePositions(initialDirection);
+  public Command neutralAuto() {
+    Path driveNeutralPath = new Path("driveToNeutral");
+    Path driveShootPath = new Path("driveToShootBump");
+    Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
+    drive.setModulePositions(initialDirection);
 
-        return Commands.sequence(
-            new ParallelCommandGroup(
-                pathBuilder.build(driveNeutralPath),
-                new Intake(fuelSubsystem)),
-            pathBuilder.build(driveShootPath),
-            DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
-            new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
-        );
-    }
+    return Commands.sequence(
+        new ParallelCommandGroup(pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem)),
+        pathBuilder.build(driveShootPath),
+        DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
+        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+  }
 
-    public Command intakeAuto() {
-        Path driveIntakePath = new Path("driveToIntake");
-        Path intakeShootPath = new Path("intakeShoot");
-        Rotation2d initialDirection = driveIntakePath.getInitialModuleDirection();
-        drive.setModulePositions(initialDirection);
+  public Command intakeAuto() {
+    Path driveIntakePath = new Path("driveToIntake");
+    Path intakeShootPath = new Path("intakeShoot");
+    Rotation2d initialDirection = driveIntakePath.getInitialModuleDirection();
+    drive.setModulePositions(initialDirection);
 
-        return Commands.sequence(
-            new ParallelCommandGroup(
-                pathBuilder.build(driveIntakePath),
-                new Intake(fuelSubsystem)),
-            pathBuilder.build(intakeShootPath),
-            DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
-            new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
-        );
-    }
+    return Commands.sequence(
+        new ParallelCommandGroup(pathBuilder.build(driveIntakePath), new Intake(fuelSubsystem)),
+        pathBuilder.build(intakeShootPath),
+        DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
+        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+  }
 
-    public Command pickupAuto() {
-        Path outpostPath = new Path("driveToOupost");
-        Path outpostShootPath = new Path("outpostShoot");
-        Rotation2d initialDirection = outpostPath.getInitialModuleDirection();
-        drive.setModulePositions(initialDirection);
+  public Command pickupAuto() {
+    Path outpostPath = new Path("driveToOutpost");
+    Path outpostShootPath = new Path("outpostShoot");
+    Rotation2d initialDirection = outpostPath.getInitialModuleDirection();
+    drive.setModulePositions(initialDirection);
 
-        return Commands.sequence(
-            pathBuilder.build(outpostPath),
-            new WaitCommand(3),
-            pathBuilder.build(outpostShootPath),
-            DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
-            new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
-        );
-    }
-    
+    return Commands.sequence(
+        pathBuilder.build(outpostPath),
+        new WaitCommand(3),
+        pathBuilder.build(outpostShootPath),
+        DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
+        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+  }
 }

@@ -23,7 +23,8 @@
 //   private DigitalInput metalDetector;
 
 //   public ClimbSubsystem(
-//       TalonFX climbMotor, DigitalInput limitSwitch, CANcoder encoder, DigitalInput metalDetector) {
+//       TalonFX climbMotor, DigitalInput limitSwitch, CANcoder encoder, DigitalInput metalDetector)
+// {
 //     this.climbMotor = climbMotor;
 //     this.limitSwitch = limitSwitch;
 //     this.encoder = encoder;
@@ -75,7 +76,8 @@
 //     } else if (Constants.equals(
 //         climbMotor.get(), Constants.ClimbConstants.climbExtendSpeed, 0.05)) {
 //       currentState = ClimbState.EXTENDING;
-//     } else if (Constants.equals(getEncoder(), Constants.ClimbConstants.encoderClicksToTop, 0.1)) {
+//     } else if (Constants.equals(getEncoder(), Constants.ClimbConstants.encoderClicksToTop, 0.1))
+// {
 //       currentState = ClimbState.EXTENDED;
 //     } else if (getLimitSwitch()) {
 //       currentState = ClimbState.RETRACTED;
@@ -103,7 +105,8 @@
 //     SmartDashboard.putNumber("Motor Speed", getMotorSpeed());
 //     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
 //     SmartDashboard.putBoolean("Metal Detector", getMetalSensor());
-//     // SmartDashboard.putBoolean("Controller", RobotContainer.controller.povDown().getAsBoolean());
+//     // SmartDashboard.putBoolean("Controller",
+// RobotContainer.controller.povDown().getAsBoolean());
 
 //     SmartDashboard.putBoolean(
 //         "Target Matches Encoder",
