@@ -213,7 +213,7 @@ public final class Constants {
     public static AutoClimbState currentAutoClimbMode = ClimbConstants.AutoClimbState.IDLE;
 
     // component ids
-    public static final int climbMotorID = 31;
+    // public static final int climbMotorID = 31;
     public static final int climbEncoderID = 32;
     public static final int climbLimitSwitchID = 0;
     public static final int climbMetalDetectorID = 2;
