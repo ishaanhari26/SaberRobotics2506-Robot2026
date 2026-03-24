@@ -11,7 +11,6 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -19,7 +18,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -29,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 // import frc.robot.commands.AutoAim;
@@ -40,12 +37,12 @@ import frc.robot.commands.CommandFactory;
 import frc.robot.commands.ControllerRumble;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Eject;
-import frc.robot.commands.HoldPosition;
+// import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.LaunchPID;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Camera;
-import frc.robot.subsystems.ClimbSubsystem;
+// import frc.robot.subsystems.ClimbSubsystem;
 // import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.LED;
@@ -76,7 +73,9 @@ public class RobotContainer {
 
   public final TalonFX intakeMotor = new TalonFX(Constants.FuelConstants.IntakeMotor);
   public final TalonFX feederMotor = new TalonFX(Constants.FuelConstants.FeederMotor);
-  public final TalonFX agitatorMotor = new TalonFX(Constants.FuelConstants.AgitatorMotor);
+
+  public final TalonFX indexerMotor = new TalonFX(Constants.FuelConstants.IndexerMotor);
+
   public final TalonFX launchMotor = new TalonFX(Constants.FuelConstants.LaunchMotor);
   public final TalonFX launchMotor2 = new TalonFX(Constants.FuelConstants.LaunchMotor2);
   public final TalonFX launchMotor3 = new TalonFX(Constants.FuelConstants.LaunchMotor3);
@@ -88,7 +87,7 @@ public class RobotContainer {
       new FuelSubsystem(
           intakeMotor,
           feederMotor,
-          agitatorMotor,
+          indexerMotor,
           launchMotor,
           launchMotor2,
           launchMotor3,
@@ -107,15 +106,15 @@ public class RobotContainer {
   private final SlewRateLimiter robotyLimiter = new SlewRateLimiter(3);
 
   // climb
-  public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
-  public final DigitalInput climbLimitSwitch =
-      new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
-  public final CANcoder climbEncoder = new CANcoder(Constants.ClimbConstants.climbEncoderID);
-  public final DigitalInput climbMetalDetector =
-      new DigitalInput(Constants.ClimbConstants.climbMetalDetectorID);
+//   public final TalonFX climbMotor = new TalonFX(Constants.ClimbConstants.climbMotorID);
+//   public final DigitalInput climbLimitSwitch =
+//       new DigitalInput(Constants.ClimbConstants.climbLimitSwitchID);
+//   public final CANcoder climbEncoder = new CANcoder(Constants.ClimbConstants.climbEncoderID);
+//   public final DigitalInput climbMetalDetector =
+//       new DigitalInput(Constants.ClimbConstants.climbMetalDetectorID);
 
-  private final ClimbSubsystem m_climbSubsystem =
-      new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder, climbMetalDetector);
+//   private final ClimbSubsystem m_climbSubsystem =
+//       new ClimbSubsystem(climbMotor, climbLimitSwitch, climbEncoder, climbMetalDetector);
 
   private static PIDController lockedTargetPID =
       new PIDController(
@@ -223,8 +222,8 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "IntakeAuto",
         new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTimeAuto));
-    NamedCommands.registerCommand("Climb", AutoClimb());
-    NamedCommands.registerCommand("Unclimb", DropClimb());
+    // NamedCommands.registerCommand("Climb", AutoClimb());
+    // NamedCommands.registerCommand("Unclimb", DropClimb());
     // NamedCommands.registerCommand(
     //     "Align",
     //     new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
@@ -377,7 +376,7 @@ public class RobotContainer {
             new LaunchPID(
                 m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh, false));
 
-    m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
+    // m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
@@ -451,7 +450,7 @@ public class RobotContainer {
         new InstantCommand(
             () -> {
               SmartDashboard.putString("aC", "B");
-            }),
+            }));
         // new InstantCommand(
         //     () -> {
         //       drivetrain.applyRequest(
@@ -474,19 +473,19 @@ public class RobotContainer {
         //     "FORWARD",
         //     0.1),
         // replace this with metal sensor
-        new WaitUntilCommand(() -> m_climbSubsystem.getEncoder() > 2.3),
-        new InstantCommand(
-            () -> {
-              SmartDashboard.putString("aC", "C");
-            }),
-        new InstantCommand(
-            () -> {
-              Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
-            }),
-        new InstantCommand(
-            () -> {
-              SmartDashboard.putString("aC", "D");
-            }));
+        // new WaitUntilCommand(() -> m_climbSubsystem.getEncoder() > 2.3),
+        // new InstantCommand(
+        //     () -> {
+        //       SmartDashboard.putString("aC", "C");
+        //     }),
+        // new InstantCommand(
+        //     () -> {
+        //       Constants.ClimbConstants.climbTarget = Constants.ClimbConstants.autoRetractPos;
+        //     }),
+        // new InstantCommand(
+        //     () -> {
+        //       SmartDashboard.putString("aC", "D");
+        //     }));
   }
 
   public boolean onBlue() {

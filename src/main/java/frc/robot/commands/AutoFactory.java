@@ -15,28 +15,30 @@ import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.drive.Drive;
 
 public class AutoFactory {
-    private Drive drive;
-    private FuelSubsystem fuelSubsystem;
+  private Drive drive;
+  private FuelSubsystem fuelSubsystem;
 
     private PIDController translation = new PIDController(5, 0, 0);
     private PIDController rotation = new PIDController(3, 0, 0);
     private PIDController crossTrack = new PIDController(3, 0, 0);
 
-    private FollowPath.Builder pathBuilder;
+  private FollowPath.Builder pathBuilder;
 
-    public AutoFactory(Drive drive, FuelSubsystem fuelSubsystem) {
-        this.drive = drive;
-        this.fuelSubsystem = fuelSubsystem;
+  public AutoFactory(Drive drive, FuelSubsystem fuelSubsystem) {
+    this.drive = drive;
+    this.fuelSubsystem = fuelSubsystem;
 
-        pathBuilder = new FollowPath.Builder(
-            drive, 
-            () -> drive.getPose(), 
-            () -> drive.getChassisSpeeds(), 
-            drive::runVelocity,
-            translation, 
-            rotation, 
-            crossTrack).withDefaultShouldFlip();
-    }
+    pathBuilder =
+        new FollowPath.Builder(
+                drive,
+                () -> drive.getPose(),
+                () -> drive.getChassisSpeeds(),
+                drive::runVelocity,
+                translation,
+                rotation,
+                crossTrack)
+            .withDefaultShouldFlip();
+  }
 
     public Command testAuto() {
         Path testPath = new Path("test");
@@ -48,11 +50,10 @@ public class AutoFactory {
         );
     }
 
-    public Command justShootMiddle() {
-        return Commands.sequence(
-            new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true)
-        );
-    }
+  public Command justShootMiddle() {
+    return Commands.sequence(
+        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+  }
 
     public Command driveBackShootMiddle() {
         Path shootMiddlePath = new Path("justShootMiddle");

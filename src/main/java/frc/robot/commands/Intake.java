@@ -36,7 +36,9 @@ public class Intake extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_subsystem.runIndexer(Constants.FuelConstants.IndexerReverseSpeed);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

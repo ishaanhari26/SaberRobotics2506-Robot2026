@@ -30,6 +30,7 @@ public class Eject extends Command {
   public void initialize() {
     m_subsystem.runIntake(Constants.FuelConstants.IntakeEjectSpeed);
     m_subsystem.runFeeder(Constants.FuelConstants.FeederEjectSpeed);
+    m_subsystem.runIndexer(Constants.FuelConstants.IndexerSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
