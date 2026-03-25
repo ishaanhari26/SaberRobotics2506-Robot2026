@@ -219,7 +219,7 @@ public class RobotContainer {
     autoChooser.addOption("justShootMiddle", AutoFactory.justShootMiddle());
     autoChooser.addOption("driveBackAndShootMiddle", AutoFactory.driveBackShootMiddle());
 
-    SmartDashboard.putData("Auto Choices", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // lockedTargetPID.setSetpoint(0);
     // lockedTargetPID.setTolerance(0.3);
