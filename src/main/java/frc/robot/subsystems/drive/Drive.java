@@ -53,6 +53,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.LimelightHelpers;
+import frc.lib.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.CommandFactory;
@@ -266,7 +267,7 @@ public class Drive extends SubsystemBase {
     }
 
     Constants.FuelConstants.IntakeLaunchSpeedRPM =
-        -((CommandFactory.distanceFromHub(getPose()) * 16.67) + 1632.94);
+        -((CommandFactory.distanceFromHub(getPose()) * 17.5) + 1785);
 
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
 
@@ -319,9 +320,35 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
   }
 
+  public static int findIndex(double[] arr, double target) {
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] == target) return i;
+    }
+    return -1;
+  }
+
+  public static double[] getLimelightFiducialIDs(String limelightName) {
+    LimelightTarget_Fiducial[] tags =
+        LimelightHelpers.getLatestResults(limelightName).targets_Fiducials;
+
+    double[] fiducialIDs = new double[tags.length];
+    for (int i = 0; i < tags.length; i++) {
+      fiducialIDs[i] = tags[i].fiducialID;
+    }
+
+    return fiducialIDs;
+  }
+
+  public static double getLimelightTargetTX(String limelightName) {
+    int index = findIndex(getLimelightFiducialIDs(limelightName), onRed() ? 10 : 26);
+    if (index == -1) {
+      return 0;
+    }
+    return LimelightHelpers.getLatestResults(limelightName).targets_Fiducials[index].tx;
+  }
+
   public static boolean validTargetTags() {
-    if (DoubleStream.of(CommandFactory.validTargets)
-        .anyMatch(x -> x == LimelightHelpers.getFiducialID("limelight"))) {
+    if (DoubleStream.of(getLimelightFiducialIDs("limelight")).anyMatch(x -> x == 10 || x == 26)) {
       return true;
     }
     return false;

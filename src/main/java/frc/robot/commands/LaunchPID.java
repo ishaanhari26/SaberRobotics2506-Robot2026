@@ -21,10 +21,17 @@ public class LaunchPID extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public LaunchPID(FuelSubsystem subsystem, double speed, boolean vision) {
+  public LaunchPID(FuelSubsystem subsystem, double speed) {
     m_subsystem = subsystem;
     m_speed = speed;
-    this.vision = vision;
+    vision = false;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(subsystem);
+  }
+
+  public LaunchPID(FuelSubsystem subsystem) {
+    m_subsystem = subsystem;
+    vision = true;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -40,6 +47,7 @@ public class LaunchPID extends Command {
   public void execute() {
     m_subsystem.runLaunchPID(vision ? Constants.FuelConstants.IntakeLaunchSpeedRPM : m_speed);
     m_subsystem.runIntake(Constants.FuelConstants.IntakeIntakeSpeed);
+
     if (m_subsystem.getAtSetpoint() || m_subsystem.manualFeeder) {
       m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
       m_subsystem.runIndexer(Constants.FuelConstants.IndexerSpeed);

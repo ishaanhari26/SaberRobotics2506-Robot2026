@@ -78,9 +78,9 @@ public final class Constants {
     // speeds for intake and feeder motors when launching
     public static final double LaunchSpeed = -.8;
     public static final double PassingSpeed = -3000;
-    public static double IntakeLaunchSpeedRPM = -3500;
+    public static double IntakeLaunchSpeedRPM = -3325;
 
-    public static final double ConstantIntakeLaunchSpeedRPM = -3500;
+    public static final double ConstantIntakeLaunchSpeedRPM = -3325;
     public static final double ConstantIntakeLaunchSpeedRPMLow = -2800;
     public static final double ConstantIntakeLaunchSpeedRPMMedium = -3325;
     public static final double ConstantIntakeLaunchSpeedRPMHigh = -3850;

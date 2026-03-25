@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
 import frc.robot.lib.BLine.FollowPath;
 import frc.robot.lib.BLine.Path;
 import frc.robot.subsystems.FuelSubsystem;
@@ -47,8 +46,7 @@ public class AutoFactory {
   }
 
   public Command justShootMiddle() {
-    return Commands.sequence(
-        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+    return Commands.sequence(new LaunchPID(fuelSubsystem));
   }
 
   public Command driveBackShootMiddle() {
@@ -56,9 +54,7 @@ public class AutoFactory {
     Rotation2d initialDirection = shootMiddlePath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
-    return Commands.sequence(
-        pathBuilder.build(shootMiddlePath),
-        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+    return Commands.sequence(pathBuilder.build(shootMiddlePath), new LaunchPID(fuelSubsystem));
   }
 
   public Command neutralAuto() {
@@ -71,7 +67,7 @@ public class AutoFactory {
         new ParallelCommandGroup(pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem)),
         pathBuilder.build(driveShootPath),
         DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
-        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+        new LaunchPID(fuelSubsystem));
   }
 
   public Command intakeAuto() {
@@ -84,7 +80,7 @@ public class AutoFactory {
         new ParallelCommandGroup(pathBuilder.build(driveIntakePath), new Intake(fuelSubsystem)),
         pathBuilder.build(intakeShootPath),
         DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
-        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+        new LaunchPID(fuelSubsystem));
   }
 
   public Command pickupAuto() {
@@ -98,6 +94,6 @@ public class AutoFactory {
         new WaitCommand(3),
         pathBuilder.build(outpostShootPath),
         DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
-        new LaunchPID(fuelSubsystem, Constants.FuelConstants.IntakeLaunchSpeedRPM, true));
+        new LaunchPID(fuelSubsystem));
   }
 }

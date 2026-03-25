@@ -127,7 +127,7 @@ public class DriveCommands {
               new ChassisSpeeds(
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                  Drive.validTargetTags() ? lockedTargetPID.calculate(Vision.tx) : 0);
+                  Drive.validTargetTags() ? lockedTargetPID.calculate(Drive.getLimelightTargetTX("limelight")) : 0);
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;
