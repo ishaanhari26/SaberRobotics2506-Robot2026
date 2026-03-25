@@ -118,27 +118,31 @@ public class LED extends SubsystemBase {
   }
 
   public void scrollWhite() {
-    setPattern(
-        LEDPattern.steps(
-                Map.of(
-                    0,
-                    Color.kBlack,
-                    (LEDConstants.length - 1) / (double) LEDConstants.length,
-                    Color.kWhite))
-            .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
-            .overlayOn(currentPattern));
+    try {
+      setPattern(
+          LEDPattern.steps(
+                  Map.of(
+                      0,
+                      Color.kBlack,
+                      (LEDConstants.length - 1) / (double) LEDConstants.length,
+                      Color.kWhite))
+              .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
+              .overlayOn(currentPattern));
+    } catch {}
   }
 
   public void scrollPink() {
-    setPattern(
-        LEDPattern.steps(
-                Map.of(
-                    0,
-                    Color.kBlack,
-                    (LEDConstants.length - 1) / (double) LEDConstants.length,
-                    Color.kPink))
-            .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
-            .overlayOn(currentPattern));
+    try {
+      setPattern(
+          LEDPattern.steps(
+                  Map.of(
+                      0,
+                      Color.kBlack,
+                      (LEDConstants.length - 1) / (double) LEDConstants.length,
+                      Color.kPink))
+              .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
+              .overlayOn(currentPattern));
+    } catch {}
   }
 
   public void auto(int selected) {
