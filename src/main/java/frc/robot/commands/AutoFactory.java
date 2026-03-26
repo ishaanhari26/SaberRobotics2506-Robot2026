@@ -10,6 +10,7 @@ import frc.robot.lib.BLine.FollowPath;
 import frc.robot.lib.BLine.Path;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.drive.Drive;
+import org.littletonrobotics.junction.Logger;
 
 public class AutoFactory {
   private Drive drive;
@@ -24,6 +25,8 @@ public class AutoFactory {
   public AutoFactory(Drive drive, FuelSubsystem fuelSubsystem) {
     this.drive = drive;
     this.fuelSubsystem = fuelSubsystem;
+
+    rotation.enableContinuousInput(-Math.PI, Math.PI);
 
     pathBuilder =
         new FollowPath.Builder(
@@ -95,5 +98,29 @@ public class AutoFactory {
         pathBuilder.build(outpostShootPath),
         DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
         new LaunchPID(fuelSubsystem));
+  }
+
+  public void periodic() {
+    // SmartDashboard.putData("Tuning/Auto Translation Controller", translationController);//TODO:
+    // Remove for Comp
+    // SmartDashboard.putData("Tuning/Auto Rotation Controller", rotationController);//TODO: Remove
+    // for Comp
+    // SmartDashboard.putData("Tuning/Auto Cross Track Controller", crossTrackController);//TODO:
+    // Remove for Comp
+
+    FollowPath.setPoseLoggingConsumer(
+        pair -> {
+          Logger.recordOutput(pair.getFirst(), pair.getSecond());
+        });
+
+    FollowPath.setTranslationListLoggingConsumer(
+        pair -> {
+          Logger.recordOutput(pair.getFirst(), pair.getSecond());
+        });
+
+    FollowPath.setDoubleLoggingConsumer(
+        pair -> {
+          Logger.recordOutput(pair.getFirst(), pair.getSecond());
+        });
   }
 }
