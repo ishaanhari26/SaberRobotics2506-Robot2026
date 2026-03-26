@@ -212,7 +212,7 @@ public class RobotContainer {
     autoChooser = new SendableChooser<>();
 
     autoChooser.setDefaultOption("None", Commands.none());
-    autoChooser.addOption("testAuto", AutoFactory.testAuto());
+    autoChooser.addOption("driveBackAuto", AutoFactory.testAuto());
     autoChooser.addOption("neutralAuto", AutoFactory.neutralAuto());
     autoChooser.addOption("intakeOutpostAuto", AutoFactory.intakeAuto());
     autoChooser.addOption("pickupOutpostAuto", AutoFactory.pickupAuto());
@@ -239,9 +239,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         DriveCommands.joystickDrive(
             drivetrain,
-            () -> xLimiter.calculate(-controller.getLeftY()),
-            () -> yLimiter.calculate(-controller.getLeftX()),
-            () -> -controller.getRightX()));
+            () -> controller.getLeftY(),
+            () -> controller.getLeftX(),
+            () -> controller.getRightX()));
 
     // controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
 

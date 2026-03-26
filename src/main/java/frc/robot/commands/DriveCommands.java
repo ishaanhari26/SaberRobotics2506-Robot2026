@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 // import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -127,7 +126,9 @@ public class DriveCommands {
               new ChassisSpeeds(
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                  Drive.validTargetTags() ? lockedTargetPID.calculate(Drive.getLimelightTargetTX("limelight")) : 0);
+                  Drive.validTargetTags()
+                      ? lockedTargetPID.calculate(Drive.getLimelightTargetTX("limelight"))
+                      : 0);
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;

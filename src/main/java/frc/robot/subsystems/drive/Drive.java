@@ -267,7 +267,7 @@ public class Drive extends SubsystemBase {
     }
 
     Constants.FuelConstants.IntakeLaunchSpeedRPM =
-        -((CommandFactory.distanceFromHub(getPose()) * 17.5) + 1785);
+        -((CommandFactory.distanceFromHub(getPose()) * 17.5) + 1185);
 
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
 
@@ -280,6 +280,8 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("poseY", getPose().getY());
 
     SmartDashboard.putNumber("angleOffset", CommandFactory.getHubAngleOffsetRadians(getPose()));
+
+    SmartDashboard.putNumber("LimelightTX", getLimelightTargetTX("limelight"));
 
     SmartDashboard.putNumber("Average Module Speed", getAverageVelocity());
     SmartDashboard.putNumber("Match Time", Timer.getMatchTime());

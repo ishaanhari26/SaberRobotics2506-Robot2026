@@ -65,6 +65,20 @@ public class FuelSubsystem extends SubsystemBase {
 
     ConfigureMotors();
 
+    var launch1Configurator = LaunchMotor.getConfigurator();
+    var launch2Configurator = LaunchMotor2.getConfigurator();
+    var launch3Configurator = LaunchMotor3.getConfigurator();
+    var launch4Configurator = LaunchMotor4.getConfigurator();
+    var launchLimitsConfigs = new CurrentLimitsConfigs();
+
+    launchLimitsConfigs.StatorCurrentLimit = 25;
+    launchLimitsConfigs.StatorCurrentLimitEnable = true;
+
+    launch1Configurator.apply(launchLimitsConfigs);
+    launch2Configurator.apply(launchLimitsConfigs);
+    launch3Configurator.apply(launchLimitsConfigs);
+    launch4Configurator.apply(launchLimitsConfigs);
+
     // Sets the error tolerance to 1, and the error derivative tolerance to 5 per second
     ShooterPid.setTolerance(250);
   }
@@ -129,20 +143,6 @@ public class FuelSubsystem extends SubsystemBase {
 
     LaunchMotor4.setNeutralMode(NeutralModeValue.Coast);
     LaunchMotor4.setControl(new Follower(LaunchMotor.getDeviceID(), MotorAlignmentValue.Opposed));
-
-    var launch1Configurator = LaunchMotor.getConfigurator();
-    var launch2Configurator = LaunchMotor2.getConfigurator();
-    var launch3Configurator = LaunchMotor3.getConfigurator();
-    var launch4Configurator = LaunchMotor4.getConfigurator();
-    var launchLimitsConfigs = new CurrentLimitsConfigs();
-
-    launchLimitsConfigs.StatorCurrentLimit = 25;
-    launchLimitsConfigs.StatorCurrentLimitEnable = true;
-
-    launch1Configurator.apply(launchLimitsConfigs);
-    launch2Configurator.apply(launchLimitsConfigs);
-    launch3Configurator.apply(launchLimitsConfigs);
-    launch4Configurator.apply(launchLimitsConfigs);
   }
 
   @Override
