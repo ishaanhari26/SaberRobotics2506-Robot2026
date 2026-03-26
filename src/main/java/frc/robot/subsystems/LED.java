@@ -6,9 +6,7 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-// import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.Timer;
@@ -26,18 +24,11 @@ public class LED extends SubsystemBase {
 
   // Create the buffer
   private final AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(LEDConstants.length);
-  // private final AddressableLEDBufferView m_bufferP1 =
-  //     new AddressableLEDBufferView(m_buffer, 0, (int) (Math.floor(m_buffer.getLength() / 2) -
-  // 1));
-  // private final AddressableLEDBufferView m_bufferP2 =
-  //     new AddressableLEDBufferView(m_buffer, (int) (Math.floor(m_buffer.getLength() / 2)),
-  // m_buffer.getLength() - 1);
 
   private LEDPattern currentPattern;
   private static Mode LEDMode;
   private LEDConstants.Period state;
   private String gameData;
-  private Alliance alliance;
   // Timer
   private double matchTime;
 
