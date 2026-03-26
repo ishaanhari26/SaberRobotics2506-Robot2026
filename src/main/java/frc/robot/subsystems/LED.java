@@ -128,7 +128,9 @@ public class LED extends SubsystemBase {
                       Color.kWhite))
               .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
               .overlayOn(currentPattern));
-    } catch {}
+    } catch (Exception err) {
+      setPattern(LEDPattern.solid(m_buffer.getLED(0)));
+    }
   }
 
   public void scrollPink() {
@@ -142,7 +144,9 @@ public class LED extends SubsystemBase {
                       Color.kPink))
               .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
               .overlayOn(currentPattern));
-    } catch {}
+    } catch (Exception err) {
+      setPattern(LEDPattern.solid(m_buffer.getLED(0)));
+    }
   }
 
   public void auto(int selected) {
