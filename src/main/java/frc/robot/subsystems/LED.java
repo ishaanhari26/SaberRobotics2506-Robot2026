@@ -6,9 +6,7 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-// import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.Timer;
@@ -26,18 +24,11 @@ public class LED extends SubsystemBase {
 
   // Create the buffer
   private final AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(LEDConstants.length);
-  // private final AddressableLEDBufferView m_bufferP1 =
-  //     new AddressableLEDBufferView(m_buffer, 0, (int) (Math.floor(m_buffer.getLength() / 2) -
-  // 1));
-  // private final AddressableLEDBufferView m_bufferP2 =
-  //     new AddressableLEDBufferView(m_buffer, (int) (Math.floor(m_buffer.getLength() / 2)),
-  // m_buffer.getLength() - 1);
 
   private LEDPattern currentPattern;
   private static Mode LEDMode;
   private LEDConstants.Period state;
   private String gameData;
-  private Alliance alliance;
   // Timer
   private double matchTime;
 
@@ -56,7 +47,7 @@ public class LED extends SubsystemBase {
   }
 
   public void setPattern(LEDPattern pattern) {
-    off();
+    LEDPattern.solid(Color.kBlack).applyTo(m_buffer);
     currentPattern = pattern;
     try {
       pattern.applyTo(m_buffer);
@@ -118,27 +109,35 @@ public class LED extends SubsystemBase {
   }
 
   public void scrollWhite() {
-    setPattern(
-        LEDPattern.steps(
-                Map.of(
-                    0,
-                    Color.kBlack,
-                    (LEDConstants.length - 1) / (double) LEDConstants.length,
-                    Color.kWhite))
-            .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
-            .overlayOn(currentPattern));
+    try {
+      setPattern(
+          LEDPattern.steps(
+                  Map.of(
+                      0,
+                      Color.kBlack,
+                      (LEDConstants.length - 1) / (double) LEDConstants.length,
+                      Color.kWhite))
+              .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
+              .overlayOn(currentPattern));
+    } catch (Exception err) {
+      setPattern(LEDPattern.solid(m_buffer.getLED(0)));
+    }
   }
 
-  public void scrollAquamarine() {
-    setPattern(
-        LEDPattern.steps(
-                Map.of(
-                    0,
-                    Color.kBlack,
-                    (LEDConstants.length - 1) / (double) LEDConstants.length,
-                    Color.kAquamarine))
-            .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
-            .overlayOn(currentPattern));
+  public void scrollPink() {
+    try {
+      setPattern(
+          LEDPattern.steps(
+                  Map.of(
+                      0,
+                      Color.kBlack,
+                      (LEDConstants.length - 1) / (double) LEDConstants.length,
+                      Color.kPink))
+              .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
+              .overlayOn(currentPattern));
+    } catch (Exception err) {
+      setPattern(LEDPattern.solid(m_buffer.getLED(0)));
+    }
   }
 
   public void auto(int selected) {
@@ -191,9 +190,8 @@ public class LED extends SubsystemBase {
     if (DriverStation.isAutonomous()) {
       return LEDConstants.Period.AUTO;
     }
-    // SmartDashboard.putString(
-    //     "Alliance Color",
-    // Character.toString(DriverStation.getAlliance().get().name().charAt(0)));
+    SmartDashboard.putString(
+        "Alliance Color", Character.toString(DriverStation.getAlliance().get().name().charAt(0)));
     if (DriverStation.isTeleop() && DriverStation.getGameSpecificMessage().length() > 0) {
       if (Timer.getMatchTime() <= LEDConstants.transitionPeriodStart
           && Timer.getMatchTime() > LEDConstants.firstShiftStart) {
@@ -298,7 +296,7 @@ public class LED extends SubsystemBase {
    * <h3>Intaking:</h3>
    *
    * <ul>
-   *   <li>scrolling aquamarine LED
+   *   <li>scrolling pink LED
    * </ul>
    *
    * <h3>Climbing:</h3>
@@ -367,16 +365,32 @@ public class LED extends SubsystemBase {
         scrollWhite();
         break;
       case INTAKE:
-        scrollAquamarine();
-        break;
-      case CLIMB:
-        gold();
+        scrollPink();
         break;
       case ESTOP:
         rainbow();
         break;
       case ASTOP:
         blink();
+        break;
+      case NONE:
+        switch (state) {
+          case AUTO:
+            // auto(1);
+            break;
+          case TRANSITION:
+          case ACTIVE:
+            active();
+            break;
+          case INACTIVE:
+            inactive();
+            break;
+          case ENDGAME:
+            purple();
+            break;
+          default:
+            break;
+        }
         break;
       default:
         break;

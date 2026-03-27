@@ -164,8 +164,6 @@ public final class Constants {
       SHOOT,
       /** The robot is intaking */
       INTAKE,
-      /** The robot is climbing */
-      CLIMB,
       /** The robot is E Stopped */
       ESTOP,
       /** The robot is A Stopped */
