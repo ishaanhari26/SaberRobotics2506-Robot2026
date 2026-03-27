@@ -141,6 +141,17 @@ public class CommandFactory {
     }
   }
 
+  public static Pose2d translateToRed(Pose2d pose) {
+    if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue) {
+      return new Pose2d(
+          16.54 - pose.getX(),
+          8.02 - pose.getY(),
+          pose.getRotation().rotateBy(new Rotation2d(Math.PI)));
+    } else {
+      return pose;
+    }
+  }
+
   public static double distanceFromHub(Pose2d pose) {
     Pose2d hubPose = getHubPose(DriverStation.getAlliance().orElse(Alliance.Blue));
     return hubPose.getTranslation().getDistance(pose.getTranslation()) * 39.37; // Convert to inches

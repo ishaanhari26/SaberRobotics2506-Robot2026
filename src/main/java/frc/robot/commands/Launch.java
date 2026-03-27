@@ -29,15 +29,15 @@ public class Launch extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    LED.setMode(Constants.LEDConstants.Mode.SHOOT);
-    m_subsystem.runLaunch(Constants.FuelConstants.LaunchSpeed);
+    // LED.setMode(Constants.LEDConstants.Mode.SHOOT);
+    m_subsystem.runLaunch(Constants.FuelConstants.ReverseLaunchSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // if (m_subsystem.getAtSetpoint()) {
-    m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
+    // m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
     // }
   }
 

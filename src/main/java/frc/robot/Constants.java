@@ -76,7 +76,8 @@ public final class Constants {
     public static final double IndexerReverseSpeed = 0.1;
 
     // speeds for intake and feeder motors when launching
-    public static final double LaunchSpeed = -.8;
+    public static final double LaunchSpeed = -0.8;
+    public static final double ReverseLaunchSpeed = 0.8;
     public static final double PassingSpeed = -3000;
     public static double IntakeLaunchSpeedRPM = -3325;
 

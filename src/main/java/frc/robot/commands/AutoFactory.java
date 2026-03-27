@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -16,9 +17,9 @@ public class AutoFactory {
   private Drive drive;
   private FuelSubsystem fuelSubsystem;
 
-  private PIDController translation = new PIDController(5, 0, 0);
-  private PIDController rotation = new PIDController(3, 0, 0);
-  private PIDController crossTrack = new PIDController(3, 0, 0);
+  private PIDController translation = new PIDController(2.53, 0, 0);
+  private PIDController rotation = new PIDController(3.8, 0, 0.25);
+  private PIDController crossTrack = new PIDController(1.03, 0, 0);
 
   private FollowPath.Builder pathBuilder;
 
@@ -26,6 +27,7 @@ public class AutoFactory {
     this.drive = drive;
     this.fuelSubsystem = fuelSubsystem;
 
+    translation.setTolerance(0.1);
     rotation.enableContinuousInput(-Math.PI, Math.PI);
 
     pathBuilder =
@@ -46,6 +48,17 @@ public class AutoFactory {
     drive.setModulePositions(initialDirection);
 
     return Commands.sequence(pathBuilder.build(testPath));
+  }
+
+  public Command newTestAuto() {
+    Path driveForwardPath = new Path("driveForward");
+    Rotation2d initialDirection = driveForwardPath.getInitialModuleDirection();
+    Pose2d initialPose = driveForwardPath.getStartPose();
+    drive.setPose(Drive.onRed() ? CommandFactory.translateToRed(initialPose) : initialPose);
+    drive.setModulePositions(initialDirection);
+
+    // return Commands.sequence(pathBuilder.build(driveForwardPath));
+    return Commands.none();
   }
 
   public Command justShootMiddle() {
