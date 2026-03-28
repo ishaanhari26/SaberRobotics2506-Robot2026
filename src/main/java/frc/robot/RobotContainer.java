@@ -350,8 +350,7 @@ public class RobotContainer {
                     m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh),
                 Commands.run(() -> drivetrain.stopWithX(), drivetrain)))
         .onFalse(new ClearShooter(m_fuelSubsystem).withTimeout(Constants.FuelConstants.ShooterClearTime));
-
-    // m_climbSubsystem.setDefaultCommand(new HoldPosition(m_climbSubsystem, false));
+        
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
