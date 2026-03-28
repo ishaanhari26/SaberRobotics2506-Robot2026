@@ -84,6 +84,8 @@ public final class Constants {
     public static final double LaunchEjectSpeed = 1;
     public static final double LaunchUnjamShooterSpeed = -1;
 
+    public static final double ShooterClearTime = 1;
+
     public static final double ConstantIntakeLaunchSpeedRPM = -3325;
     public static final double ConstantIntakeLaunchSpeedRPMLow = -2800;
     public static final double ConstantIntakeLaunchSpeedRPMMedium = -3325;
