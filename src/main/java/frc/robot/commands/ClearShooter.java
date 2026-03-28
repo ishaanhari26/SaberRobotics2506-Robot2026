@@ -5,23 +5,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.FuelSubsystem;
-import frc.robot.subsystems.LED;
 
 /** An example command that uses an example subsystem. */
-public class FinishLaunch extends Command {
+public class ClearShooter extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
   private final FuelSubsystem m_subsystem;
 
+  private double m_speed;
+  private boolean vision;
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public FinishLaunch(FuelSubsystem subsystem) {
+  public ClearShooter(FuelSubsystem subsystem) {
     m_subsystem = subsystem;
+    vision = true;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -30,21 +31,18 @@ public class FinishLaunch extends Command {
   @Override
   public void initialize() {
     // LED.setMode(Constants.LEDConstants.Mode.SHOOT);
-    m_subsystem.runLaunch(Constants.FuelConstants.LaunchSpeed);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    // if (m_subsystem.getAtSetpoint()) {
-    // m_subsystem.runFeeder(Constants.FuelConstants.FeederLaunchSpeed);
-    // }
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    LED.setMode(Constants.LEDConstants.Mode.NONE);
+    // LED.setMode(Constants.LEDConstants.Mode.NONE);
+    // m_subsystem.finishShooting();
     m_subsystem.stopMotors();
   }
 
