@@ -63,7 +63,7 @@ import frc.robot.subsystems.vision.VisionIOLimelight;
  */
 public class RobotContainer {
   // Subsystems
-  private final Drive drivetrain;
+  public final Drive drivetrain;
   public final Vision aprilTagEstimator;
   private final LED led = new LED();
 
@@ -250,9 +250,7 @@ public class RobotContainer {
         .a()
         .whileTrue(
             DriveCommands.lockedTargetJoystickDrive(
-                drivetrain,
-                () -> xLimiter.calculate(-controller.getLeftY()),
-                () -> yLimiter.calculate(-controller.getLeftX())));
+                drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX()));
 
     // drivetrain.setDefaultCommand(
     //     // Drivetrain will execute this command periodically
@@ -365,7 +363,7 @@ public class RobotContainer {
         .whileTrue(
             new ParallelCommandGroup(
                 new LaunchPID(
-                    m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPM),
+                    m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow),
                 Commands.run(() -> drivetrain.stopWithX(), drivetrain)));
     controller
         .rightTrigger()

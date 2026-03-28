@@ -267,7 +267,7 @@ public class Drive extends SubsystemBase {
     }
 
     Constants.FuelConstants.IntakeLaunchSpeedRPM =
-        -((CommandFactory.distanceFromHub(getPose()) * 17.5) + 1785);
+        -((CommandFactory.distanceFromHub(getPose()) * 17.5) + 1485);
 
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
 

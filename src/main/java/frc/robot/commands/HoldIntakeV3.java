@@ -12,7 +12,7 @@
 // public class HoldIntakeV3 extends Command {
 //   @SuppressWarnings("PMD.UnusedPrivateField")
 //   private final IntakeV3Subsystem m_subsystem;
-// // 
+// //
 //   private boolean reset;
 
 //   /**

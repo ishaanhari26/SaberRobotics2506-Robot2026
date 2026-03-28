@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.lib.BLine.FlippingUtil;
 import frc.robot.lib.BLine.FollowPath;
 import frc.robot.lib.BLine.Path;
 import frc.robot.subsystems.FuelSubsystem;
@@ -17,7 +18,7 @@ public class AutoFactory {
   private Drive drive;
   private FuelSubsystem fuelSubsystem;
 
-  private PIDController translation = new PIDController(2.53, 0, 0);
+  private PIDController translation = new PIDController(2.7, 0, 0);
   private PIDController rotation = new PIDController(3.8, 0, 0.25);
   private PIDController crossTrack = new PIDController(1.03, 0, 0);
 
@@ -53,9 +54,10 @@ public class AutoFactory {
   public Command newTestAuto() {
     Path driveForwardPath = new Path("driveForward");
     Rotation2d initialDirection = driveForwardPath.getInitialModuleDirection();
+    drive.setModulePositions(initialDirection);
+
     Pose2d initialPose = driveForwardPath.getStartPose();
     drive.setPose(Drive.onRed() ? CommandFactory.translateToRed(initialPose) : initialPose);
-    drive.setModulePositions(initialDirection);
 
     // return Commands.sequence(pathBuilder.build(driveForwardPath));
     return Commands.none();
@@ -70,6 +72,9 @@ public class AutoFactory {
     Rotation2d initialDirection = shootMiddlePath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
+    Pose2d initialPose = shootMiddlePath.getStartPose();
+    drive.setPose(Drive.onRed() ? CommandFactory.translateToRed(initialPose) : initialPose);
+
     return Commands.sequence(pathBuilder.build(shootMiddlePath), new LaunchPID(fuelSubsystem));
   }
 
@@ -79,8 +84,12 @@ public class AutoFactory {
     Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
+    Pose2d initialPose = driveNeutralPath.getStartPose();
+    drive.setPose(Drive.onRed() ? FlippingUtil.flipFieldPose(initialPose) : initialPose);
+
     return Commands.sequence(
-        new ParallelCommandGroup(pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem)),
+        new ParallelCommandGroup(
+            pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem).withTimeout(5)),
         pathBuilder.build(driveShootPath),
         DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
         new LaunchPID(fuelSubsystem));

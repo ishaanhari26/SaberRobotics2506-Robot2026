@@ -31,7 +31,7 @@ public final class Constants {
   public static double slowModeMaxSpeed = MaxSpeed * 0.3;
   public static double slowModeMaxAngularRate = MaxAngularRate * 0.3;
 
-  public static boolean slowMode;
+  public static boolean slowMode = false;
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -72,7 +72,7 @@ public final class Constants {
     public static final double FeederEjectSpeed = 1;
 
     // speed for agitator motor
-    public static final double IndexerSpeed = -0.25;
+    public static final double IndexerSpeed = -0.4;
     public static final double IndexerReverseSpeed = 0.1;
 
     // speeds for intake and feeder motors when launching
