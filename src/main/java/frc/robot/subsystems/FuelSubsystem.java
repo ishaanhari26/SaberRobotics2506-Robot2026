@@ -124,8 +124,13 @@ public class FuelSubsystem extends SubsystemBase {
     intakeMotor.set(0);
     feederMotor.set(0);
     ShooterPid.setSetpoint(0);
-
     LaunchMotor.set(0);
+    indexerMotor.set(0);
+  }
+
+  public void stopExceptShooter() {
+    intakeMotor.set(0);
+    feederMotor.set(0);
     indexerMotor.set(0);
   }
 

@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 // import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.AutoFactory;
+import frc.robot.commands.ClearShooter;
 import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.ControllerRumble;
@@ -331,7 +332,8 @@ public class RobotContainer {
             new ParallelCommandGroup(
                 new LaunchPID(
                     m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow),
-                Commands.run(() -> drivetrain.stopWithX(), drivetrain)));
+                Commands.run(() -> drivetrain.stopWithX(), drivetrain)))
+        .onFalse(new ClearShooter(m_fuelSubsystem).withTimeout(6));
     opController
         .y()
         .whileTrue(
