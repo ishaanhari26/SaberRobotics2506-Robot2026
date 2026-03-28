@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -15,6 +18,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.*;
 
 public class FuelSubsystem extends SubsystemBase {
@@ -193,6 +197,18 @@ public class FuelSubsystem extends SubsystemBase {
                 + (LaunchMotor3.getStatorCurrent().getValueAsDouble())
                 + (LaunchMotor4.getStatorCurrent().getValueAsDouble()))
             / 4);
+
+    Logger.recordOutput("FuelSubsystem/IntakeSpeed", intakeMotor.getVelocity().getValueAsDouble());
+  }
+
+  @AutoLogOutput(key="FuelSubsystem/ShooterSetpoint")
+  public double getShooterSetpoint() {
+    return Constants.FuelConstants.IntakeLaunchSpeedRPM;
+  }
+
+  @AutoLogOutput(key="FuelSubsystem/ShooterSpeed")
+  public double getShooterSpeed() {
+    return LaunchMotor.getVelocity().getValueAsDouble();
   }
 
   @Override
