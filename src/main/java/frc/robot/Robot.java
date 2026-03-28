@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -113,27 +112,37 @@ public class Robot extends LoggedRobot {
     Pose2d initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d());
     SmartDashboard.putString("RobotAlliance", DriverStation.getAlliance().get().name());
 
-    if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
+    if (DriverStation.getAlliance().get().name().equals("Red")) {
       switch (autonomousCommand.getName()) {
         case "intakeOutpostAuto":
-          initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
+          initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d());
+          break;
         case "pickupOutpostAuto":
           initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
+          break;
+        default:
         case "neutralAuto":
           initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
+          break;
         case "driveBackAndShootMiddle":
-          initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d(Math.PI));
+          initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d());
+          break;
       }
-    } else if (DriverStation.getAlliance().get() == Alliance.Blue) {
+    } else if (DriverStation.getAlliance().get().name().equals("Blue")) {
       switch (autonomousCommand.getName()) {
         case "intakeOutpostAuto":
-          initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
+          initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d(Math.PI));
+          break;
         case "pickupOutpostAuto":
           initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
+          break;
+        default:
         case "neutralAuto":
           initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
+          break;
         case "driveBackAndShootMiddle":
-          initialAutoPose = new Pose2d(3.601, 4.026, new Rotation2d());
+          initialAutoPose = new Pose2d(3.601, 4.026, new Rotation2d(Math.PI));
+          break;
       }
     }
 

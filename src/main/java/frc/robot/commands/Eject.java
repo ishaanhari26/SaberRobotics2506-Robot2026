@@ -31,6 +31,7 @@ public class Eject extends Command {
     m_subsystem.runIntake(Constants.FuelConstants.IntakeEjectSpeed);
     m_subsystem.runFeeder(Constants.FuelConstants.FeederEjectSpeed);
     m_subsystem.runIndexer(Constants.FuelConstants.IndexerSpeed);
+    m_subsystem.runLaunch(Constants.FuelConstants.LaunchEjectSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

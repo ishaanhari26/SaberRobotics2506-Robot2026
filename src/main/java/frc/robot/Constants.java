@@ -28,8 +28,8 @@ public final class Constants {
       RotationsPerSecond.of(0.75)
           .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-  public static double slowModeMaxSpeed = MaxSpeed * 0.3;
-  public static double slowModeMaxAngularRate = MaxAngularRate * 0.3;
+  public static double slowModeMaxSpeed = MaxSpeed;
+  public static double slowModeMaxAngularRate = MaxAngularRate;
 
   public static boolean slowMode = false;
 
@@ -80,6 +80,9 @@ public final class Constants {
     public static final double ReverseLaunchSpeed = 0.8;
     public static final double PassingSpeed = -3000;
     public static double IntakeLaunchSpeedRPM = -3325;
+
+    public static final double LaunchEjectSpeed = 1;
+    public static final double LaunchUnjamShooterSpeed = -1;
 
     public static final double ConstantIntakeLaunchSpeedRPM = -3325;
     public static final double ConstantIntakeLaunchSpeedRPMLow = -2800;

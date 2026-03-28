@@ -11,7 +11,7 @@ import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.LED;
 
 /** An example command that uses an example subsystem. */
-public class Launch extends Command {
+public class FinishLaunch extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
   private final FuelSubsystem m_subsystem;
 
@@ -20,7 +20,7 @@ public class Launch extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public Launch(FuelSubsystem subsystem) {
+  public FinishLaunch(FuelSubsystem subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);

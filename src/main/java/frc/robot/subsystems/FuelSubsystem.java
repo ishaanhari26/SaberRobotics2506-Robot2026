@@ -126,11 +126,16 @@ public class FuelSubsystem extends SubsystemBase {
     ShooterPid.setSetpoint(0);
 
     LaunchMotor.set(0);
-    // LaunchMotor2.set(0);
-    // LaunchMotor3.set(0);
-    // LaunchMotor4.set(0);
     indexerMotor.set(0);
   }
+
+  // public void finishShooting() {
+  //   intakeMotor.set(0);
+  //   feederMotor.set(0);
+  //   indexerMotor.set(0);
+  //   Commands.run(() -> new WaitCommand(5));
+  //   stopMotors();
+  // }
 
   public void ConfigureMotors() {
     LaunchMotor.setNeutralMode(NeutralModeValue.Coast);

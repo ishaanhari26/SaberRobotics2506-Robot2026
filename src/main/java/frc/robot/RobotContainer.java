@@ -38,6 +38,7 @@ import frc.robot.commands.Eject;
 // import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.LaunchPID;
+import frc.robot.commands.UnjamShooter;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Camera;
 // import frc.robot.subsystems.ClimbSubsystem;
@@ -215,6 +216,7 @@ public class RobotContainer {
     autoChooser.addOption("driveBackAuto", AutoFactory.testAuto());
     autoChooser.addOption("driveForward", AutoFactory.newTestAuto());
     autoChooser.addOption("neutralAuto", AutoFactory.neutralAuto());
+    autoChooser.addOption("neutralAutoHalf", AutoFactory.neutralAutoHalf());
     autoChooser.addOption("intakeOutpostAuto", AutoFactory.intakeAuto());
     autoChooser.addOption("pickupOutpostAuto", AutoFactory.pickupAuto());
     autoChooser.addOption("justShootMiddle", AutoFactory.justShootMiddle());
@@ -350,8 +352,11 @@ public class RobotContainer {
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
     controller.y().whileTrue(new Eject(m_fuelSubsystem));
+    opController.b().whileTrue(new Eject(m_fuelSubsystem));
 
     controller.x().whileTrue(Commands.run(() -> drivetrain.stopWithX(), drivetrain));
+
+    opController.rightStick().whileTrue(new UnjamShooter(m_fuelSubsystem));
 
     opController2
         .a()
