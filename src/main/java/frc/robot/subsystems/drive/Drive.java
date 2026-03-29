@@ -294,6 +294,8 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("Pigeon Roll", getRoll());
     SmartDashboard.putNumber("Pigeon Yaw", getYaw());
 
+    SmartDashboard.putNumber("Rotation", getPose().getRotation().getDegrees());
+
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
   }
