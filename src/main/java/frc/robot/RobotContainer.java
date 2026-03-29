@@ -215,6 +215,7 @@ public class RobotContainer {
 
     autoChooser.setDefaultOption("None", Commands.none());
     autoChooser.addOption("driveBackAuto", AutoFactory.testAuto());
+
     autoChooser.addOption("driveForward", AutoFactory.newTestAuto());
     autoChooser.addOption("neutralAuto", AutoFactory.neutralAuto());
     autoChooser.addOption("neutralAutoHalf", AutoFactory.neutralAutoHalf());
@@ -333,7 +334,9 @@ public class RobotContainer {
                 new LaunchPID(
                     m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow),
                 Commands.run(() -> drivetrain.stopWithX(), drivetrain)))
-        .onFalse(new ClearShooter(m_fuelSubsystem).withTimeout(Constants.FuelConstants.ShooterClearTime));
+        .onFalse(
+            new ClearShooter(m_fuelSubsystem)
+                .withTimeout(Constants.FuelConstants.ShooterClearTime));
     opController
         .y()
         .whileTrue(
@@ -341,7 +344,9 @@ public class RobotContainer {
                 new LaunchPID(
                     m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium),
                 Commands.run(() -> drivetrain.stopWithX(), drivetrain)))
-        .onFalse(new ClearShooter(m_fuelSubsystem).withTimeout(Constants.FuelConstants.ShooterClearTime));
+        .onFalse(
+            new ClearShooter(m_fuelSubsystem)
+                .withTimeout(Constants.FuelConstants.ShooterClearTime));
     opController
         .leftBumper()
         .whileTrue(
@@ -349,8 +354,9 @@ public class RobotContainer {
                 new LaunchPID(
                     m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh),
                 Commands.run(() -> drivetrain.stopWithX(), drivetrain)))
-        .onFalse(new ClearShooter(m_fuelSubsystem).withTimeout(Constants.FuelConstants.ShooterClearTime));
-        
+        .onFalse(
+            new ClearShooter(m_fuelSubsystem)
+                .withTimeout(Constants.FuelConstants.ShooterClearTime));
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
@@ -373,14 +379,18 @@ public class RobotContainer {
                 new LaunchPID(
                     m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow),
                 Commands.run(() -> drivetrain.stopWithX(), drivetrain)))
-        .onFalse(new ClearShooter(m_fuelSubsystem).withTimeout(Constants.FuelConstants.ShooterClearTime));
+        .onFalse(
+            new ClearShooter(m_fuelSubsystem)
+                .withTimeout(Constants.FuelConstants.ShooterClearTime));
     controller
         .rightTrigger()
         .whileTrue(
             new ParallelCommandGroup(
                 new LaunchPID(m_fuelSubsystem),
                 Commands.run(() -> drivetrain.stopWithX(), drivetrain)))
-        .onFalse(new ClearShooter(m_fuelSubsystem).withTimeout(Constants.FuelConstants.ShooterClearTime));
+        .onFalse(
+            new ClearShooter(m_fuelSubsystem)
+                .withTimeout(Constants.FuelConstants.ShooterClearTime));
 
     // controller.povUp().whileTrue(new Unstick(m_fuelSubsystem));
 
