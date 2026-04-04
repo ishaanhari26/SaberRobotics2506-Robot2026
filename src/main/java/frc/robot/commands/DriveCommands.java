@@ -13,6 +13,8 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.*;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -32,12 +34,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 // import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.util.LocationUtils;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
@@ -57,7 +62,7 @@ public class DriveCommands {
           VisionConstants.TURN_ANGLE_KD);
 
   private DriveCommands() {
-    lockedTargetPID.setSetpoint(0);
+    
   }
 
   private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
@@ -113,31 +118,42 @@ public class DriveCommands {
         drive);
   }
 
+  // public static Command lockedTargetJoystickDrive(
+  //     Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier) {
+  //   return Commands.run(
+  //       () -> {
+  //         // Get linear velocity
+  //         Translation2d linearVelocity =
+  //             getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+
+  //         // Convert to field relative speeds & send command
+  //         ChassisSpeeds speeds =
+  //             new ChassisSpeeds(
+  //                 linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+  //                 linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+  //                 Drive.validTargetTags()
+  //                     ? lockedTargetPID.calculate(Drive.getLimelightTargetTX("limelight"))
+  //                     : 0);
+  //         boolean isFlipped =
+  //             DriverStation.getAlliance().isPresent()
+  //                 && DriverStation.getAlliance().get() == Alliance.Red;
+  //         drive.runVelocity(
+  //             ChassisSpeeds.fromFieldRelativeSpeeds(
+  //                 speeds,
+  //                 isFlipped
+  //                     ? drive.getRotation().plus(new Rotation2d(Math.PI))
+  //                     : drive.getRotation()));
+  //       },
+  //       drive);
+  // }
+
   public static Command lockedTargetJoystickDrive(
-      Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier) {
+      Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, Supplier<Translation2d> pose, boolean isBackward) {
     return Commands.run(
         () -> {
-          // Get linear velocity
-          Translation2d linearVelocity =
-              getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
-
-          // Convert to field relative speeds & send command
-          ChassisSpeeds speeds =
-              new ChassisSpeeds(
-                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                  Drive.validTargetTags()
-                      ? lockedTargetPID.calculate(Drive.getLimelightTargetTX("limelight"))
-                      : 0);
-          boolean isFlipped =
-              DriverStation.getAlliance().isPresent()
-                  && DriverStation.getAlliance().get() == Alliance.Red;
-          drive.runVelocity(
-              ChassisSpeeds.fromFieldRelativeSpeeds(
-                  speeds,
-                  isFlipped
-                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                      : drive.getRotation()));
+          joystickDriveAtAngle(drive, xSupplier, ySupplier, () ->
+                LocationUtils.getDirectionToLocation(drive.getPose().getTranslation(), pose.get())
+                    .plus(isBackward ? Rotation2d.k180deg : Rotation2d.kZero));
         },
         drive);
   }

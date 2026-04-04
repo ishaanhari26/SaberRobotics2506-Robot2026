@@ -93,7 +93,7 @@ public class AutoFactory {
             pathBuilder.build(driveNeutralPath).withTimeout(6),
             new Intake(fuelSubsystem).withTimeout(6)),
         pathBuilder.build(driveShootPath).withTimeout(5),
-        DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
+        // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem));
   }
 
@@ -113,7 +113,7 @@ public class AutoFactory {
             new Intake(fuelSubsystem).withTimeout(6)),
         Commands.run(() -> drive.setModulePositions(shootPathDirection)),
         pathBuilder.build(driveShootPath).withTimeout(6),
-        DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
+        // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem));
   }
 
@@ -128,7 +128,7 @@ public class AutoFactory {
             pathBuilder.build(driveIntakePath).withTimeout(3),
             new Intake(fuelSubsystem).withTimeout(3)),
         pathBuilder.build(intakeShootPath).withTimeout(3),
-        DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
+        // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
         new LaunchPID(fuelSubsystem));
   }
 
@@ -142,7 +142,7 @@ public class AutoFactory {
         pathBuilder.build(outpostPath).withTimeout(3),
         new WaitCommand(3),
         pathBuilder.build(outpostShootPath).withTimeout(3),
-        DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
+        // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
         new LaunchPID(fuelSubsystem));
   }
 
