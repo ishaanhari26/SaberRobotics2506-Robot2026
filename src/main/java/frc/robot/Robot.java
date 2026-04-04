@@ -109,7 +109,7 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
-    Pose2d initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d());
+    Pose2d initialAutoPose = new Pose2d();
     SmartDashboard.putString("RobotAlliance", DriverStation.getAlliance().get().name());
 
     if (DriverStation.getAlliance().get().name().equals("Red")) {
@@ -120,13 +120,20 @@ public class Robot extends LoggedRobot {
         case "pickupOutpostAuto":
           initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
           break;
-        default:
         case "neutralAuto":
+          initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
+          break;
+        case "neutralAutoHalf":
           initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
           break;
         case "driveBackAndShootMiddle":
           initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d());
           break;
+        case "justShootMiddle":
+          initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d());
+          break;
+        default:
+          initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
       }
     } else if (DriverStation.getAlliance().get().name().equals("Blue")) {
       switch (autonomousCommand.getName()) {
@@ -136,13 +143,20 @@ public class Robot extends LoggedRobot {
         case "pickupOutpostAuto":
           initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
           break;
-        default:
         case "neutralAuto":
+          initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
+          break;
+        case "neutralAutoHalf":
           initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
           break;
         case "driveBackAndShootMiddle":
           initialAutoPose = new Pose2d(3.601, 4.026, new Rotation2d(Math.PI));
           break;
+        case "justShootMiddle":
+          initialAutoPose = new Pose2d(3.601, 4.026, new Rotation2d(Math.PI));
+          break;
+        default:
+          initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
       }
     }
 
