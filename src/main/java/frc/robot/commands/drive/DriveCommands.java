@@ -11,12 +11,11 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,16 +32,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 // import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.vision.VisionConstants;
-import frc.robot.util.LocationUtils;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
@@ -55,17 +50,7 @@ public class DriveCommands {
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
-  private static final PIDController lockedTargetPID =
-      new PIDController(
-          VisionConstants.TURN_ANGLE_KP,
-          VisionConstants.TURN_ANGLE_KI,
-          VisionConstants.TURN_ANGLE_KD);
-
-  private DriveCommands() {
-    
-  }
-
-  private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
+  public static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
     // Apply deadband
     double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DEADBAND);
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
@@ -146,17 +131,6 @@ public class DriveCommands {
   //       },
   //       drive);
   // }
-
-  public static Command lockedTargetJoystickDrive(
-      Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, Supplier<Translation2d> pose, boolean isBackward) {
-    return Commands.run(
-        () -> {
-          joystickDriveAtAngle(drive, xSupplier, ySupplier, () ->
-                LocationUtils.getDirectionToLocation(drive.getPose().getTranslation(), pose.get())
-                    .plus(isBackward ? Rotation2d.k180deg : Rotation2d.kZero));
-        },
-        drive);
-  }
 
   /**
    * Field relative drive command using joystick for linear control and PID for angular control.

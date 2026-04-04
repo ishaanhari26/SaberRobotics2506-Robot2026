@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
 
@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.subsystems.drive.Drive;
 import java.util.function.Function;
 import org.littletonrobotics.junction.Logger;
 
@@ -158,11 +159,9 @@ public class CommandFactory {
   }
 
   public static double getHubAngleOffsetRadians(Pose2d pose) {
-    Pose2d blueHubPose = getHubPose(Alliance.Blue);
-    Pose2d transPose = translateToBlue(pose);
-    double angleToHub =
-        Math.atan2(blueHubPose.getY() - transPose.getY(), blueHubPose.getX() - transPose.getX());
-    return MathUtil.angleModulus(angleToHub - transPose.getRotation().getRadians());
+    Pose2d hubPose = getHubPose(Drive.onRed() ? Alliance.Red : Alliance.Blue);
+    double angleToHub = Math.atan2(hubPose.getY() - pose.getY(), hubPose.getX() - pose.getX());
+    return MathUtil.angleModulus(angleToHub - pose.getRotation().getRadians());
   }
 
   // public static double getHubAngleOffsetRadians(Pose2d pose) {

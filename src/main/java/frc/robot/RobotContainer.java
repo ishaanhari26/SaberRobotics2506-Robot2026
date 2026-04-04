@@ -27,19 +27,19 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-// import frc.robot.commands.AutoAim;
-import frc.robot.commands.AutoAlignCommand;
-import frc.robot.commands.AutoFactory;
 import frc.robot.commands.ClearShooter;
-import frc.robot.commands.CommandFactory;
 // import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.ControllerRumble;
-import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Eject;
 // import frc.robot.commands.HoldPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.LaunchPID;
 import frc.robot.commands.UnjamShooter;
+import frc.robot.commands.drive.AutoAlignCommand;
+import frc.robot.commands.drive.AutoFactory;
+import frc.robot.commands.drive.CommandFactory;
+import frc.robot.commands.drive.DriveCommands;
+import frc.robot.commands.drive.LockedTargetCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Camera;
 // import frc.robot.subsystems.ClimbSubsystem;
@@ -195,7 +195,7 @@ public class RobotContainer {
     //     new AutoAlignCommand(CommandFactory.getTargetPositionFunction(0.5969), drivetrain));
     NamedCommands.registerCommand(
         "Targeting",
-        DriveCommands.lockedTargetJoystickDrive(drivetrain, () -> 0.0, () -> 0.0).withTimeout(2));
+        new LockedTargetCommand(drivetrain, () -> 0.0, () -> 0.0, false).withTimeout(2));
     NamedCommands.registerCommand(
         "ShooterLow",
         new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow));
@@ -253,8 +253,8 @@ public class RobotContainer {
     controller
         .a()
         .whileTrue(
-            DriveCommands.lockedTargetJoystickDrive(
-                drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX()));
+            new LockedTargetCommand(
+                drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX(), false));
 
     // drivetrain.setDefaultCommand(
     //     // Drivetrain will execute this command periodically
