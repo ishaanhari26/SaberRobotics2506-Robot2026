@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.DoubleSupplier;
@@ -70,7 +72,6 @@ public class DriveAngleCommand extends Command {
 
     // If not moving and at desired angle
     if (linearVelocity.getX() == 0 && linearVelocity.getY() == 0 && angleController.atSetpoint()) {
-      drive.stopWithX();
       angleController.setTolerance(ADJUSTMENT_TOLERANCE.getRadians());
       return;
     }
@@ -82,10 +83,13 @@ public class DriveAngleCommand extends Command {
             linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
             linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
             omega);
+    boolean isFlipped =
+              DriverStation.getAlliance().isPresent()
+                  && DriverStation.getAlliance().get() == Alliance.Red;
     drive.runVelocity(
         ChassisSpeeds.fromFieldRelativeSpeeds(
             speeds,
-            Drive.onRed()
+            isFlipped
                 ? drive.getRotation().plus(new Rotation2d(Math.PI))
                 : drive.getRotation()));
   }

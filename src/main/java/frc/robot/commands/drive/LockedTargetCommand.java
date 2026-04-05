@@ -9,23 +9,10 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LocationUtils;
 import java.util.function.DoubleSupplier;
 
-/**
- * Command that drives at a target angle while allowing joystick control of linear movement. Locks
- * the robot's heading to face a target pose, accounting for backward orientation if needed.
- */
 public class LockedTargetCommand extends Command {
 
   private final DriveAngleCommand lockedTargetCommand;
 
-  /**
-   * Creates a LockedTarget command.
-   *
-   * @param drive The drive subsystem
-   * @param xSupplier Joystick X input (left/right)
-   * @param ySupplier Joystick Y input (forward/backward)
-   * @param pose Supplier providing the target pose to lock onto
-   * @param isBackward If true, aims at the target backwards (adds 180°)
-   */
   public LockedTargetCommand(
       Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, boolean isBackward) {
 
@@ -54,23 +41,12 @@ public class LockedTargetCommand extends Command {
     lockedTargetCommand.execute();
   }
 
-  /** Resets the internal PID controller for the aiming system. */
   public void resetPID() {
     lockedTargetCommand.resetPID();
   }
 
-  /**
-   * Gets the current PID output for the angle control.
-   *
-   * @param flipped If true, inverts the target angle by 180°
-   * @return The angular velocity output from the PID controller
-   */
   public double getPIDOutput(boolean flipped) {
     return lockedTargetCommand.getPIDOutput(flipped);
-  }
-
-  public Translation2d getTargetPose() {
-    return CommandFactory.getHubPose(Alliance.Blue).getTranslation();
   }
 
   // Called once the command ends or is interrupted.
