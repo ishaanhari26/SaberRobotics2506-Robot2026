@@ -70,12 +70,12 @@ public class DriveAngleCommand extends Command {
     // Calculate angular speed
     double omega = getPIDOutput(false);
 
-    // If not moving and at desired angle
+    // Adjust tolerance based on movement state
     if (linearVelocity.getX() == 0 && linearVelocity.getY() == 0 && angleController.atSetpoint()) {
       angleController.setTolerance(ADJUSTMENT_TOLERANCE.getRadians());
-      return;
+    } else {
+      angleController.setTolerance(INITIAL_TOLERANCE.getRadians());
     }
-    angleController.setTolerance(INITIAL_TOLERANCE.getRadians());
 
     // Convert to field relative speeds & send command
     ChassisSpeeds speeds =
@@ -109,5 +109,17 @@ public class DriveAngleCommand extends Command {
         flipped
             ? rotationSupplier.get().getRadians() + Math.PI
             : rotationSupplier.get().getRadians());
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    // Stop the drive when command ends
+    drive.stop();
+  }
+
+  @Override
+  public boolean isFinished() {
+    // Command never finishes on its own (continuous command)
+    return false;
   }
 }

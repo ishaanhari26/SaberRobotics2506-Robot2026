@@ -27,6 +27,9 @@ public class LockedTargetCommand extends Command {
                         CommandFactory.getHubPose(DriverStation.getAlliance().orElse(Alliance.Blue))
                             .getTranslation())
                     .plus(isBackward ? Rotation2d.k180deg : Rotation2d.kZero));
+
+    // Declare subsystem requirement
+    addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
@@ -58,6 +61,6 @@ public class LockedTargetCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return lockedTargetCommand.isFinished();
   }
 }
