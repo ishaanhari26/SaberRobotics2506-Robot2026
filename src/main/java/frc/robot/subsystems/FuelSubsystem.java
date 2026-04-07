@@ -104,6 +104,12 @@ public class FuelSubsystem extends SubsystemBase {
     LaunchMotor.set(speed);
   }
 
+  public void runLaunchRPM(double speed) {
+    ConfigureMotors();
+
+    LaunchMotor.set(speed / 6380);
+  }
+
   public void runIndexer(double speed) {
     indexerMotor.set(speed);
   }
@@ -135,6 +141,14 @@ public class FuelSubsystem extends SubsystemBase {
     intakeMotor.set(0);
     feederMotor.set(0);
     indexerMotor.set(0);
+  }
+
+  public void spoolWhileActive() {
+    if (LED.getPeriod().equals(Constants.LEDConstants.Period.ACTIVE)) {
+      runLaunchRPM(Constants.FuelConstants.SpoolWhileActiveSpeed);
+    } else {
+      stopMotors();
+    }
   }
 
   // public void finishShooting() {
