@@ -63,7 +63,7 @@ public class AutoFactory {
   }
 
   public Command justShootMiddle() {
-    return Commands.sequence(new LaunchPID(fuelSubsystem));
+    return Commands.sequence(new LaunchPID(fuelSubsystem, false));
   }
 
   public Command driveBackShootMiddle() {
@@ -72,7 +72,7 @@ public class AutoFactory {
     drive.setModulePositions(initialDirection);
 
     return Commands.sequence(
-        pathBuilder.build(shootMiddlePath), new LaunchPID(fuelSubsystem));
+        pathBuilder.build(shootMiddlePath), new LaunchPID(fuelSubsystem, false));
   }
 
   public Command neutralAuto() {
@@ -87,7 +87,7 @@ public class AutoFactory {
             new Intake(fuelSubsystem).withTimeout(6)),
         pathBuilder.build(driveShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
-        new LaunchPID(fuelSubsystem));
+        new LaunchPID(fuelSubsystem, false));
   }
 
   public Command neutralAutoHalf() {
@@ -104,7 +104,7 @@ public class AutoFactory {
         Commands.run(() -> drive.setModulePositions(shootPathDirection)),
         pathBuilder.build(driveShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
-        new LaunchPID(fuelSubsystem));
+        new LaunchPID(fuelSubsystem, false));
   }
 
   public Command intakeAuto() {
@@ -119,7 +119,7 @@ public class AutoFactory {
             new Intake(fuelSubsystem).withTimeout(3)),
         pathBuilder.build(intakeShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
-        new LaunchPID(fuelSubsystem));
+        new LaunchPID(fuelSubsystem, false));
   }
 
   public Command pickupAuto() {
@@ -133,7 +133,7 @@ public class AutoFactory {
         new WaitCommand(3),
         pathBuilder.build(outpostShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
-        new LaunchPID(fuelSubsystem));
+        new LaunchPID(fuelSubsystem, false));
   }
 
   public void periodic() {

@@ -168,6 +168,7 @@ public class CommandFactory {
     return aimPoint;
   }
 
+  // y = (1/2 * g * t^2) + (v * sin(theta) * t) + deltaY
   public static double timeOfFlightSeconds(Distance distance) {
     double rpm = interpolateRPM(distance);
     double exitVelocity = rpm * Math.PI * 0.1016 / 60.0;

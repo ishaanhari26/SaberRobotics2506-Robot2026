@@ -4,7 +4,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.commands.fuelsubsystem.LaunchPID;
+import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LocationUtils;
 import java.util.function.DoubleSupplier;
@@ -14,13 +17,16 @@ public class ShootOnTheMoveCommand extends Command {
 
   private final DriveAngleCommand driveAngleCommand;
   private Drive drive;
+  private FuelSubsystem fuelSubsystem;
 
   public ShootOnTheMoveCommand(
       Drive drive,
+      FuelSubsystem fuelSubsystem,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       boolean isBackward) {
     this.drive = drive;
+    this.fuelSubsystem = fuelSubsystem;
 
     driveAngleCommand =
         new DriveAngleCommand(
@@ -45,6 +51,7 @@ public class ShootOnTheMoveCommand extends Command {
   @Override
   public void execute() {
     driveAngleCommand.execute();
+    CommandScheduler.getInstance().schedule(new LaunchPID(fuelSubsystem, true));
   }
 
   public Supplier<Translation2d> getTargetSupplier() {
@@ -68,6 +75,7 @@ public class ShootOnTheMoveCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     driveAngleCommand.end(interrupted);
+    fuelSubsystem.stopExceptShooter();
   }
 
   // Returns true when the command should end.
