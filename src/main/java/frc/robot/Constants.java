@@ -115,6 +115,8 @@ public final class Constants {
     public static final double LaunchkP = 2.75; // 1.2
     public static final double LaunchkI = 0;
     public static final double LaunchkD = 0.001; // 0.002
+
+    public static final double SpoolWhileActiveSpeed = -1500;
   }
   /** Constants for the LED subsytem. */
   public static final class LEDConstants {

@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 // import frc.robot.commands.AutoAlignCommand;
@@ -249,11 +248,14 @@ public class RobotContainer {
 
     // controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
+    m_fuelSubsystem.setDefaultCommand(
+        Commands.run(() -> m_fuelSubsystem.spoolWhileActive(), m_fuelSubsystem));
+
     controller
         .a()
         .whileTrue(
             new LockedTargetCommand(
-                drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX(), false));
+                drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX(), true));
 
     // drivetrain.setDefaultCommand(
     //     // Drivetrain will execute this command periodically
@@ -329,33 +331,28 @@ public class RobotContainer {
     opController
         .x()
         .whileTrue(
-            new ParallelCommandGroup(
-                new LaunchPID(
-                    m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow),
-                Commands.runOnce(() -> drivetrain.stopWithX(), drivetrain)))
+            new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow))
         .onFalse(
             new ClearShooter(m_fuelSubsystem)
                 .withTimeout(Constants.FuelConstants.ShooterClearTime));
     opController
         .y()
         .whileTrue(
-            new ParallelCommandGroup(
-                new LaunchPID(
-                    m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium),
-                Commands.runOnce(() -> drivetrain.stopWithX(), drivetrain)))
+            new LaunchPID(
+                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMMedium))
         .onFalse(
             new ClearShooter(m_fuelSubsystem)
                 .withTimeout(Constants.FuelConstants.ShooterClearTime));
     opController
         .leftBumper()
         .whileTrue(
-            new ParallelCommandGroup(
-                new LaunchPID(
-                    m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh),
-                Commands.runOnce(() -> drivetrain.stopWithX(), drivetrain)))
+            new LaunchPID(
+                m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMHigh))
         .onFalse(
             new ClearShooter(m_fuelSubsystem)
                 .withTimeout(Constants.FuelConstants.ShooterClearTime));
+
+    opController.rightBumper().whileTrue(Commands.runOnce(() -> drivetrain.stopWithX()));
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
@@ -374,19 +371,13 @@ public class RobotContainer {
     controller
         .rightBumper()
         .whileTrue(
-            new ParallelCommandGroup(
-                new LaunchPID(
-                    m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow),
-                Commands.runOnce(() -> drivetrain.stopWithX(), drivetrain)))
+            new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow))
         .onFalse(
             new ClearShooter(m_fuelSubsystem)
                 .withTimeout(Constants.FuelConstants.ShooterClearTime));
     controller
         .rightTrigger()
-        .whileTrue(
-            new ParallelCommandGroup(
-                new LaunchPID(m_fuelSubsystem),
-                Commands.runOnce(() -> drivetrain.stopWithX(), drivetrain)))
+        .whileTrue(new LaunchPID(m_fuelSubsystem))
         .onFalse(
             new ClearShooter(m_fuelSubsystem)
                 .withTimeout(Constants.FuelConstants.ShooterClearTime));
