@@ -80,6 +80,7 @@ public final class Constants {
     public static final double ReverseLaunchSpeed = 0.8;
     public static final double PassingSpeed = -3000;
     public static double IntakeLaunchSpeedRPM = -3325;
+    public static double MovingLaunchSpeedRPM = -3325;
 
     public static final double LaunchEjectSpeed = 1;
     public static final double LaunchUnjamShooterSpeed = -1;

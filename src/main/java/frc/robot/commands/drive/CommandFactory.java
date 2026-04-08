@@ -1,16 +1,21 @@
 package frc.robot.commands.drive;
 
+import static edu.wpi.first.units.Units.*;
 import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.LocationUtils;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class CommandFactory {
@@ -34,6 +39,8 @@ public class CommandFactory {
   public static final double[] validTargets = {10, 26};
 
   private static int[] targetIds;
+
+  public static Translation2d aimPoint = new Translation2d();
 
   // public static int closestTag = 0;
 
@@ -158,22 +165,54 @@ public class CommandFactory {
     return hubPose.getTranslation().getDistance(pose.getTranslation()) * 39.37; // Convert to inches
   }
 
-  public static double getHubAngleOffsetRadians(Pose2d pose) {
-    Pose2d hubPose = getHubPose(Drive.onRed() ? Alliance.Red : Alliance.Blue);
-    double angleToHub = Math.atan2(hubPose.getY() - pose.getY(), hubPose.getX() - pose.getX());
-    return MathUtil.angleModulus(angleToHub - pose.getRotation().getRadians());
+  public static Translation2d calculateLeadTarget(Drive drive, Supplier<Translation2d> target) {
+    Translation2d robotPos = drive.getPose().getTranslation();
+    Translation2d targetPos = target.get();
+
+    ChassisSpeeds fieldSpeeds =
+        ChassisSpeeds.fromRobotRelativeSpeeds(drive.getChassisSpeeds(), drive.getRotation());
+    Translation2d velocityVec =
+        new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
+
+    Distance distance = LocationUtils.getDistanceToLocation(robotPos, targetPos);
+    double timeOfFlight = timeOfFlight(distance);
+
+    for (int i = 0; i < 20; i++) {
+
+      Translation2d motionOffset = velocityVec.times(timeOfFlight);
+
+      aimPoint = targetPos.minus(motionOffset);
+
+      Distance newDistance = LocationUtils.getDistanceToLocation(aimPoint, robotPos);
+      timeOfFlight = timeOfFlight(newDistance);
+    }
+
+    return aimPoint;
   }
 
-  // public static double getHubAngleOffsetRadians(Pose2d pose) {
-  //   Pose2d translatedPose = translateToBlue(pose);
-  //   Rotation2d angleToHub =
-  //       getHubPose(Alliance.Blue)
-  //           .getTranslation()
-  //           .minus(translatedPose.getTranslation())
-  //           .getAngle();
+  public static double timeOfFlight(Distance distance) {
+    double rpm = interpolateRPM(distance);
+    double exitVelocity = rpm * Math.PI * 0.1016 / 60.0;
+    double vy = exitVelocity * Math.sin(Math.toRadians(68));
+    double deltaY = 1.401;
 
-  //   return MathUtil.angleModulus(angleToHub.minus(translatedPose.getRotation()).getRadians());
-  // }
+    double a = 4.905;
+    double b = -vy;
+    double c = deltaY;
+
+    double discriminant = b * b - 4 * a * c;
+    double t = (-b + Math.sqrt(discriminant)) / (2 * a);
+    return t;
+  }
+
+  public static double interpolateRPM(Distance distance) {
+    double distanceInches = distance.in(Inches);
+    return 17.5 * distanceInches + 1785;
+  }
+
+  public static Translation2d getAimPoint() {
+    return aimPoint;
+  }
 
   public static Function<Pose2d, Pose2d> driveToPoseFunction(
       double x, double y, Rotation2d rotation) {

@@ -61,6 +61,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.LocationUtils;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.DoubleStream;
@@ -123,6 +124,7 @@ public class Drive extends SubsystemBase {
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
   public PIDController turnAnglePID;
+  private double newShooterSpeed;
 
   private static Field2d field = new Field2d();
 
@@ -269,6 +271,13 @@ public class Drive extends SubsystemBase {
     Constants.FuelConstants.IntakeLaunchSpeedRPM =
         -((CommandFactory.distanceFromHub(getPose()) * 17.5) + 1485);
 
+    newShooterSpeed =
+        CommandFactory.interpolateRPM(
+            LocationUtils.getDistanceToLocation(
+                getPose().getTranslation(),
+                CommandFactory.getAimPoint()));
+    Constants.FuelConstants.MovingLaunchSpeedRPM = -newShooterSpeed;
+
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
 
     SmartDashboard.putBoolean(
@@ -279,7 +288,7 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());
 
-    SmartDashboard.putNumber("angleOffset", CommandFactory.getHubAngleOffsetRadians(getPose()));
+    // SmartDashboard.putNumber("angleOffset", CommandFactory.getHubAngleRadians(getPose()));
 
     SmartDashboard.putNumber("LimelightTX", getLimelightTargetTX("limelight"));
 

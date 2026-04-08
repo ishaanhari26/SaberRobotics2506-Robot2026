@@ -84,14 +84,12 @@ public class DriveAngleCommand extends Command {
             linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
             omega);
     boolean isFlipped =
-              DriverStation.getAlliance().isPresent()
-                  && DriverStation.getAlliance().get() == Alliance.Red;
+        DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Red;
     drive.runVelocity(
         ChassisSpeeds.fromFieldRelativeSpeeds(
             speeds,
-            isFlipped
-                ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                : drive.getRotation()));
+            isFlipped ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()));
   }
 
   public void resetPID() {
