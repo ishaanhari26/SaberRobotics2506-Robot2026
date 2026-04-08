@@ -3,13 +3,14 @@ package frc.robot.commands.drive;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LocationUtils;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-public class ShootOnTheMoveCommand extends ParallelCommandGroup {
+public class ShootOnTheMoveCommand extends Command {
 
   private final DriveAngleCommand driveAngleCommand;
   private Drive drive;
@@ -32,7 +33,19 @@ public class ShootOnTheMoveCommand extends ParallelCommandGroup {
                         drive.getPose().getTranslation(), getTargetSupplier().get())
                     .plus(isBackward ? Rotation2d.k180deg : Rotation2d.kZero));
 
-    addCommands(driveAngleCommand);
+    addRequirements(drive);
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    driveAngleCommand.initialize();
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    driveAngleCommand.execute();
   }
 
   public Supplier<Translation2d> getTargetSupplier() {
@@ -50,5 +63,17 @@ public class ShootOnTheMoveCommand extends ParallelCommandGroup {
 
   public double getPIDOutput(boolean flipped) {
     return driveAngleCommand.getPIDOutput(flipped);
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    driveAngleCommand.end(interrupted);
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return driveAngleCommand.isFinished();
   }
 }
