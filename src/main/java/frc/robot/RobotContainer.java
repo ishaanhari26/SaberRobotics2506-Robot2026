@@ -212,10 +212,10 @@ public class RobotContainer {
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser = new SendableChooser<>();
 
-    autoChooser.setDefaultOption("None", "none");
+    autoChooser.setDefaultOption("None", "None");
     // autoChooser.addOption("driveBackAuto", AutoFactory.testAuto());
 
-    // autoChooser.addOption("driveForward", AutoFactory.newTestAuto());
+    autoChooser.addOption("driveForward", "driveForward");
     autoChooser.addOption("neutralAuto", "neutralAuto");
     autoChooser.addOption("neutralAutoHalf", "neutralAutoHalf");
     autoChooser.addOption("intakeOutpostAuto", "intakeOutpostAuto");
@@ -490,6 +490,32 @@ public class RobotContainer {
       default:
         return Commands.none();
     }
+    switch(autoChooser.getSelected()) {
+        case "None":
+            return Commands.none();
+        case "driveBackAuto":
+            return AutoFactory.testAuto();
+        case "driveForward":
+            return AutoFactory.newTestAuto();
+        case "neutralAuto":
+            return AutoFactory.neutralAuto();
+        case "neutralAutoHalf":
+            return AutoFactory.neutralAutoHalf();
+        case "intakeOutpostAuto":
+            return AutoFactory.intakeAuto();
+        case "pickupOutpostAuto":
+            return AutoFactory.pickupAuto();
+        case "justShootMiddle":
+            return AutoFactory.justShootMiddle();
+        case "driveBackAndShootMiddle":
+            return AutoFactory.driveBackShootMiddle();
+        default:
+            return Commands.none();
+    }
+  }
+
+  public String getAutonomousName() {
+    return autoChooser.getSelected();
   }
 
   public Command getAutoAlignCommand() {
