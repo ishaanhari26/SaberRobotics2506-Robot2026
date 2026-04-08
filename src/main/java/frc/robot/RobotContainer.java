@@ -180,7 +180,7 @@ public class RobotContainer {
     AutoFactory = new AutoFactory(drivetrain, m_fuelSubsystem);
 
     NamedCommands.registerCommand(
-        "Launch", new LaunchPID(m_fuelSubsystem, false).withTimeout(Constants.AutoConstants.launchTime));
+        "Launch", new LaunchPID(m_fuelSubsystem).withTimeout(Constants.AutoConstants.launchTime));
     NamedCommands.registerCommand(
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
     NamedCommands.registerCommand(
@@ -377,7 +377,7 @@ public class RobotContainer {
                 .withTimeout(Constants.FuelConstants.ShooterClearTime));
     controller
         .rightTrigger()
-        .whileTrue(new LaunchPID(m_fuelSubsystem, false))
+        .whileTrue(new LaunchPID(m_fuelSubsystem))
         .onFalse(
             new ClearShooter(m_fuelSubsystem)
                 .withTimeout(Constants.FuelConstants.ShooterClearTime));

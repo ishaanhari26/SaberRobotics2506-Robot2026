@@ -274,8 +274,7 @@ public class Drive extends SubsystemBase {
     newShooterSpeed =
         CommandFactory.interpolateRPM(
             LocationUtils.getDistanceToLocation(
-                getPose().getTranslation(),
-                CommandFactory.getAimPoint()));
+                getPose().getTranslation(), CommandFactory.getAimPoint()));
     Constants.FuelConstants.MovingLaunchSpeedRPM = -newShooterSpeed;
 
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
