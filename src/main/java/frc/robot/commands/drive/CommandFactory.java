@@ -40,7 +40,7 @@ public class CommandFactory {
 
   private static int[] targetIds;
 
-  public static Translation2d targetPoint = new Translation2d();
+  public static Translation2d aimPoint = new Translation2d();
 
   // public static int closestTag = 0;
 
@@ -154,7 +154,6 @@ public class CommandFactory {
 
     Distance distance = LocationUtils.getDistanceToLocation(robotPos, targetPos);
     double timeOfFlight = timeOfFlightSeconds(distance);
-    Translation2d aimPoint = new Translation2d();
 
     for (int i = 0; i < 20; i++) {
 
@@ -166,9 +165,6 @@ public class CommandFactory {
       timeOfFlight = timeOfFlightSeconds(newDistance);
     }
 
-    Logger.recordOutput("ShootOnTheMove/Target", new Pose2d(aimPoint, Rotation2d.kZero));
-    targetPoint = aimPoint;
-    
     return aimPoint;
   }
 
@@ -194,7 +190,7 @@ public class CommandFactory {
   }
 
   public static Translation2d getAimPoint() {
-    return targetPoint;
+    return aimPoint;
   }
 
   public static Function<Pose2d, Pose2d> driveToPoseFunction(
