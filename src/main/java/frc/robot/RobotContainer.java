@@ -111,7 +111,7 @@ public class RobotContainer {
   // Dashboard inputs
   //   private final LoggedDashboardChooser<Command> autoChooser;
   //   private final LoggedDashboardChooser<Command> autoChooser;
-  private final SendableChooser<Command> autoChooser;
+  public final SendableChooser<String> autoChooser;
 
   private final AutoFactory AutoFactory;
 
@@ -180,7 +180,8 @@ public class RobotContainer {
     AutoFactory = new AutoFactory(drivetrain, m_fuelSubsystem);
 
     NamedCommands.registerCommand(
-        "Launch", new LaunchPID(m_fuelSubsystem, false).withTimeout(Constants.AutoConstants.launchTime));
+        "Launch",
+        new LaunchPID(m_fuelSubsystem, false).withTimeout(Constants.AutoConstants.launchTime));
     NamedCommands.registerCommand(
         "Intake", new Intake(m_fuelSubsystem).withTimeout(Constants.AutoConstants.intakeTime));
     NamedCommands.registerCommand(
@@ -211,16 +212,16 @@ public class RobotContainer {
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser = new SendableChooser<>();
 
-    autoChooser.setDefaultOption("None", Commands.none());
-    autoChooser.addOption("driveBackAuto", AutoFactory.testAuto());
+    autoChooser.setDefaultOption("None", "none");
+    // autoChooser.addOption("driveBackAuto", AutoFactory.testAuto());
 
-    autoChooser.addOption("driveForward", AutoFactory.newTestAuto());
-    autoChooser.addOption("neutralAuto", AutoFactory.neutralAuto());
-    autoChooser.addOption("neutralAutoHalf", AutoFactory.neutralAutoHalf());
-    autoChooser.addOption("intakeOutpostAuto", AutoFactory.intakeAuto());
-    autoChooser.addOption("pickupOutpostAuto", AutoFactory.pickupAuto());
-    autoChooser.addOption("justShootMiddle", AutoFactory.justShootMiddle());
-    autoChooser.addOption("driveBackAndShootMiddle", AutoFactory.driveBackShootMiddle());
+    // autoChooser.addOption("driveForward", AutoFactory.newTestAuto());
+    autoChooser.addOption("neutralAuto", "neutralAuto");
+    autoChooser.addOption("neutralAutoHalf", "neutralAutoHalf");
+    autoChooser.addOption("intakeOutpostAuto", "intakeOutpostAuto");
+    autoChooser.addOption("pickupOutpostAuto", "pickupOutpostAuto");
+    autoChooser.addOption("justShootMiddle", "justShootMiddle");
+    autoChooser.addOption("driveBackAndShootMiddle", "driveBackAndShootMiddle");
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -481,7 +482,14 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    switch (autoChooser.getSelected()) {
+      case "neutralAuto":
+        return AutoFactory.neutralAuto();
+      case "neutralAutoHalf":
+        return AutoFactory.neutralAutoHalf();
+      default:
+        return Commands.none();
+    }
   }
 
   public Command getAutoAlignCommand() {

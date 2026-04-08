@@ -1,7 +1,6 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -9,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.fuelsubsystem.Intake;
 import frc.robot.commands.fuelsubsystem.LaunchPID;
-import frc.robot.lib.BLine.FlippingUtil;
 import frc.robot.lib.BLine.FollowPath;
 import frc.robot.lib.BLine.Path;
 import frc.robot.subsystems.FuelSubsystem;
@@ -83,8 +81,7 @@ public class AutoFactory {
 
     return Commands.sequence(
         new ParallelCommandGroup(
-            pathBuilder.build(driveNeutralPath),
-            new Intake(fuelSubsystem).withTimeout(6)),
+            pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem).withTimeout(6)),
         pathBuilder.build(driveShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem, false));
@@ -99,8 +96,7 @@ public class AutoFactory {
 
     return Commands.sequence(
         new ParallelCommandGroup(
-            pathBuilder.build(driveNeutralPath),
-            new Intake(fuelSubsystem).withTimeout(6)),
+            pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem).withTimeout(6)),
         Commands.run(() -> drive.setModulePositions(shootPathDirection)),
         pathBuilder.build(driveShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
@@ -115,8 +111,7 @@ public class AutoFactory {
 
     return Commands.sequence(
         new ParallelCommandGroup(
-            pathBuilder.build(driveIntakePath),
-            new Intake(fuelSubsystem).withTimeout(3)),
+            pathBuilder.build(driveIntakePath), new Intake(fuelSubsystem).withTimeout(3)),
         pathBuilder.build(intakeShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
         new LaunchPID(fuelSubsystem, false));

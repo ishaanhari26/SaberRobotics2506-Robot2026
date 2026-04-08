@@ -113,7 +113,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putString("RobotAlliance", DriverStation.getAlliance().get().name());
 
     if (DriverStation.getAlliance().get().name().equals("Red")) {
-      switch (autonomousCommand.getName()) {
+      switch (robotContainer.autoChooser.getSelected()) {
         case "intakeOutpostAuto":
           initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d());
           break;
@@ -136,7 +136,7 @@ public class Robot extends LoggedRobot {
           initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
       }
     } else if (DriverStation.getAlliance().get().name().equals("Blue")) {
-      switch (autonomousCommand.getName()) {
+      switch (robotContainer.autoChooser.getSelected()) {
         case "intakeOutpostAuto":
           initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d(Math.PI));
           break;

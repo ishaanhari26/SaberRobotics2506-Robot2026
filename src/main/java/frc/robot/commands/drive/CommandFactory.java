@@ -168,7 +168,7 @@ public class CommandFactory {
 
     Logger.recordOutput("ShootOnTheMove/Target", new Pose2d(aimPoint, Rotation2d.kZero));
     targetPoint = aimPoint;
-    
+
     return aimPoint;
   }
 
