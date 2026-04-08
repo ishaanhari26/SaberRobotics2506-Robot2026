@@ -29,6 +29,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
+  private String autonomousName;
   private RobotContainer robotContainer;
 
   public Robot() {
@@ -108,12 +109,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
+    autonomousName = robotContainer.getAutonomousName();
 
     Pose2d initialAutoPose = new Pose2d();
     SmartDashboard.putString("RobotAlliance", DriverStation.getAlliance().get().name());
 
     if (DriverStation.getAlliance().get().name().equals("Red")) {
-      switch (autonomousCommand.getName()) {
+      switch (autonomousName) {
         case "intakeOutpostAuto":
           initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d());
           break;
@@ -136,7 +138,7 @@ public class Robot extends LoggedRobot {
           initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
       }
     } else if (DriverStation.getAlliance().get().name().equals("Blue")) {
-      switch (autonomousCommand.getName()) {
+      switch (autonomousName) {
         case "intakeOutpostAuto":
           initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d(Math.PI));
           break;

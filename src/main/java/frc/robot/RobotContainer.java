@@ -111,7 +111,7 @@ public class RobotContainer {
   // Dashboard inputs
   //   private final LoggedDashboardChooser<Command> autoChooser;
   //   private final LoggedDashboardChooser<Command> autoChooser;
-  private final SendableChooser<Command> autoChooser;
+  public final SendableChooser<String> autoChooser;
 
   private final AutoFactory AutoFactory;
 
@@ -211,16 +211,16 @@ public class RobotContainer {
     // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser = new SendableChooser<>();
 
-    autoChooser.setDefaultOption("None", Commands.none());
-    autoChooser.addOption("driveBackAuto", AutoFactory.testAuto());
+    autoChooser.setDefaultOption("None", "None");
+    // autoChooser.addOption("driveBackAuto", AutoFactory.testAuto());
 
-    autoChooser.addOption("driveForward", AutoFactory.newTestAuto());
-    autoChooser.addOption("neutralAuto", AutoFactory.neutralAuto());
-    autoChooser.addOption("neutralAutoHalf", AutoFactory.neutralAutoHalf());
-    autoChooser.addOption("intakeOutpostAuto", AutoFactory.intakeAuto());
-    autoChooser.addOption("pickupOutpostAuto", AutoFactory.pickupAuto());
-    autoChooser.addOption("justShootMiddle", AutoFactory.justShootMiddle());
-    autoChooser.addOption("driveBackAndShootMiddle", AutoFactory.driveBackShootMiddle());
+    autoChooser.addOption("driveForward", "driveForward");
+    autoChooser.addOption("neutralAuto", "neutralAuto");
+    autoChooser.addOption("neutralAutoHalf", "neutralAutoHalf");
+    autoChooser.addOption("intakeOutpostAuto", "intakeOutpostAuto");
+    autoChooser.addOption("pickupOutpostAuto", "pickupOutpostAuto");
+    autoChooser.addOption("justShootMiddle", "justShootMiddle");
+    autoChooser.addOption("driveBackAndShootMiddle", "driveBackAndShootMiddle");
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -481,6 +481,31 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    switch(autoChooser.getSelected()) {
+        case "None":
+            return Commands.none();
+        case "driveBackAuto":
+            return AutoFactory.testAuto();
+        case "driveForward":
+            return AutoFactory.newTestAuto();
+        case "neutralAuto":
+            return AutoFactory.neutralAuto();
+        case "neutralAutoHalf":
+            return AutoFactory.neutralAutoHalf();
+        case "intakeOutpostAuto":
+            return AutoFactory.intakeAuto();
+        case "pickupOutpostAuto":
+            return AutoFactory.pickupAuto();
+        case "justShootMiddle":
+            return AutoFactory.justShootMiddle();
+        case "driveBackAndShootMiddle":
+            return AutoFactory.driveBackShootMiddle();
+        default:
+            return Commands.none();
+    }
+  }
+
+  public String getAutonomousName() {
     return autoChooser.getSelected();
   }
 
