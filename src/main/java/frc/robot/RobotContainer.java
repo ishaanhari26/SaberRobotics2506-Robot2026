@@ -482,14 +482,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    switch (autoChooser.getSelected()) {
-      case "neutralAuto":
-        return AutoFactory.neutralAuto();
-      case "neutralAutoHalf":
-        return AutoFactory.neutralAutoHalf();
-      default:
-        return Commands.none();
-    }
     switch(autoChooser.getSelected()) {
         case "None":
             return Commands.none();
