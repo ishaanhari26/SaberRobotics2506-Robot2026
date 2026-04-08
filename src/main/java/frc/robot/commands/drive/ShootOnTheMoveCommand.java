@@ -19,7 +19,6 @@ public class ShootOnTheMoveCommand extends Command {
       Drive drive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
-      Supplier<Translation2d> pose,
       boolean isBackward) {
     this.drive = drive;
 

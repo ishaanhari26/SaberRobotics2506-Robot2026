@@ -138,28 +138,6 @@ public class CommandFactory {
         : new Pose2d(11.91, 4.03, new Rotation2d(Math.PI));
   }
 
-  public static Pose2d translateToBlue(Pose2d pose) {
-    if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-      return new Pose2d(
-          16.54 - pose.getX(),
-          8.02 - pose.getY(),
-          pose.getRotation().rotateBy(new Rotation2d(Math.PI)));
-    } else {
-      return pose;
-    }
-  }
-
-  public static Pose2d translateToRed(Pose2d pose) {
-    if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue) {
-      return new Pose2d(
-          16.54 - pose.getX(),
-          8.02 - pose.getY(),
-          pose.getRotation().rotateBy(new Rotation2d(Math.PI)));
-    } else {
-      return pose;
-    }
-  }
-
   public static double distanceFromHub(Pose2d pose) {
     Pose2d hubPose = getHubPose(DriverStation.getAlliance().orElse(Alliance.Blue));
     return hubPose.getTranslation().getDistance(pose.getTranslation()) * 39.37; // Convert to inches
@@ -175,7 +153,7 @@ public class CommandFactory {
         new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
 
     Distance distance = LocationUtils.getDistanceToLocation(robotPos, targetPos);
-    double timeOfFlight = timeOfFlight(distance);
+    double timeOfFlight = timeOfFlightSeconds(distance);
 
     for (int i = 0; i < 20; i++) {
 
@@ -184,13 +162,13 @@ public class CommandFactory {
       aimPoint = targetPos.minus(motionOffset);
 
       Distance newDistance = LocationUtils.getDistanceToLocation(aimPoint, robotPos);
-      timeOfFlight = timeOfFlight(newDistance);
+      timeOfFlight = timeOfFlightSeconds(newDistance);
     }
 
     return aimPoint;
   }
 
-  public static double timeOfFlight(Distance distance) {
+  public static double timeOfFlightSeconds(Distance distance) {
     double rpm = interpolateRPM(distance);
     double exitVelocity = rpm * Math.PI * 0.1016 / 60.0;
     double vy = exitVelocity * Math.sin(Math.toRadians(68));
@@ -218,12 +196,6 @@ public class CommandFactory {
       double x, double y, Rotation2d rotation) {
     return (Pose2d pose) -> {
       return new Pose2d(x, y, rotation);
-    };
-  }
-
-  public static Function<Pose2d, Pose2d> getAutoClimbPose() { // TODO: find the actual position
-    return (Pose2d pose) -> {
-      return new Pose2d(2.5, 0.6, new Rotation2d(Math.PI));
     };
   }
 

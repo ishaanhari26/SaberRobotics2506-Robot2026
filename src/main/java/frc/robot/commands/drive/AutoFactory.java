@@ -58,9 +58,6 @@ public class AutoFactory {
     Rotation2d initialDirection = driveForwardPath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
-    Pose2d initialPose = driveForwardPath.getStartPose();
-    drive.setPose(Drive.onRed() ? CommandFactory.translateToRed(initialPose) : initialPose);
-
     // return Commands.sequence(pathBuilder.build(driveForwardPath));
     return Commands.none();
   }
@@ -74,11 +71,8 @@ public class AutoFactory {
     Rotation2d initialDirection = shootMiddlePath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
-    Pose2d initialPose = shootMiddlePath.getStartPose();
-    drive.setPose(Drive.onRed() ? CommandFactory.translateToRed(initialPose) : initialPose);
-
     return Commands.sequence(
-        pathBuilder.build(shootMiddlePath).withTimeout(3), new LaunchPID(fuelSubsystem));
+        pathBuilder.build(shootMiddlePath), new LaunchPID(fuelSubsystem));
   }
 
   public Command neutralAuto() {
@@ -87,14 +81,11 @@ public class AutoFactory {
     Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
-    Pose2d initialPose = driveNeutralPath.getStartPose();
-    drive.setPose(Drive.onRed() ? FlippingUtil.flipFieldPose(initialPose) : initialPose);
-
     return Commands.sequence(
         new ParallelCommandGroup(
-            pathBuilder.build(driveNeutralPath).withTimeout(6),
+            pathBuilder.build(driveNeutralPath),
             new Intake(fuelSubsystem).withTimeout(6)),
-        pathBuilder.build(driveShootPath).withTimeout(5),
+        pathBuilder.build(driveShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem));
   }
@@ -106,15 +97,12 @@ public class AutoFactory {
     Rotation2d shootPathDirection = driveShootPath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
-    Pose2d initialPose = driveNeutralPath.getStartPose();
-    drive.setPose(Drive.onRed() ? FlippingUtil.flipFieldPose(initialPose) : initialPose);
-
     return Commands.sequence(
         new ParallelCommandGroup(
-            pathBuilder.build(driveNeutralPath).withTimeout(6),
+            pathBuilder.build(driveNeutralPath),
             new Intake(fuelSubsystem).withTimeout(6)),
         Commands.run(() -> drive.setModulePositions(shootPathDirection)),
-        pathBuilder.build(driveShootPath).withTimeout(6),
+        pathBuilder.build(driveShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem));
   }
@@ -127,9 +115,9 @@ public class AutoFactory {
 
     return Commands.sequence(
         new ParallelCommandGroup(
-            pathBuilder.build(driveIntakePath).withTimeout(3),
+            pathBuilder.build(driveIntakePath),
             new Intake(fuelSubsystem).withTimeout(3)),
-        pathBuilder.build(intakeShootPath).withTimeout(3),
+        pathBuilder.build(intakeShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
         new LaunchPID(fuelSubsystem));
   }
@@ -141,21 +129,14 @@ public class AutoFactory {
     drive.setModulePositions(initialDirection);
 
     return Commands.sequence(
-        pathBuilder.build(outpostPath).withTimeout(3),
+        pathBuilder.build(outpostPath),
         new WaitCommand(3),
-        pathBuilder.build(outpostShootPath).withTimeout(3),
+        pathBuilder.build(outpostShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(2),
         new LaunchPID(fuelSubsystem));
   }
 
   public void periodic() {
-    // SmartDashboard.putData("Tuning/Auto Translation Controller", translationController);//TODO:
-    // Remove for Comp
-    // SmartDashboard.putData("Tuning/Auto Rotation Controller", rotationController);//TODO: Remove
-    // for Comp
-    // SmartDashboard.putData("Tuning/Auto Cross Track Controller", crossTrackController);//TODO:
-    // Remove for Comp
-
     FollowPath.setPoseLoggingConsumer(
         pair -> {
           Logger.recordOutput(pair.getFirst(), pair.getSecond());
