@@ -51,7 +51,8 @@ public class ShootOnTheMoveCommand extends Command {
   @Override
   public void execute() {
     driveAngleCommand.execute();
-    CommandScheduler.getInstance().schedule(new LaunchPID(fuelSubsystem, Constants.FuelConstants.MovingLaunchSpeedRPM));
+    CommandScheduler.getInstance()
+        .schedule(new LaunchPID(fuelSubsystem, Constants.FuelConstants.MovingLaunchSpeedRPM));
   }
 
   public Supplier<Translation2d> getTargetSupplier() {

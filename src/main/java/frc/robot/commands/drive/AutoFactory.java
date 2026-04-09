@@ -19,8 +19,8 @@ public class AutoFactory {
   private FuelSubsystem fuelSubsystem;
 
   private PIDController translation = new PIDController(2.8, 0, 0);
-  private PIDController rotation = new PIDController(3.8, 0, 0.25);
-  private PIDController crossTrack = new PIDController(1.03, 0, 0);
+  private PIDController rotation = new PIDController(4.8, 0, 0);
+  private PIDController crossTrack = new PIDController(0.45, 0, 0);
 
   private FollowPath.Builder pathBuilder;
 
@@ -80,23 +80,23 @@ public class AutoFactory {
 
     return Commands.sequence(
         new ParallelCommandGroup(
-            pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem).withTimeout(6)),
+            pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem).withTimeout(4)),
         pathBuilder.build(driveShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem));
   }
 
   public Command neutralAutoHalf() {
-    Path driveNeutralPath = new Path("driveToNeutralHalf");
+    Path driveNeutralPath = new Path("driveForwardNeutral");
+    Path driveIntakePath = new Path("intakeNeutralHalf");
     Path driveShootPath = new Path("driveToShootBumpHalf");
     Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
-    Rotation2d shootPathDirection = driveShootPath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
     return Commands.sequence(
+        pathBuilder.build(driveNeutralPath),
         new ParallelCommandGroup(
-            pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem).withTimeout(6)),
-        Commands.run(() -> drive.setModulePositions(shootPathDirection)),
+            pathBuilder.build(driveIntakePath), new Intake(fuelSubsystem).withTimeout(3)),
         pathBuilder.build(driveShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem));

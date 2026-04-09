@@ -481,27 +481,27 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    switch(autoChooser.getSelected()) {
-        case "None":
-            return Commands.none();
-        case "driveBackAuto":
-            return AutoFactory.testAuto();
-        case "driveForward":
-            return AutoFactory.newTestAuto();
-        case "neutralAuto":
-            return AutoFactory.neutralAuto();
-        case "neutralAutoHalf":
-            return AutoFactory.neutralAutoHalf();
-        case "intakeOutpostAuto":
-            return AutoFactory.intakeAuto();
-        case "pickupOutpostAuto":
-            return AutoFactory.pickupAuto();
-        case "justShootMiddle":
-            return AutoFactory.justShootMiddle();
-        case "driveBackAndShootMiddle":
-            return AutoFactory.driveBackShootMiddle();
-        default:
-            return Commands.none();
+    switch (autoChooser.getSelected()) {
+      case "None":
+        return Commands.none();
+      case "driveBackAuto":
+        return AutoFactory.testAuto();
+      case "driveForward":
+        return AutoFactory.newTestAuto();
+      case "neutralAuto":
+        return AutoFactory.neutralAuto();
+      case "neutralAutoHalf":
+        return AutoFactory.neutralAutoHalf();
+      case "intakeOutpostAuto":
+        return AutoFactory.intakeAuto();
+      case "pickupOutpostAuto":
+        return AutoFactory.pickupAuto();
+      case "justShootMiddle":
+        return AutoFactory.justShootMiddle();
+      case "driveBackAndShootMiddle":
+        return AutoFactory.driveBackShootMiddle();
+      default:
+        return Commands.none();
     }
   }
 
