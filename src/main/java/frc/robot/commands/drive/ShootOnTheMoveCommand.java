@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.commands.fuelsubsystem.LaunchPID;
+import frc.robot.commands.fuelsubsystem.MovingLaunchPID;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LocationUtils;
@@ -52,7 +53,7 @@ public class ShootOnTheMoveCommand extends Command {
   public void execute() {
     driveAngleCommand.execute();
     CommandScheduler.getInstance()
-        .schedule(new LaunchPID(fuelSubsystem, Constants.FuelConstants.MovingLaunchSpeedRPM));
+        .schedule(new MovingLaunchPID(fuelSubsystem));
   }
 
   public Supplier<Translation2d> getTargetSupplier() {
