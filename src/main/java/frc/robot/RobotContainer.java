@@ -66,7 +66,7 @@ public class RobotContainer {
   // Subsystems
   public final Drive drivetrain;
   public final Vision aprilTagEstimator;
-  private final LED led = new LED();
+  private final LED led;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -179,6 +179,7 @@ public class RobotContainer {
     }
 
     AutoFactory = new AutoFactory(drivetrain, m_fuelSubsystem);
+    led = new LED(drivetrain);
 
     NamedCommands.registerCommand(
         "Launch", new LaunchPID(m_fuelSubsystem).withTimeout(Constants.AutoConstants.launchTime));
@@ -357,10 +358,10 @@ public class RobotContainer {
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
-    controller.y().whileTrue(new Eject(m_fuelSubsystem));
+    // controller.y().whileTrue(new Eject(m_fuelSubsystem));
     opController.b().whileTrue(new Eject(m_fuelSubsystem));
 
-    controller.x().whileTrue(Commands.run(() -> drivetrain.stopWithX(), drivetrain));
+    // controller.x().whileTrue(Commands.run(() -> drivetrain.stopWithX(), drivetrain));
 
     opController.rightStick().whileTrue(new UnjamShooter(m_fuelSubsystem));
 
