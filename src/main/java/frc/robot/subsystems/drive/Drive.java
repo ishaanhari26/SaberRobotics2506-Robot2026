@@ -248,19 +248,6 @@ public class Drive extends SubsystemBase {
       }
     }
 
-    SmartDashboard.putNumber(
-        "rotationValue",
-        LimelightHelpers.getBotPose3d_TargetSpace("limelight").getRotation().getAngle());
-
-    SmartDashboard.putNumber(
-        "targetValue",
-        LimelightHelpers.getTargetPose3d_RobotSpace("limelight").getRotation().getAngle());
-
-    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
-
-    SmartDashboard.putNumber(
-        "tagcount", LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight").tagCount);
-
     field.setRobotPose(getPose());
     SmartDashboard.putData("Field", field);
 
@@ -282,8 +269,7 @@ public class Drive extends SubsystemBase {
 
     SmartDashboard.putBoolean(
         "In Shooting Range",
-        CommandFactory.distanceFromHub(getPose()) >= 58
-            && CommandFactory.distanceFromHub(getPose()) <= 118);
+        inShootingRange);
 
     inShootingRange =
         CommandFactory.distanceFromHub(getPose()) >= 58
@@ -292,16 +278,7 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());
 
-    // SmartDashboard.putNumber("angleOffset", CommandFactory.getHubAngleRadians(getPose()));
-
-    SmartDashboard.putNumber("LimelightTX", getLimelightTargetTX("limelight"));
-
-    SmartDashboard.putNumber("Average Module Speed", getAverageVelocity());
     SmartDashboard.putNumber("Match Time", Timer.getMatchTime());
-
-    SmartDashboard.putNumber("Closest Tag", CommandFactory.findClosestTagAfterRefresh(getPose()));
-
-    SmartDashboard.putNumber("Rotation", getRotation().getDegrees());
 
     SmartDashboard.putNumber("Pigeon Pitch", getPitch());
     SmartDashboard.putNumber("Pigeon Roll", getRoll());
@@ -354,30 +331,6 @@ public class Drive extends SubsystemBase {
     }
 
     return fiducialIDs;
-  }
-
-  public static double getLimelightTargetTX(String limelightName) {
-    int index = findIndex(getLimelightFiducialIDs(limelightName), onRed() ? 10 : 26);
-    if (index == -1) {
-      return 0;
-    }
-    return LimelightHelpers.getLatestResults(limelightName).targets_Fiducials[index].tx;
-  }
-
-  public static boolean validTargetTags() {
-    if (DoubleStream.of(getLimelightFiducialIDs("limelight")).anyMatch(x -> x == 10 || x == 26)) {
-      return true;
-    }
-    return false;
-  }
-
-  public Command target() {
-    if (validTargetTags()) {
-      turnAnglePID.setSetpoint(0);
-      return Commands.run(
-          () -> runVelocity(new ChassisSpeeds(0, 0, turnAnglePID.calculate(Vision.tx))), this);
-    }
-    return Commands.run(() -> runVelocity(new ChassisSpeeds()));
   }
 
   /** Runs the drive in a straight line with the specified drive output. */

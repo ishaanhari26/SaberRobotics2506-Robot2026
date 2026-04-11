@@ -32,10 +32,6 @@ public class Vision extends SubsystemBase {
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
-  public static double tx;
-  public static double ty;
-  public static double ta;
-
   public Vision(VisionConsumer consumer, VisionIO... io) {
     this.consumer = consumer;
     this.io = io;
@@ -70,9 +66,6 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("tv", LimelightHelpers.getTV(camera0Name));
-    SmartDashboard.putNumber("pipeline", LimelightHelpers.getCurrentPipelineIndex(camera0Name));
-
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
@@ -95,13 +88,7 @@ public class Vision extends SubsystemBase {
       List<Pose3d> robotPosesAccepted = new LinkedList<>();
       List<Pose3d> robotPosesRejected = new LinkedList<>();
 
-      // Add tag poses
-      // SmartDashboard.putNumber("cameraIndex", cameraIndex);
-
-      SmartDashboard.putNumber("tagidlength", inputs[cameraIndex].tagIds.length);
-
       for (int tagId : inputs[cameraIndex].tagIds) {
-        SmartDashboard.putString("tagidtest", "works");
         var tagPose = aprilTagLayout.getTagPose(tagId);
         if (tagPose.isPresent()) {
           tagPoses.add(tagPose.get());
@@ -110,7 +97,6 @@ public class Vision extends SubsystemBase {
 
       // Loop over pose observations
       for (var observation : inputs[cameraIndex].poseObservations) {
-        SmartDashboard.putString("observationtest", "works");
         // Check whether to reject pose
         boolean rejectPose =
             observation.tagCount() == 0 // Must have at least one tag
@@ -137,8 +123,6 @@ public class Vision extends SubsystemBase {
         if (rejectPose) {
           continue;
         }
-
-        SmartDashboard.putBoolean("rejectpose", rejectPose);
 
         // Calculate standard deviations
         double stdDevFactor =
@@ -179,15 +163,6 @@ public class Vision extends SubsystemBase {
       allRobotPosesAccepted.addAll(robotPosesAccepted);
       allRobotPosesRejected.addAll(robotPosesRejected);
     }
-
-    tx = getTargetX(0).getRadians();
-    ty = getTargetY(0).getRadians();
-    ta = LimelightHelpers.getTA("limelight");
-
-    SmartDashboard.putNumber("limelightPoseX", LimelightHelpers.getBotPose2d(camera1Name).getX());
-    SmartDashboard.putNumber("limelightPoseY", LimelightHelpers.getBotPose2d(camera1Name).getY());
-
-    SmartDashboard.putNumber("ta", ta);
 
     // Log summary data
     Logger.recordOutput("Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[0]));

@@ -151,14 +151,6 @@ public class FuelSubsystem extends SubsystemBase {
     }
   }
 
-  // public void finishShooting() {
-  //   intakeMotor.set(0);
-  //   feederMotor.set(0);
-  //   indexerMotor.set(0);
-  //   Commands.run(() -> new WaitCommand(5));
-  //   stopMotors();
-  // }
-
   public void ConfigureMotors() {
     LaunchMotor.setNeutralMode(NeutralModeValue.Coast);
 
@@ -174,47 +166,7 @@ public class FuelSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber(
-        "intake motor speed", intakeMotor.getVelocity().getValueAsDouble() * 60);
-    SmartDashboard.putNumber(
-        "feeder motor speed", feederMotor.getVelocity().getValueAsDouble() * 60);
-    SmartDashboard.putNumber(
-        "Launch motor speed", LaunchMotor.getVelocity().getValueAsDouble() * 60);
-    SmartDashboard.putNumber(
-        "Launch motor2 speed", LaunchMotor2.getVelocity().getValueAsDouble() * 60);
-    SmartDashboard.putNumber(
-        "Launch motor3 speed", LaunchMotor3.getVelocity().getValueAsDouble() * 60);
-    SmartDashboard.putNumber(
-        "Launch motor4 speed", LaunchMotor4.getVelocity().getValueAsDouble() * 60);
     SmartDashboard.putNumber("PID set point", ShooterPid.getSetpoint());
-    SmartDashboard.putBoolean("PID at setPoint", getAtSetpoint());
-    SmartDashboard.putData("shooter PID controller", ShooterPid);
-    SmartDashboard.putNumber("Feeder Current", feederMotor.getStatorCurrent().getValueAsDouble());
-    SmartDashboard.putNumber("Intake Current", intakeMotor.getStatorCurrent().getValueAsDouble());
-    SmartDashboard.putNumber("Launch 1 Current", LaunchMotor.getStatorCurrent().getValueAsDouble());
-    SmartDashboard.putNumber(
-        "Launch 2 Current", LaunchMotor2.getStatorCurrent().getValueAsDouble());
-    SmartDashboard.putNumber(
-        "Launch 3 Current", LaunchMotor3.getStatorCurrent().getValueAsDouble());
-    SmartDashboard.putNumber(
-        "Launch 4 Current", LaunchMotor4.getStatorCurrent().getValueAsDouble());
-
-    SmartDashboard.putNumber(
-        "Launch Motor Average Speed",
-        ((LaunchMotor.getVelocity().getValueAsDouble() * 60)
-                + (LaunchMotor2.getVelocity().getValueAsDouble() * 60)
-                + (LaunchMotor3.getVelocity().getValueAsDouble() * 60)
-                + (LaunchMotor4.getVelocity().getValueAsDouble() * 60))
-            / 4);
-
-    SmartDashboard.putNumber(
-        "Launch Motor Average Current",
-        ((LaunchMotor.getStatorCurrent().getValueAsDouble())
-                + (LaunchMotor2.getStatorCurrent().getValueAsDouble())
-                + (LaunchMotor3.getStatorCurrent().getValueAsDouble())
-                + (LaunchMotor4.getStatorCurrent().getValueAsDouble()))
-            / 4);
 
     Logger.recordOutput("FuelSubsystem/IntakeSpeed", intakeMotor.getVelocity().getValueAsDouble());
   }
