@@ -370,11 +370,9 @@ public class RobotContainer {
 
     controller
         .rightBumper()
-        .whileTrue(
-            new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow))
-        .onFalse(
-            new ClearShooter(m_fuelSubsystem)
-                .withTimeout(Constants.FuelConstants.ShooterClearTime));
+        .onTrue(Commands.runOnce(() -> m_fuelSubsystem.runLaunchPID(Constants.FuelConstants.IntakeLaunchSpeedRPM)))
+        .whileTrue(new LockedTargetCommand(drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX(), true));
+
     controller
         .rightTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem))
