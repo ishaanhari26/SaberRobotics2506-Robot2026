@@ -37,6 +37,7 @@ import frc.robot.commands.fuelsubsystem.ClearShooter;
 import frc.robot.commands.fuelsubsystem.Eject;
 import frc.robot.commands.fuelsubsystem.Intake;
 import frc.robot.commands.fuelsubsystem.LaunchPID;
+import frc.robot.commands.fuelsubsystem.RevShooter;
 import frc.robot.commands.fuelsubsystem.UnjamShooter;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Camera;
@@ -370,10 +371,8 @@ public class RobotContainer {
 
     controller
         .rightBumper()
-        // .onTrue(
-        //     Commands.run(
-        //         () ->
-        // m_fuelSubsystem.runLaunchPID(Constants.FuelConstants.IntakeLaunchSpeedRPM)))
+        .onTrue(
+            new RevShooter(m_fuelSubsystem))
         .whileTrue(
             new LockedTargetCommand(
                 drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX(), true));
