@@ -20,7 +20,7 @@ public class AutoFactory {
 
   private PIDController translation = new PIDController(2.8, 0, 0);
   private PIDController rotation = new PIDController(4.8, 0, 0);
-  private PIDController crossTrack = new PIDController(0.45, 0, 0);
+  private PIDController crossTrack = new PIDController(0.55, 0, 0);
 
   private FollowPath.Builder pathBuilder;
 
@@ -69,7 +69,10 @@ public class AutoFactory {
     Rotation2d initialDirection = shootMiddlePath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
-    return Commands.sequence(pathBuilder.build(shootMiddlePath), new LaunchPID(fuelSubsystem));
+    return Commands.sequence(
+        pathBuilder.build(shootMiddlePath),
+        new LockedTargetCommand(drive, () -> 0.0, () -> 0.0, true),
+        new LaunchPID(fuelSubsystem).withTimeout(5));
   }
 
   public Command neutralAuto() {

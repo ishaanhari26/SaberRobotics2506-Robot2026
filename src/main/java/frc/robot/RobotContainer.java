@@ -248,8 +248,8 @@ public class RobotContainer {
 
     // controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
-    m_fuelSubsystem.setDefaultCommand(
-        Commands.run(() -> m_fuelSubsystem.spoolWhileActive(), m_fuelSubsystem));
+    // m_fuelSubsystem.setDefaultCommand(
+    //     Commands.run(() -> m_fuelSubsystem.spoolWhileActive(), m_fuelSubsystem));
 
     controller
         .a()
@@ -370,8 +370,13 @@ public class RobotContainer {
 
     controller
         .rightBumper()
-        .onTrue(Commands.runOnce(() -> m_fuelSubsystem.runLaunchPID(Constants.FuelConstants.IntakeLaunchSpeedRPM)))
-        .whileTrue(new LockedTargetCommand(drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX(), true));
+        // .onTrue(
+        //     Commands.run(
+        //         () ->
+        // m_fuelSubsystem.runLaunchPID(Constants.FuelConstants.IntakeLaunchSpeedRPM)))
+        .whileTrue(
+            new LockedTargetCommand(
+                drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX(), true));
 
     controller
         .rightTrigger()
