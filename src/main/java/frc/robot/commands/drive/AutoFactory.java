@@ -20,7 +20,7 @@ public class AutoFactory {
 
   private PIDController translation = new PIDController(2.8, 0, 0);
   private PIDController rotation = new PIDController(4.8, 0, 0);
-  private PIDController crossTrack = new PIDController(0.45, 0, 0);
+  private PIDController crossTrack = new PIDController(0.55, 0, 0);
 
   private FollowPath.Builder pathBuilder;
 
@@ -65,31 +65,36 @@ public class AutoFactory {
   }
 
   public Command driveBackShootMiddle() {
-    Path shootMiddlePath = new Path("justShootMiddle");
+    Path shootMiddlePath = new Path("justShootM");
     Rotation2d initialDirection = shootMiddlePath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
-    return Commands.sequence(pathBuilder.build(shootMiddlePath), new LaunchPID(fuelSubsystem));
+    return Commands.sequence(
+        pathBuilder.build(shootMiddlePath),
+        new LockedTargetCommand(drive, () -> 0.0, () -> 0.0, true),
+        new LaunchPID(fuelSubsystem).withTimeout(5));
   }
 
   public Command neutralAuto() {
-    Path driveNeutralPath = new Path("driveToNeutral");
-    Path driveShootPath = new Path("driveToShootBump");
+    Path driveNeutralPath = new Path("neutralDriveFowardR");
+    Path driveIntakePath = new Path("neutralIntakeR");
+    Path driveShootPath = new Path("driveToShootBumpR");
     Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
     return Commands.sequence(
+        pathBuilder.build(driveNeutralPath),
         new ParallelCommandGroup(
-            pathBuilder.build(driveNeutralPath), new Intake(fuelSubsystem).withTimeout(4)),
+            pathBuilder.build(driveIntakePath), new Intake(fuelSubsystem).withTimeout(4)),
         pathBuilder.build(driveShootPath),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem));
   }
 
   public Command neutralAutoHalf() {
-    Path driveNeutralPath = new Path("driveForwardNeutral");
-    Path driveIntakePath = new Path("intakeNeutralHalf");
-    Path driveShootPath = new Path("driveToShootBumpHalf");
+    Path driveNeutralPath = new Path("neutralDriveForwardR");
+    Path driveIntakePath = new Path("neutralIntakeHalfR");
+    Path driveShootPath = new Path("neutralShootBumpHalfR");
     Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
@@ -103,7 +108,7 @@ public class AutoFactory {
   }
 
   public Command intakeAuto() {
-    Path driveIntakePath = new Path("driveToIntake");
+    Path driveIntakePath = new Path("intakeOutpost");
     Path intakeShootPath = new Path("intakeShoot");
     Rotation2d initialDirection = driveIntakePath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
@@ -117,8 +122,8 @@ public class AutoFactory {
   }
 
   public Command pickupAuto() {
-    Path outpostPath = new Path("driveToOutpost");
-    Path outpostShootPath = new Path("outpostShoot");
+    Path outpostPath = new Path("pickupOutpost");
+    Path outpostShootPath = new Path("pickupShoot");
     Rotation2d initialDirection = outpostPath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 

@@ -37,6 +37,7 @@ import frc.robot.commands.fuelsubsystem.ClearShooter;
 import frc.robot.commands.fuelsubsystem.Eject;
 import frc.robot.commands.fuelsubsystem.Intake;
 import frc.robot.commands.fuelsubsystem.LaunchPID;
+import frc.robot.commands.fuelsubsystem.RevShooter;
 import frc.robot.commands.fuelsubsystem.UnjamShooter;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Camera;
@@ -249,8 +250,8 @@ public class RobotContainer {
 
     // controller.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
-    m_fuelSubsystem.setDefaultCommand(
-        Commands.run(() -> m_fuelSubsystem.spoolWhileActive(), m_fuelSubsystem));
+    // m_fuelSubsystem.setDefaultCommand(
+    //     Commands.run(() -> m_fuelSubsystem.spoolWhileActive(), m_fuelSubsystem));
 
     controller
         .a()
@@ -371,11 +372,12 @@ public class RobotContainer {
 
     controller
         .rightBumper()
+        .onTrue(
+            new RevShooter(m_fuelSubsystem))
         .whileTrue(
-            new LaunchPID(m_fuelSubsystem, Constants.FuelConstants.ConstantIntakeLaunchSpeedRPMLow))
-        .onFalse(
-            new ClearShooter(m_fuelSubsystem)
-                .withTimeout(Constants.FuelConstants.ShooterClearTime));
+            new LockedTargetCommand(
+                drivetrain, () -> -controller.getLeftY(), () -> -controller.getLeftX(), true));
+
     controller
         .rightTrigger()
         .whileTrue(new LaunchPID(m_fuelSubsystem))
