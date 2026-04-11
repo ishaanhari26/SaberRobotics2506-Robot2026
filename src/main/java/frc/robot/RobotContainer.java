@@ -358,10 +358,10 @@ public class RobotContainer {
 
     // fuelSubsystem buttons Intake, Launch, Eject
     controller.leftTrigger().whileTrue(new Intake(m_fuelSubsystem));
-    controller.y().whileTrue(new Eject(m_fuelSubsystem));
+    // controller.y().whileTrue(new Eject(m_fuelSubsystem));
     opController.b().whileTrue(new Eject(m_fuelSubsystem));
 
-    controller.x().whileTrue(Commands.run(() -> drivetrain.stopWithX(), drivetrain));
+    // controller.x().whileTrue(Commands.run(() -> drivetrain.stopWithX(), drivetrain));
 
     opController.rightStick().whileTrue(new UnjamShooter(m_fuelSubsystem));
 
