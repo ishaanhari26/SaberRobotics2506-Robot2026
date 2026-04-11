@@ -37,6 +37,7 @@ public class LED extends SubsystemBase {
   private Drive m_drive;
 
   private LEDPattern currentPattern;
+  private LEDPattern currentPatternNoOverlay;
   private static Mode LEDMode;
   private LEDConstants.Period state;
   private String gameData;
@@ -59,30 +60,25 @@ public class LED extends SubsystemBase {
   }
 
   public void setPattern(LEDPattern pattern) {
-    if (pattern != currentPattern) {
-      currentPattern = pattern;
-      try {
-        pattern.applyTo(m_start);
-        pattern.applyTo(m_end);
-      } catch (Exception bad) {
-        off();
-        System.err.println(bad);
-      }
-      m_led.setData(m_buffer);
+    currentPattern = pattern;
+    try {
+      pattern.applyTo(m_start);
+      pattern.applyTo(m_end);
+    } catch (Exception bad) {
+      off();
+      System.err.println(bad);
     }
   }
 
   public void setMiddlePattern(LEDPattern pattern) {
-    if (pattern != currentPattern) {
-      currentPattern = pattern;
-      try {
-        pattern.applyTo(m_shootingRange);
-      } catch (Exception bad) {
-        off();
-        System.err.println(bad);
-      }
-      m_led.setData(m_buffer);
+    currentPattern = pattern;
+    try {
+      pattern.applyTo(m_shootingRange);
+    } catch (Exception bad) {
+      off();
+      System.err.println(bad);
     }
+    m_led.setData(m_buffer);
   }
 
   public static void setMode(Mode mode) {
@@ -140,6 +136,7 @@ public class LED extends SubsystemBase {
     try {
       LEDPattern single = LEDPattern.steps(Map.of(0, Color.kWhite, 1 / (double) LEDConstants.startLength, Color.kBlack));
       LEDPattern scroll = single.scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency));
+      currentPatternNoOverlay = currentPattern;
       LEDPattern overlay = scroll.overlayOn(currentPattern);
       setPattern(overlay);
     } catch (Exception err) {
@@ -151,6 +148,7 @@ public class LED extends SubsystemBase {
     try {
       LEDPattern single = LEDPattern.steps(Map.of(0, Color.kPink, 1 / (double) LEDConstants.startLength, Color.kBlack));
       LEDPattern scroll = single.scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency));
+      currentPatternNoOverlay = currentPattern;
       LEDPattern overlay = scroll.overlayOn(currentPattern);
       setPattern(overlay);
     } catch (Exception err) {
@@ -376,7 +374,7 @@ public class LED extends SubsystemBase {
       default:
         break;
     }
-
+    currentPatternNoOverlay = currentPattern;
     SmartDashboard.putString("LEDMode:", LED.LEDMode.name());
     switch (LED.LEDMode) {
       case SHOOT:
@@ -392,25 +390,8 @@ public class LED extends SubsystemBase {
         blink();
         break;
       case NONE:
-        switch (state) {
-          case AUTO:
-            // auto(1);
-            break;
-          case TRANSITION:
-          case ACTIVE:
-            active();
-            break;
-          case INACTIVE:
-            inactive();
-            break;
-          case ENDGAME:
-            purple();
-            break;
-          default:
-            break;
-        }
-        break;
       default:
+        setPattern(currentPatternNoOverlay);
         break;
     }
 
