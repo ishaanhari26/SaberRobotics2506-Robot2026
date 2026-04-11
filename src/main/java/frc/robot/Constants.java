@@ -125,6 +125,7 @@ public final class Constants {
     public static final int port = 0;
     /** The LED strip length */
     public static final int length = 27; // 76
+
     public static final int startLength = 8;
     public static final int rangeLength = 11;
     public static final int endLength = 8;

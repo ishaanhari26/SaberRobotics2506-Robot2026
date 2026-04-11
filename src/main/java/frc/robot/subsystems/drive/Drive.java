@@ -125,7 +125,7 @@ public class Drive extends SubsystemBase {
 
   public PIDController turnAnglePID;
   private double newShooterSpeed;
-  public boolean inShootingRange = CommandFactory.distanceFromHub(getPose()) >= 58 && CommandFactory.distanceFromHub(getPose()) <= 118; 
+  public boolean inShootingRange;
 
   private static Field2d field = new Field2d();
 
@@ -284,6 +284,10 @@ public class Drive extends SubsystemBase {
         "In Shooting Range",
         CommandFactory.distanceFromHub(getPose()) >= 58
             && CommandFactory.distanceFromHub(getPose()) <= 118);
+
+    inShootingRange =
+        CommandFactory.distanceFromHub(getPose()) >= 58
+            && CommandFactory.distanceFromHub(getPose()) <= 118;
 
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());
