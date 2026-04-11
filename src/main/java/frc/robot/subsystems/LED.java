@@ -60,8 +60,6 @@ public class LED extends SubsystemBase {
 
   public void setPattern(LEDPattern pattern) {
     if (pattern != currentPattern) {
-      LEDPattern.solid(Color.kBlack).applyTo(m_start);
-      LEDPattern.solid(Color.kBlack).applyTo(m_end);
       currentPattern = pattern;
       try {
         pattern.applyTo(m_start);
@@ -70,6 +68,20 @@ public class LED extends SubsystemBase {
         off();
         System.err.println(bad);
       }
+      m_led.setData(m_buffer);
+    }
+  }
+
+  public void setMiddlePattern(LEDPattern pattern) {
+    if (pattern != currentPattern) {
+      currentPattern = pattern;
+      try {
+        pattern.applyTo(m_shootingRange);
+      } catch (Exception bad) {
+        off();
+        System.err.println(bad);
+      }
+      m_led.setData(m_buffer);
     }
   }
 
@@ -126,11 +138,10 @@ public class LED extends SubsystemBase {
 
   public void scrollWhite() {
     try {
-      setPattern(
-          LEDPattern.steps(
-                  Map.of(0, Color.kWhite, 1 / (double) LEDConstants.startLength, Color.kBlack))
-              .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
-              .overlayOn(currentPattern));
+      LEDPattern single = LEDPattern.steps(Map.of(0, Color.kWhite, 1 / (double) LEDConstants.startLength, Color.kBlack));
+      LEDPattern scroll = single.scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency));
+      LEDPattern overlay = scroll.overlayOn(currentPattern);
+      setPattern(overlay);
     } catch (Exception err) {
       setPattern(LEDPattern.solid(m_start.getLED(0)));
     }
@@ -138,11 +149,10 @@ public class LED extends SubsystemBase {
 
   public void scrollPink() {
     try {
-      setPattern(
-          LEDPattern.steps(
-                  Map.of(0, Color.kPink, 1 / (double) LEDConstants.startLength, Color.kBlack))
-              .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
-              .overlayOn(currentPattern));
+      LEDPattern single = LEDPattern.steps(Map.of(0, Color.kPink, 1 / (double) LEDConstants.startLength, Color.kBlack));
+      LEDPattern scroll = single.scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency));
+      LEDPattern overlay = scroll.overlayOn(currentPattern);
+      setPattern(overlay);
     } catch (Exception err) {
       setPattern(LEDPattern.solid(m_start.getLED(0)));
     }
