@@ -56,15 +56,17 @@ public class LED extends SubsystemBase {
   }
 
   public void setPattern(LEDPattern pattern) {
-    LEDPattern.solid(Color.kBlack).applyTo(m_start);
-    LEDPattern.solid(Color.kBlack).applyTo(m_end);
-    currentPattern = pattern;
-    try {
-      pattern.applyTo(m_start);
-      pattern.applyTo(m_end);
-    } catch (Exception bad) {
-      off();
-      System.err.println(bad);
+    if(pattern != currentPattern){
+      LEDPattern.solid(Color.kBlack).applyTo(m_start);
+      LEDPattern.solid(Color.kBlack).applyTo(m_end);
+      currentPattern = pattern;
+      try {
+        pattern.applyTo(m_start);
+        pattern.applyTo(m_end);
+      } catch (Exception bad) {
+        off();
+        System.err.println(bad);
+      }
     }
   }
 
@@ -125,13 +127,13 @@ public class LED extends SubsystemBase {
           LEDPattern.steps(
                   Map.of(
                       0,
-                      Color.kBlack,
-                      (LEDConstants.length - 1) / (double) LEDConstants.startLength,
-                      Color.kWhite))
+                      Color.kWhite,
+                      1 / (double) LEDConstants.startLength,
+                      Color.kBlack))
               .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
               .overlayOn(currentPattern));
     } catch (Exception err) {
-      setPattern(LEDPattern.solid(m_buffer.getLED(0)));
+      setPattern(LEDPattern.solid(m_start.getLED(0)));
     }
   }
 
@@ -141,27 +143,27 @@ public class LED extends SubsystemBase {
           LEDPattern.steps(
                   Map.of(
                       0,
-                      Color.kBlack,
-                      (LEDConstants.length - 1) / (double) LEDConstants.startLength,
-                      Color.kPink))
+                      Color.kPink,
+                      1 / (double) LEDConstants.startLength,
+                      Color.kBlack))
               .scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency))
               .overlayOn(currentPattern));
     } catch (Exception err) {
-      setPattern(LEDPattern.solid(m_buffer.getLED(0)));
+      setPattern(LEDPattern.solid(m_start.getLED(0)));
     }
   }
 
-  public void auto(int selected) {
-    setPattern(
-        currentPattern.mask(
-            LEDPattern.steps(
-                    Map.of(
-                        0,
-                        Color.kBlack,
-                        (LEDConstants.length - 1) / (double) LEDConstants.startLength,
-                        Color.kWhite))
-                .offsetBy(selected)));
-  }
+  // public void auto(int selected) {
+  //   setPattern(
+  //       currentPattern.mask(
+  //           LEDPattern.steps(
+  //                   Map.of(
+  //                       0,
+  //                       Color.kBlack,
+  //                       (LEDConstants.length - 1) / (double) LEDConstants.startLength,
+  //                       Color.kWhite))
+  //               .offsetBy(selected)));
+  // }
 
   public void blink() {
     setPattern(currentPattern.blink(Seconds.of(LEDConstants.blinkSpeed)));
