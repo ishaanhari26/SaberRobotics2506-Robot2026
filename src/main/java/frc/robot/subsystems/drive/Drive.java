@@ -125,6 +125,7 @@ public class Drive extends SubsystemBase {
 
   public PIDController turnAnglePID;
   private double newShooterSpeed;
+  public boolean inShootingRange = CommandFactory.distanceFromHub(getPose()) >= 58 && CommandFactory.distanceFromHub(getPose()) <= 118; 
 
   private static Field2d field = new Field2d();
 

@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
@@ -15,6 +16,8 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.Constants.LEDConstants.Mode;
+import frc.robot.subsystems.drive.Drive;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -24,6 +27,11 @@ public class LED extends SubsystemBase {
 
   // Create the buffer
   private final AddressableLEDBuffer m_buffer = new AddressableLEDBuffer(LEDConstants.length);
+  private final AddressableLEDBufferView m_start = m_buffer.createView(0, LEDConstants.startLength-1);
+  private final AddressableLEDBufferView m_shootingRange = m_buffer.createView(LEDConstants.startLength, LEDConstants.startLength+LEDConstants.rangeLength-1);
+  private final AddressableLEDBufferView m_end = m_buffer.createView(LEDConstants.length-LEDConstants.endLength, LEDConstants.length-1);
+
+  private Drive m_drive;
 
   private LEDPattern currentPattern;
   private static Mode LEDMode;
@@ -32,12 +40,13 @@ public class LED extends SubsystemBase {
   // Timer
   private double matchTime;
 
-  public LED() {
+  public LED(Drive drive) {
     m_led.setLength(m_buffer.getLength());
-    m_led.setData(m_buffer); // sets the led output dat
+    m_led.setData(m_buffer); // sets the led output data
     m_led.start(); // start leds
     off(); // starts LEDS as off
     LED.LEDMode = Mode.NONE;
+    m_drive = drive;
   }
 
   public void set(int red, int green, int blue) {
@@ -47,10 +56,12 @@ public class LED extends SubsystemBase {
   }
 
   public void setPattern(LEDPattern pattern) {
-    LEDPattern.solid(Color.kBlack).applyTo(m_buffer);
+    LEDPattern.solid(Color.kBlack).applyTo(m_start);
+    LEDPattern.solid(Color.kBlack).applyTo(m_end);
     currentPattern = pattern;
     try {
-      pattern.applyTo(m_buffer);
+      pattern.applyTo(m_start);
+      pattern.applyTo(m_end);
     } catch (Exception bad) {
       off();
       System.err.println(bad);
@@ -403,6 +414,12 @@ public class LED extends SubsystemBase {
                 ? LEDConstants.endWarningTime
                 : LEDConstants.warningTime)) {
       blink();
+    }
+
+    if(m_drive.inShootingRange) {
+      LEDPattern.solid(Color.kGreen).applyTo(m_shootingRange);
+    } else {
+      LEDPattern.solid(Color.kRed).applyTo(m_shootingRange);
     }
 
     m_led.setData(m_buffer);
