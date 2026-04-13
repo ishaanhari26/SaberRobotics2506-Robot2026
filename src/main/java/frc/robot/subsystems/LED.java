@@ -134,8 +134,11 @@ public class LED extends SubsystemBase {
 
   public void scrollWhite() {
     try {
-      LEDPattern single = LEDPattern.steps(Map.of(0, Color.kWhite, 1 / (double) LEDConstants.startLength, Color.kBlack));
-      LEDPattern scroll = single.scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency));
+      LEDPattern single =
+          LEDPattern.steps(
+              Map.of(0, Color.kWhite, 1 / (double) LEDConstants.startLength, Color.kBlack));
+      LEDPattern scroll =
+          single.scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency));
       currentPatternNoOverlay = currentPattern;
       LEDPattern overlay = scroll.overlayOn(currentPattern);
       setPattern(overlay);
@@ -146,8 +149,11 @@ public class LED extends SubsystemBase {
 
   public void scrollPink() {
     try {
-      LEDPattern single = LEDPattern.steps(Map.of(0, Color.kPink, 1 / (double) LEDConstants.startLength, Color.kBlack));
-      LEDPattern scroll = single.scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency));
+      LEDPattern single =
+          LEDPattern.steps(
+              Map.of(0, Color.kPink, 1 / (double) LEDConstants.startLength, Color.kBlack));
+      LEDPattern scroll =
+          single.scrollAtRelativeSpeed(Percent.per(Second).of(LEDConstants.percentFrequency));
       currentPatternNoOverlay = currentPattern;
       LEDPattern overlay = scroll.overlayOn(currentPattern);
       setPattern(overlay);

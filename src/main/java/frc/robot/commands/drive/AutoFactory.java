@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.fuelsubsystem.ClearShooter;
 import frc.robot.commands.fuelsubsystem.Intake;
 import frc.robot.commands.fuelsubsystem.LaunchPID;
 import frc.robot.lib.BLine.FollowPath;
@@ -72,7 +73,8 @@ public class AutoFactory {
     return Commands.sequence(
         pathBuilder.build(shootMiddlePath),
         new LockedTargetCommand(drive, () -> 0.0, () -> 0.0, true).withTimeout(1),
-        new LaunchPID(fuelSubsystem).withTimeout(5));
+        new LaunchPID(fuelSubsystem).withTimeout(5.0),
+        new ClearShooter(fuelSubsystem).withTimeout(0.1));
   }
 
   public Command neutralAuto() {
