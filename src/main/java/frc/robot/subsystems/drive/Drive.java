@@ -27,7 +27,6 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -119,7 +118,6 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator autoPoseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
-  public PIDController turnAnglePID;
   private double newShooterSpeed;
   public boolean inShootingRange;
 
@@ -175,12 +173,6 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
-
-    turnAnglePID =
-        new PIDController(
-            VisionConstants.TURN_ANGLE_KP,
-            VisionConstants.TURN_ANGLE_KI,
-            VisionConstants.TURN_ANGLE_KD);
   }
 
   @Override
@@ -266,8 +258,9 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putBoolean("In Shooting Range", inShootingRange);
 
     inShootingRange =
-        CommandFactory.distanceFromHub(getPose()) >= 58
-            && CommandFactory.distanceFromHub(getPose()) <= 118;
+        (CommandFactory.distanceFromHub(getPose()) >= 58
+                && CommandFactory.distanceFromHub(getPose()) <= 118)
+            && CommandFactory.inAllianceZone(getPose());
 
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());

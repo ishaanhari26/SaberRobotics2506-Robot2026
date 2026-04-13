@@ -143,6 +143,14 @@ public class CommandFactory {
     return hubPose.getTranslation().getDistance(pose.getTranslation()) * 39.37; // Convert to inches
   }
 
+  public static boolean inAllianceZone(Pose2d pose) {
+    if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) {
+      return pose.getX() < 3.98;
+    } else {
+      return pose.getX() > 12.56;
+    }
+  }
+
   public static Translation2d calculateLeadTarget(Drive drive, Supplier<Translation2d> target) {
     Translation2d robotPos = drive.getPose().getTranslation();
     Translation2d targetPos = target.get();
