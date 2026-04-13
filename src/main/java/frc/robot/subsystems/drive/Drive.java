@@ -27,7 +27,6 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -44,12 +43,10 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.LimelightHelpers;
@@ -58,13 +55,11 @@ import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.drive.CommandFactory;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.LocationUtils;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.DoubleStream;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -123,7 +118,6 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator autoPoseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
-  public PIDController turnAnglePID;
   private double newShooterSpeed;
   public boolean inShootingRange;
 
@@ -179,12 +173,6 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
-
-    turnAnglePID =
-        new PIDController(
-            VisionConstants.TURN_ANGLE_KP,
-            VisionConstants.TURN_ANGLE_KI,
-            VisionConstants.TURN_ANGLE_KD);
   }
 
   @Override
@@ -267,13 +255,12 @@ public class Drive extends SubsystemBase {
 
     SmartDashboard.putNumber("distance", CommandFactory.distanceFromHub(getPose()));
 
-    SmartDashboard.putBoolean(
-        "In Shooting Range",
-        inShootingRange);
+    SmartDashboard.putBoolean("In Shooting Range", inShootingRange);
 
     inShootingRange =
-        CommandFactory.distanceFromHub(getPose()) >= 58
-            && CommandFactory.distanceFromHub(getPose()) <= 118;
+        (CommandFactory.distanceFromHub(getPose()) >= 58
+                && CommandFactory.distanceFromHub(getPose()) <= 118)
+            && CommandFactory.inAllianceZone(getPose());
 
     SmartDashboard.putNumber("poseX", getPose().getX());
     SmartDashboard.putNumber("poseY", getPose().getY());

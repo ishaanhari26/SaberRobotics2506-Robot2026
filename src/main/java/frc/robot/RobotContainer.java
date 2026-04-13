@@ -12,12 +12,6 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -29,9 +23,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ControllerRumble;
-import frc.robot.commands.drive.AutoAlignCommand;
 import frc.robot.commands.drive.AutoFactory;
-import frc.robot.commands.drive.CommandFactory;
 import frc.robot.commands.drive.DriveCommands;
 import frc.robot.commands.drive.LockedTargetCommand;
 import frc.robot.commands.fuelsubsystem.ClearShooter;
@@ -55,7 +47,6 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.util.LocationUtils;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
