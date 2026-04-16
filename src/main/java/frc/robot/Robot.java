@@ -125,6 +125,9 @@ public class Robot extends LoggedRobot {
         case "neutralAutoR":
           initialAutoPose = new Pose2d(12.173, 7.411, new Rotation2d(Math.PI));
           break;
+        case "neutralAutoL":
+          initialAutoPose = new Pose2d(12.173, 0.609, new Rotation2d(Math.PI));
+          break;
         case "neutralAutoHalfR":
           initialAutoPose = new Pose2d(12.173, 7.411, new Rotation2d(Math.PI));
           break;
@@ -138,7 +141,7 @@ public class Robot extends LoggedRobot {
           initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d());
           break;
         default:
-          initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
+          initialAutoPose = new Pose2d(12.173, 7.411, new Rotation2d(Math.PI));
       }
     } else if (DriverStation.getAlliance().get().name().equals("Blue")) {
       switch (autonomousName) {
@@ -148,8 +151,11 @@ public class Robot extends LoggedRobot {
         case "pickupOutpostAuto":
           initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
           break;
-        case "neutralAuto":
-          initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
+        case "neutralAutoR":
+          initialAutoPose = new Pose2d(4.367, 0.609, new Rotation2d());
+          break;
+        case "neutralAutoL":
+          initialAutoPose = new Pose2d(4.367, 7.411, new Rotation2d());
           break;
         case "neutralAutoHalfR":
           initialAutoPose = new Pose2d(4.367, 0.609, new Rotation2d());
@@ -164,7 +170,7 @@ public class Robot extends LoggedRobot {
           initialAutoPose = new Pose2d(3.601, 4.026, new Rotation2d(Math.PI));
           break;
         default:
-          initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
+          initialAutoPose = new Pose2d(4.367, 0.609, new Rotation2d());
       }
     }
 
@@ -199,6 +205,8 @@ public class Robot extends LoggedRobot {
         0,
         LimelightHelpers.getBotPose("limelight")[4],
         0);
+
+    CommandScheduler.getInstance().cancelAll();
   }
 
   /** This function is called periodically during operator control. */

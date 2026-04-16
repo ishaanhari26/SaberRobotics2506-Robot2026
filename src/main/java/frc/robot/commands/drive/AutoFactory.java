@@ -62,7 +62,7 @@ public class AutoFactory {
   }
 
   public Command justShootMiddle() {
-    return Commands.sequence(new LaunchPID(fuelSubsystem));
+    return Commands.sequence(new LaunchPID(fuelSubsystem).withTimeout(5), new ClearShooter(fuelSubsystem).withTimeout(1));
   }
 
   public Command driveBackShootMiddle() {
@@ -72,15 +72,31 @@ public class AutoFactory {
 
     return Commands.sequence(
         pathBuilder.build(shootMiddlePath),
-        new LockedTargetCommand(drive, () -> 0.0, () -> 0.0, true).withTimeout(1),
-        new LaunchPID(fuelSubsystem).withTimeout(5.0),
-        new ClearShooter(fuelSubsystem).withTimeout(0.1));
+        // new LockedTargetCommand(drive, () -> 0.0, () -> 0.0, true).withTimeout(1),
+        new LaunchPID(fuelSubsystem).withTimeout(5),
+        new ClearShooter(fuelSubsystem).withTimeout(1));
   }
 
   public Command neutralAutoR() {
     Path driveNeutralPath = new Path("neutralDriveForwardR");
     Path driveIntakePath = new Path("neutralIntakeR");
     Path driveShootPath = new Path("neutralShootBumpR");
+    Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
+    drive.setModulePositions(initialDirection);
+
+    return Commands.sequence(
+        pathBuilder.build(driveNeutralPath),
+        new ParallelCommandGroup(
+            pathBuilder.build(driveIntakePath), new Intake(fuelSubsystem).withTimeout(4)),
+        pathBuilder.build(driveShootPath),
+        // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
+        new LaunchPID(fuelSubsystem));
+  }
+
+  public Command neutralAutoL() {
+    Path driveNeutralPath = new Path("neutralDriveForwardL");
+    Path driveIntakePath = new Path("neutralIntakeL");
+    Path driveShootPath = new Path("neutralShootBumpL");
     Rotation2d initialDirection = driveNeutralPath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 

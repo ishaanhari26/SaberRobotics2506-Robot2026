@@ -157,6 +157,7 @@ public class RobotContainer {
 
     autoChooser.addOption("driveForward", "driveForward");
     autoChooser.addOption("neutralAutoR", "neutralAutoR");
+    autoChooser.addOption("neutralAutoL", "neutralAutoL");
     autoChooser.addOption("neutralAutoHalfR", "neutralAutoHalfR");
     autoChooser.addOption("neutralAutoHalfL", "neutralAutoHalfL");
     autoChooser.addOption("intakeOutpostAuto", "intakeOutpostAuto");
@@ -271,6 +272,8 @@ public class RobotContainer {
         return AutoFactory.newTestAuto();
       case "neutralAutoR":
         return AutoFactory.neutralAutoR();
+      case "neutralAutoL":
+        return AutoFactory.neutralAutoL();
       case "neutralAutoHalfR":
         return AutoFactory.neutralAutoHalfR();
       case "neutralAutoHalfL":
