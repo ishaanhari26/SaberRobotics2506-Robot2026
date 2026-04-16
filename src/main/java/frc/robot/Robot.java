@@ -122,11 +122,14 @@ public class Robot extends LoggedRobot {
         case "pickupOutpostAuto":
           initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
           break;
-        case "neutralAuto":
-          initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
+        case "neutralAutoR":
+          initialAutoPose = new Pose2d(12.173, 7.411, new Rotation2d(Math.PI));
           break;
-        case "neutralAutoHalf":
-          initialAutoPose = new Pose2d(12.939, 7.44, new Rotation2d(Math.PI));
+        case "neutralAutoHalfR":
+          initialAutoPose = new Pose2d(12.173, 7.411, new Rotation2d(Math.PI));
+          break;
+        case "neutralAutoHalfL":
+          initialAutoPose = new Pose2d(12.173, 0.609, new Rotation2d(Math.PI));
           break;
         case "driveBackAndShootMiddle":
           initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d());
@@ -148,8 +151,11 @@ public class Robot extends LoggedRobot {
         case "neutralAuto":
           initialAutoPose = new Pose2d(3.601, 0.58, new Rotation2d());
           break;
-        case "neutralAutoHalf":
+        case "neutralAutoHalfR":
           initialAutoPose = new Pose2d(4.367, 0.609, new Rotation2d());
+          break;
+        case "neutralAutoHalfL":
+          initialAutoPose = new Pose2d(4.367, 7.411, new Rotation2d());
           break;
         case "driveBackAndShootMiddle":
           initialAutoPose = new Pose2d(3.601, 4.026, new Rotation2d(Math.PI));

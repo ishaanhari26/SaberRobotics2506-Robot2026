@@ -21,14 +21,14 @@
     {
       "type": "rotation",
       "rotation_radians": 0.0,
-      "t_ratio": 0.1799187636106334,
+      "t_ratio": 0.17991876361063344,
       "profiled_rotation": true
     },
     {
       "type": "waypoint",
       "translation_target": {
-        "x_meters": 7.600000000000001,
-        "y_meters": 0.851225832656378,
+        "x_meters": 7.827000000000002,
+        "y_meters": 0.832,
         "intermediate_handoff_radius_meters": 0.2
       },
       "rotation_target": {

@@ -156,8 +156,9 @@ public class RobotContainer {
     // autoChooser.addOption("driveBackAuto", AutoFactory.testAuto());
 
     autoChooser.addOption("driveForward", "driveForward");
-    autoChooser.addOption("neutralAuto", "neutralAuto");
-    autoChooser.addOption("neutralAutoHalf", "neutralAutoHalf");
+    autoChooser.addOption("neutralAutoR", "neutralAutoR");
+    autoChooser.addOption("neutralAutoHalfR", "neutralAutoHalfR");
+    autoChooser.addOption("neutralAutoHalfL", "neutralAutoHalfL");
     autoChooser.addOption("intakeOutpostAuto", "intakeOutpostAuto");
     autoChooser.addOption("pickupOutpostAuto", "pickupOutpostAuto");
     autoChooser.addOption("justShootMiddle", "justShootMiddle");
@@ -268,10 +269,12 @@ public class RobotContainer {
         return AutoFactory.testAuto();
       case "driveForward":
         return AutoFactory.newTestAuto();
-      case "neutralAuto":
-        return AutoFactory.neutralAuto();
-      case "neutralAutoHalf":
-        return AutoFactory.neutralAutoHalf();
+      case "neutralAutoR":
+        return AutoFactory.neutralAutoR();
+      case "neutralAutoHalfR":
+        return AutoFactory.neutralAutoHalfR();
+      case "neutralAutoHalfL":
+        return AutoFactory.neutralAutoHalfL();
       case "intakeOutpostAuto":
         return AutoFactory.intakeAuto();
       case "pickupOutpostAuto":
