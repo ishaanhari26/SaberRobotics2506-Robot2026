@@ -164,6 +164,7 @@ public class RobotContainer {
     autoChooser.addOption("pickupOutpostAuto", "pickupOutpostAuto");
     autoChooser.addOption("justShootMiddle", "justShootMiddle");
     autoChooser.addOption("driveBackAndShootMiddle", "driveBackAndShootMiddle");
+    autoChooser.addOption("MiddleBumpNeutralR", "MiddleBumpNeutralR");
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -286,6 +287,8 @@ public class RobotContainer {
         return AutoFactory.justShootMiddle();
       case "driveBackAndShootMiddle":
         return AutoFactory.driveBackShootMiddle();
+      case "MiddleBumpNeutralR":
+        return AutoFactory.MiddleBumpNeutralR();
       default:
         return Commands.none();
     }

@@ -140,6 +140,9 @@ public class Robot extends LoggedRobot {
         case "justShootMiddle":
           initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d());
           break;
+        case "MiddleBumpNeutralR":
+          initialAutoPose = new Pose2d(12.939, 3.994, new Rotation2d());
+          break;
         default:
           initialAutoPose = new Pose2d(12.173, 7.411, new Rotation2d(Math.PI));
       }
@@ -167,6 +170,9 @@ public class Robot extends LoggedRobot {
           initialAutoPose = new Pose2d(3.601, 4.026, new Rotation2d(Math.PI));
           break;
         case "justShootMiddle":
+          initialAutoPose = new Pose2d(3.601, 4.026, new Rotation2d(Math.PI));
+          break;
+        case "MiddleBumpNeutralR":
           initialAutoPose = new Pose2d(3.601, 4.026, new Rotation2d(Math.PI));
           break;
         default:
