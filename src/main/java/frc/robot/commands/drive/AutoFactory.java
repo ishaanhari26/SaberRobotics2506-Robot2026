@@ -82,8 +82,7 @@ public class AutoFactory {
   // new autos
   public Command MiddleBumpNeutralR() {
     Path shootMiddlePath = new Path("justShootM");
-    Path middleToBump = new Path("MiddleBackToBumpR");
-    Path BumpToNeutral = new Path("MiddleBumpToNeutralR");
+    Path middleToBump = new Path("MiddleNeutralBumpR");
     Rotation2d initialDirection = shootMiddlePath.getInitialModuleDirection();
     drive.setModulePositions(initialDirection);
 
@@ -92,9 +91,10 @@ public class AutoFactory {
         // new LockedTargetCommand(drive, () -> 0.0, () -> 0.0, true).withTimeout(1),
         new LaunchPID(fuelSubsystem).withTimeout(5),
         new ClearShooter(fuelSubsystem).withTimeout(1),
-        new WaitCommand(5),
-        pathBuilder.build(middleToBump),
-        pathBuilder.build(BumpToNeutral));
+        new WaitCommand(4),
+        new ParallelCommandGroup(
+          pathBuilder.build(middleToBump),
+          new Intake(fuelSubsystem)));
   }
 
   public Command neutralAutoR() {
