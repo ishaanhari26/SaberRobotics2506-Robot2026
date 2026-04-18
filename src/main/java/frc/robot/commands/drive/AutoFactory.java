@@ -62,7 +62,9 @@ public class AutoFactory {
   }
 
   public Command justShootMiddle() {
-    return Commands.sequence(new LaunchPID(fuelSubsystem).withTimeout(5), new ClearShooter(fuelSubsystem).withTimeout(1));
+    return Commands.sequence(
+        new LaunchPID(fuelSubsystem).withTimeout(5),
+        new ClearShooter(fuelSubsystem).withTimeout(1));
   }
 
   public Command driveBackShootMiddle() {
