@@ -92,9 +92,7 @@ public class AutoFactory {
         new LaunchPID(fuelSubsystem).withTimeout(5),
         new ClearShooter(fuelSubsystem).withTimeout(1),
         new WaitCommand(4),
-        new ParallelCommandGroup(
-          pathBuilder.build(middleToBump),
-          new Intake(fuelSubsystem)));
+        new ParallelCommandGroup(pathBuilder.build(middleToBump), new Intake(fuelSubsystem)));
   }
 
   public Command neutralAutoR() {
@@ -141,7 +139,8 @@ public class AutoFactory {
         pathBuilder.build(driveNeutralPath),
         new ParallelCommandGroup(
             pathBuilder.build(driveIntakePath), new Intake(fuelSubsystem).withTimeout(3)),
-        pathBuilder.build(driveShootPath),
+        new ParallelCommandGroup(
+            pathBuilder.build(driveShootPath), new Intake(fuelSubsystem).withTimeout(4)),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem).withTimeout(5),
         new ClearShooter(fuelSubsystem).withTimeout(1),
@@ -159,7 +158,8 @@ public class AutoFactory {
         pathBuilder.build(driveNeutralPath),
         new ParallelCommandGroup(
             pathBuilder.build(driveIntakePath), new Intake(fuelSubsystem).withTimeout(3)),
-        pathBuilder.build(driveShootPath),
+        new ParallelCommandGroup(
+            pathBuilder.build(driveShootPath), new Intake(fuelSubsystem).withTimeout(4)),
         // DriveCommands.lockedTargetJoystickDrive(drive, () -> 0.0, () -> 0.0).withTimeout(1),
         new LaunchPID(fuelSubsystem));
   }
