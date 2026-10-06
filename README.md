@@ -32,7 +32,7 @@ Our robot was built around that cycle: collect during the inactive shift, then u
 
 As programming lead, I was responsible for:
 
-- Development of the **drivetrain** and **vision** systems in full
+- Development of the **drivetrain**, **vision**, and **autonomous** systems in full
 - Supervision of development of the **shooter**, **intake**, and **LED** code
 - Running code reviews and onboarding new members
 - Serving as a member of the drive team and leading match strategy during competition
