@@ -2,7 +2,7 @@
 
 Robot code for the team's 2026 *REBUILT* season robot, used in FRC WIN District competition.
 
-This is a fork of our team's main repo: [SaberRobotics2506/2026-robot](https://github.com/SaberRobotics2506/2026-robot).
+This is a fork of the latest version of our team's main repo: [SaberRobotics2506/2026-robot](https://github.com/SaberRobotics2506/2026-robot).
 
 ## The Game and the Robot
 
