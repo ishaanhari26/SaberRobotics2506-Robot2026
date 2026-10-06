@@ -30,12 +30,12 @@ Our robot was built around that cycle: collect during the inactive shift, then u
 
 ## My Role
 
-As programming lead, I:
+As programming lead, I was responsible for:
 
-- Developed the **drivetrain** and **vision** systems in full
-- Oversaw development of the **shooter**, **intake**, and **LED** code
-- Ran code reviews and onboarded new members
-- Served as a member of the drive team and led match strategy during competition
+- Development of the **drivetrain** and **vision** systems in full
+- Supervision of development of the **shooter**, **intake**, and **LED** code
+- Running code reviews and onboarding new members
+- Serving as a member of the drive team and leading match strategy during competition
 
 ## Tech Stack
 
