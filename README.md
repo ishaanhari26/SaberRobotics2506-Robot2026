@@ -1,5 +1,5 @@
-# Team 2506 Franklin Robotics - 2026 Robot v2
+# FRC Team 2506 Saber Robotics - 2026 Robot v2
 
-Hello! This is Team 2506 (Franklin Robotics) code for the 2025/26 FIRST Robotics Comption season - REBUILT. As of current, we just compleated a large code merge leading to many lines of code being commented out. Please ignore this code as it was mainly used just for testing and is not ready/stable.
+This repository is a fork of the SaberRobotics2506 codebase for their 2026 competition robot. This code was developed by the Saber Robotics Programming sub-team and used in FRC WIN District competition for the 2026 REBUILT season.
 
 ## [Documentation](/docs/Contents.md)
