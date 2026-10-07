@@ -4,7 +4,7 @@ Robot code for the team's 2026 *REBUILT* season robot, used in FRC WIN District 
 
 This is a fork of the latest version of our team's main repo: [SaberRobotics2506/2026-robot](https://github.com/SaberRobotics2506/2026-robot).
 
-## The Game and the Robot
+## The Game
 
 In *REBUILT*, alliances alternate between 25-second active and inactive shifts. During the inactive shift, robots collect game pieces (6-inch balls) or play defense on the other alliance. During the active shift, they score on the hub, 1 point per ball, and can reload and shoot again if time allows. Matches run 2:40, with the first 20 seconds fully autonomous.
 
@@ -27,15 +27,6 @@ Our robot was built around that cycle: collect during the inactive shift, then u
 **LED driver feedback.** LEDs on the robot are synced to our state machines, so the driver and pit crew can see what the robot code is doing at a glance.
 
 **Simulation and replay.** The code uses IO layers that separate hardware from logic, with [AdvantageKit](https://github.com/Mechanical-Advantage/AdvantageKit) for logging. This gives us full simulation and 3D replay of the drivetrain and vision systems, so we could debug and tune without the physical robot.
-
-## My Role
-
-As programming lead, I was responsible for:
-
-- Development of the **drivetrain**, **vision**, and **autonomous** systems in full
-- Supervision of development of the **shooter**, **intake**, and **LED** code
-- Running code reviews and onboarding new members
-- Serving as a member of the drive team and leading match strategy during competition
 
 ## Tech Stack
 
